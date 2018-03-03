@@ -1,10 +1,10 @@
 import { useStrict } from 'mobx'
-import { MovieStore } from './movie.store'
+import { ShowStore } from './show.store'
 
 useStrict(true)
 
 class Store {
-  movieStore = new MovieStore()
+  showStore = new ShowStore()
 }
 
 export const store = new Store()

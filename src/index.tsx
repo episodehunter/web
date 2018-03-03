@@ -3,11 +3,10 @@ import * as ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'mobx-react'
-import './styles'
+import './styles/global'
 import { store } from './store/store'
 import { Navbar } from './components/navbar'
 import { HomePage } from './pages/home'
-import { MoviesPage } from './pages/movies'
 import { ShowsPage } from './pages/shows'
 
 const App = () => (
@@ -16,7 +15,6 @@ const App = () => (
       <Wrapper>
         <Navbar />
         <Route exact path="/" component={HomePage} />
-        <Route path="/movies" component={MoviesPage} />
         <Route path="/shows" component={ShowsPage} />
       </Wrapper>
     </Router>

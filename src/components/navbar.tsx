@@ -8,9 +8,6 @@ export const Navbar = () => (
       <Link to="/">Home</Link>
     </Item>
     <Item>
-      <Link to="/movies">Movies</Link>
-    </Item>
-    <Item>
       <Link to="/shows">Shows</Link>
     </Item>
   </Nav>
@@ -18,8 +15,9 @@ export const Navbar = () => (
 
 const Nav = styled.nav`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   text-align: center;
+  padding: 20px 0;
 `
 
 const Item = styled.div``
