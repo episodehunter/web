@@ -6,15 +6,16 @@
   "scripts": {
     "tsc": "tsc --noEmit",
     "test": "jest --watch",
-    "build":
-      "webpack --config webpack.prod.js && cp src/index.html build/index.html",
+    "build": "webpack --config webpack.prod.js && cp src/index.html build/index.html",
     "dev": "webpack-dev-server --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/episodehunter/web.git"
   },
-  "keywords": ["episodehunter"],
+  "keywords": [
+    "episodehunter"
+  ],
   "author": "Oskar Karlsson <kontakta@oskarkarlsson.nu>",
   "contributors": [
     "Viktor Eriksson <me@viktoreriksson.se> (viktoreriksson.se)"
@@ -53,7 +54,12 @@
       "^.+\\.(j|t)sx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "src/.*(__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
   },
   "prettier": {
     "printWidth": 80,
