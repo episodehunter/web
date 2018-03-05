@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - node
+
+script:
+ - npm run test:ci
+
+before_deploy:
+  - npm run build
+  - sed -i 's/href="\/"/href="\/web\/"/g' ${TRAVIS_BUILD_DIR}/build/index.html
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: build
+  target_branch: gh-pages
+  on:
+    branch: master
