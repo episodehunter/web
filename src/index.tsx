@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import './styles/global'
 import { store } from './store/store'
-import { Navbar } from './components/navbar'
 import { HomePage } from './pages/home'
 import { UpcomingPage } from './pages/upcoming'
 import { SearchPage } from './pages/search'
@@ -14,7 +13,6 @@ const App = () => (
   <Provider {...store}>
     <Router>
       <Wrapper>
-        <Navbar />
         <Route exact path="/" component={HomePage} />
         <Route path="/upcoming" component={UpcomingPage} />
         <Route path="/search" component={SearchPage} />

@@ -6,6 +6,6 @@ export class ShowStore {
   shows: Show[] = []
 
   constructor() {
-    this.shows = Array(23).fill({ title: '' })
+    this.shows = Array(6).fill({ title: '' })
   }
 }
