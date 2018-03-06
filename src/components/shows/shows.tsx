@@ -9,9 +9,7 @@ type Props = {
   showStore?: ShowStore
 }
 export const ShowsComponent = ({ showStore }: Props) => (
-  <Wrapper>
-    {showStore!.shows.map((show, key) => <ShowCard key={key} show={show} />)}
-  </Wrapper>
+  <Wrapper>{showStore!.shows.map((_, key) => <ShowCard key={key} />)}</Wrapper>
 )
 
 export const Shows = inject('showStore')(ShowsComponent)

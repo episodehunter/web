@@ -7,7 +7,8 @@ import './styles/global'
 import { store } from './store/store'
 import { Navbar } from './components/navbar'
 import { HomePage } from './pages/home'
-import { ShowsPage } from './pages/shows'
+import { UpcomingPage } from './pages/upcoming'
+import { SearchPage } from './pages/search'
 
 const App = () => (
   <Provider {...store}>
@@ -15,7 +16,8 @@ const App = () => (
       <Wrapper>
         <Navbar />
         <Route exact path="/" component={HomePage} />
-        <Route path="/shows" component={ShowsPage} />
+        <Route path="/upcoming" component={UpcomingPage} />
+        <Route path="/search" component={SearchPage} />
       </Wrapper>
     </Router>
   </Provider>

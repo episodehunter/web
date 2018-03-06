@@ -6,21 +6,6 @@ export class ShowStore {
   shows: Show[] = []
 
   constructor() {
-    this.shows = [
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' },
-      { title: 'Game of Jannes' }
-    ]
+    this.shows = Array(23).fill({ title: '' })
   }
 }
