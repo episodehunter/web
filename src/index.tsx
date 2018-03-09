@@ -21,6 +21,8 @@ const App = () => (
   </Provider>
 )
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  height: 100%;
+`
 
 ReactDOM.render(<App />, document.getElementById('root'))

@@ -1,47 +1,72 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Shows } from '../components/shows/shows'
+import { shark } from '../utils/colors'
 import { media } from '../styles/media-queries'
-import { alabaster } from '../utils/colors'
-import { Navbar } from '../components/navbar'
+import { MainAbout } from '../components/main/main-about'
+import { MainShows } from '../components/main/main-shows'
+import { MainDescription } from '../components/main/main-description'
+import { MainHeader } from '../components/main/main-header'
+import { MainFooter } from '../components/main/main-footer'
 
 export const HomePage = () => (
   <Wrapper>
-    <ParallaxBefore>
-      <Navbar />
-    </ParallaxBefore>
-    <Static>
+    <TopImage>
+      <MainHeader />
+      <MainAbout />
+    </TopImage>
+    <MainContent>
       <ShowsWrapper>
-        <Shows />
+        <MainShows />
       </ShowsWrapper>
-    </Static>
-    <ParallaxAfter />
+      <DescriptionWrapper>
+        <MainDescription />
+      </DescriptionWrapper>
+    </MainContent>
+    <BottomImage>
+      <MainFooter />
+    </BottomImage>
   </Wrapper>
 )
 
-const Section = styled.div`
-  background-attachment: fixed;
+const MainContent = styled.div`
+  background-color: ${shark};
+  display: flex;
+`
+const ShowsWrapper = styled.div`
+  ${media.giant`flex: 0.6; grid-gap: 30px;`};
+  ${media.desktop`flex: 0.6; grid-gap: 30px;`};
+  ${media.tablet`flex: 0.6; grid-gap: 20px;`};
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 20px;
+`
+
+const DescriptionWrapper = styled.div`
+  ${media.giant`flex: 0.4; margin: 60px 20px;`};
+  ${media.desktop`flex: 0.4; margin: 60px 20px;`};
+  ${media.tablet`flex: 0.4; margin: 60px 20px;`};
+  flex: 1;
+  margin: 0 20px;
+`
+
+const CoverImage = styled.div`
+  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 `
-const Static = styled(Section)`
-  background: ${alabaster};
-`
-const ParallaxBefore = styled(Section)`
-  background-image: url('https://placekitten.com/g/900/700');
-  min-height: 900px;
-`
-
-const ParallaxAfter = styled(Section)`
-  background-image: url('https://placekitten.com/g/800/600');
-  min-height: 900px;
+const TopImage = styled(CoverImage)`
+  background-image: url(https://d1lolx4ilifvdr.cloudfront.net/fanart/270915.jpg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
-const Wrapper = styled.div``
+const BottomImage = styled(CoverImage)`
+  background-image: url('https://d1lolx4ilifvdr.cloudfront.net/fanart/121361.jpg');
+`
 
-const ShowsWrapper = styled.div`
-  ${media.giant`margin: 0 10%;`};
-  ${media.desktop`margin: 0 5%;`};
-  margin: 0 2%;
+const Wrapper = styled.div`
+  height: 100%;
 `
