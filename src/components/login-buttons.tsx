@@ -1,9 +1,20 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { alabaster, mountainMeadow, melrose } from '../utils/colors'
+import { auth } from '../auth'
 
-export const RegisterButton = () => <Register>Register</Register>
-export const LoginButton = () => <Login>Login</Login>
+export const RegisterButton = () => {
+  const openLock = () => {
+    auth.register()
+  }
+  return <Register onClick={openLock}>Register</Register>
+}
+export const LoginButton = () => {
+  const openLock = () => {
+    auth.login()
+  }
+  return <Login onClick={openLock}>Login</Login>
+}
 
 const Button = styled.div`
   font-family: 'Lato', sans-serif;
