@@ -6,16 +6,14 @@ import { Provider } from 'mobx-react'
 import './styles/global'
 import { store } from './store/store'
 import { HomePage } from './pages/home'
-import { UpcomingPage } from './pages/upcoming'
-import { SearchPage } from './pages/search'
+import { SecretPage } from './pages/secret'
 
 const App = () => (
   <Provider {...store}>
     <Router>
       <Wrapper>
         <Route exact path="/" component={HomePage} />
-        <Route path="/upcoming" component={UpcomingPage} />
-        <Route path="/search" component={SearchPage} />
+        <Route path="/secret" component={SecretPage} />
       </Wrapper>
     </Router>
   </Provider>

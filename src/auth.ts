@@ -5,7 +5,7 @@ import { Auth0Error, Auth0UserProfile } from 'auth0-js'
 const AUTH_CONFIG = {
   clientId: 'VsaZiNxg8B4eK2mxmcjOI4y1v0A9ZGPL',
   domain: 'episodehunter.auth0.com',
-  callbackUrl: ''
+  callbackUrl: 'http://localhost:1337'
 }
 
 const AUTH_OPTIONS = {
@@ -43,8 +43,8 @@ export class Auth {
   }
 
   isAuthenticated() {
-    let expiresAt = JSON.parse(localStorage.getItem('expires_at') || '')
-    return new Date().getTime() < expiresAt
+    let expiresAt = localStorage.getItem('expires_at')
+    return expiresAt && new Date().getTime() < JSON.parse(expiresAt)
   }
 
   login = () => {

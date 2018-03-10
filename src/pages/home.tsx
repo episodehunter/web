@@ -7,26 +7,33 @@ import { MainShows } from '../components/main/main-shows'
 import { MainDescription } from '../components/main/main-description'
 import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
+import { Redirect } from 'react-router'
+import { auth } from '../auth'
 
-export const HomePage = () => (
-  <Wrapper>
-    <TopImage>
-      <MainHeader />
-      <MainAbout />
-    </TopImage>
-    <MainContent>
-      <ShowsWrapper>
-        <MainShows />
-      </ShowsWrapper>
-      <DescriptionWrapper>
-        <MainDescription />
-      </DescriptionWrapper>
-    </MainContent>
-    <BottomImage>
-      <MainFooter />
-    </BottomImage>
-  </Wrapper>
-)
+export const HomePage = () => {
+  if (auth.isAuthenticated()) {
+    return <Redirect to="/secret" />
+  }
+  return (
+    <Wrapper>
+      <TopImage>
+        <MainHeader />
+        <MainAbout />
+      </TopImage>
+      <MainContent>
+        <ShowsWrapper>
+          <MainShows />
+        </ShowsWrapper>
+        <DescriptionWrapper>
+          <MainDescription />
+        </DescriptionWrapper>
+      </MainContent>
+      <BottomImage>
+        <MainFooter />
+      </BottomImage>
+    </Wrapper>
+  )
+}
 
 const MainContent = styled.div`
   background-color: ${shark};
