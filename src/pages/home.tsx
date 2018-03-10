@@ -1,79 +1,43 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { shark } from '../utils/colors'
-import { media } from '../styles/media-queries'
-import { MainAbout } from '../components/main/main-about'
-import { MainShows } from '../components/main/main-shows'
-import { MainDescription } from '../components/main/main-description'
-import { MainHeader } from '../components/main/main-header'
-import { MainFooter } from '../components/main/main-footer'
-import { Redirect } from 'react-router'
+import { inject } from 'mobx-react'
+import { ShowStore } from '../store/show.store'
 import { auth } from '../auth'
+import { requireLogin } from '../utils/require-login'
+import { shark, gossamer } from '../utils/colors'
 
-export const HomePage = () => {
-  if (auth.isAuthenticated()) {
-    return <Redirect to="/secret" />
-  }
-  return (
-    <Wrapper>
-      <TopImage>
-        <MainHeader />
-        <MainAbout />
-      </TopImage>
-      <MainContent>
-        <ShowsWrapper>
-          <MainShows />
-        </ShowsWrapper>
-        <DescriptionWrapper>
-          <MainDescription />
-        </DescriptionWrapper>
-      </MainContent>
-      <BottomImage>
-        <MainFooter />
-      </BottomImage>
-    </Wrapper>
-  )
+type Props = {
+  showStore?: ShowStore
 }
 
-const MainContent = styled.div`
-  background-color: ${shark};
-  display: flex;
-`
-const ShowsWrapper = styled.div`
-  ${media.giant`flex: 0.6; grid-gap: 30px;`};
-  ${media.desktop`flex: 0.6; grid-gap: 30px;`};
-  ${media.tablet`flex: 0.6; grid-gap: 20px;`};
-  display: grid;
-  grid-gap: 5px;
-  grid-template-columns: repeat(3, 1fr);
-  margin: 20px;
-`
+export class HomePageComponent extends React.Component<Props> {
+  componentWillMount() {
+    if (auth.isAuthenticated()) {
+      // this.props.showStore!.shows[0].fetchEpisodes()
+    }
+  }
 
-const DescriptionWrapper = styled.div`
-  ${media.giant`flex: 0.4; margin: 60px 20px;`};
-  ${media.desktop`flex: 0.4; margin: 60px 20px;`};
-  ${media.tablet`flex: 0.4; margin: 60px 20px;`};
-  flex: 1;
-  margin: 0 20px;
-`
+  render() {
+    return (
+      <Wrapper>
+        <Header>LOGGED IN</Header>
+        {this.props.showStore!.shows[0].episodes.length}
+      </Wrapper>
+    )
+  }
+}
 
-const CoverImage = styled.div`
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-`
-const TopImage = styled(CoverImage)`
-  background-image: url(https://d1lolx4ilifvdr.cloudfront.net/fanart/270915.jpg);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`
+export const HomePage = requireLogin<Props>(
+  inject('showStore')(HomePageComponent)
+)
 
-const BottomImage = styled(CoverImage)`
-  background-image: url('https://d1lolx4ilifvdr.cloudfront.net/fanart/121361.jpg');
+const Header = styled.h1`
+  color: ${gossamer};
+  text-align: center;
+  font-family: 'Lato' sans-serif;
+  margin-top: 40px;
 `
-
 const Wrapper = styled.div`
   height: 100%;
+  background-color: ${shark};
 `

@@ -1,11 +1,12 @@
 import Auth0Lock from 'auth0-lock'
 import { gossamer } from './utils/colors'
 import { Auth0Error, Auth0UserProfile } from 'auth0-js'
+import { history } from './history'
 
 const AUTH_CONFIG = {
   clientId: 'VsaZiNxg8B4eK2mxmcjOI4y1v0A9ZGPL',
   domain: 'episodehunter.auth0.com',
-  callbackUrl: 'http://localhost:1337'
+  callbackUrl: 'http://localhost:1337/login'
 }
 
 const AUTH_OPTIONS = {
@@ -75,6 +76,8 @@ export class Auth {
       localStorage.setItem('expires_at', expiresAt)
 
       this.getUser(authResult.accessToken)
+
+      history.replace('/')
     }
   }
 
