@@ -6,6 +6,7 @@ import { history } from './history'
 const AUTH_CONFIG = {
   clientId: 'VsaZiNxg8B4eK2mxmcjOI4y1v0A9ZGPL',
   domain: 'episodehunter.auth0.com',
+  audience: 'https://api.episodehunter.tv',
   callbackUrl: 'http://localhost:1337/login'
 }
 
@@ -14,7 +15,7 @@ const AUTH_OPTIONS = {
   auth: {
     redirectUrl: AUTH_CONFIG.callbackUrl,
     responseType: 'token id_token',
-    audience: `https://${AUTH_CONFIG.domain}/userinfo`,
+    audience: AUTH_CONFIG.audience,
     params: {
       scope: 'openid'
     }
