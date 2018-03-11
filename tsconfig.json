@@ -11,7 +11,19 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "plugins": [
+      {
+        "name": "ts-graphql-plugin",
+        "schema": {
+          "http": {
+            "url": "http://devapi.episodehunter.tv/graphql"
+          }
+        },
+        "tag": "gql"
+      }
+    ]
   },
   "exclude": ["node_modules"]
 }

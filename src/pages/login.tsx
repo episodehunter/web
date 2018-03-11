@@ -9,6 +9,7 @@ import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
 import { Redirect } from 'react-router'
 import { auth } from '../auth'
+import { images } from '../images.config'
 
 export const LoginPage = () => {
   if (auth.isAuthenticated()) {
@@ -64,14 +65,14 @@ const CoverImage = styled.div`
   background-size: cover;
 `
 const TopImage = styled(CoverImage)`
-  background-image: url(https://d1lolx4ilifvdr.cloudfront.net/fanart/270915.jpg);
+  background-image: url(${images.fanart.big(270915)});
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 `
 
 const BottomImage = styled(CoverImage)`
-  background-image: url('https://d1lolx4ilifvdr.cloudfront.net/fanart/121361.jpg');
+  background-image: url(${images.fanart.big(121361)});
 `
 
 const Wrapper = styled.div`

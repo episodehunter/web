@@ -1,12 +1,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { images } from '../images.config'
 
 type Props = {
-  src: string
+  tvdbId: number
 }
-export const ShowCard = ({ src }: Props) => (
+export const Poster = ({ tvdbId }: Props) => (
   <Wrapper>
-    <Image src={src} />
+    <Image src={images.poster.small(tvdbId)} />
   </Wrapper>
 )
 

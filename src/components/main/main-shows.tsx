@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { inject } from 'mobx-react'
-import { ShowCard } from '../show-card'
 import { ShowStore } from '../../store/show.store'
+import { Poster } from '../poster'
 
 type Props = {
   showStore?: ShowStore
@@ -9,7 +9,9 @@ type Props = {
 
 const MainShowsComponent = ({ showStore }: Props) => (
   <React.Fragment>
-    {showStore!.shows.map(show => <ShowCard key={show.id} src={show.src} />)}
+    {showStore!.shows.map(show => (
+      <Poster key={show.id} tvdbId={show.tvdbId} />
+    ))}
   </React.Fragment>
 )
 

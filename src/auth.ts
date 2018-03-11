@@ -46,7 +46,11 @@ export class Auth {
 
   isAuthenticated() {
     let expiresAt = localStorage.getItem('expires_at')
-    return expiresAt && new Date().getTime() < JSON.parse(expiresAt)
+    return expiresAt && new Date().getTime() < Number(expiresAt)
+  }
+
+  getToken() {
+    return localStorage.getItem('access_token')
   }
 
   login = () => {
@@ -76,13 +80,13 @@ export class Auth {
       localStorage.setItem('id_token', authResult.idToken)
       localStorage.setItem('expires_at', expiresAt)
 
-      this.getUser(authResult.accessToken)
+      this.setUser(authResult.accessToken)
 
       history.replace('/')
     }
   }
 
-  getUser = (token: string) => {
+  setUser = (token: string) => {
     this.lock.getUserInfo(
       token,
       (err: Auth0Error, profile: Auth0UserProfile) => {

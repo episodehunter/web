@@ -1,41 +1,52 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { inject } from 'mobx-react'
-import { ShowStore } from '../store/show.store'
-import { auth } from '../auth'
+import { inject, observer } from 'mobx-react'
 import { requireLogin } from '../utils/require-login'
-import { shark, alabaster, manatee, gossamer } from '../utils/colors'
+import { shark, alabaster, gossamer, melrose } from '../utils/colors'
 import { NavLink } from 'react-router-dom'
+import { User } from '../store/user.store'
+import { Following } from '../components/following'
+import { Spinner } from '../components/spinner'
 
 type Props = {
-  showStore?: ShowStore
+  user?: User
 }
 
 export class HomePageComponent extends React.Component<Props> {
   componentWillMount() {
-    if (auth.isAuthenticated()) {
-      // this.props.showStore!.shows[0].fetchEpisodes()
-    }
+    this.props.user!.fetchFollowing()
   }
 
   render() {
     return (
       <Wrapper>
         <Navbar>
+          <NavbarItem to="/">Following</NavbarItem>
           <NavbarItem to="/upcoming">Upcoming</NavbarItem>
           <NavbarItem to="/popular">Popular</NavbarItem>
           <NavbarItem to="/search">Search</NavbarItem>
           <Image src="https://episodehunter.tv/img/logga.png" />
         </Navbar>
-        {this.props.showStore!.shows[0].episodes.length}
+        {this.props.user!.loading ? (
+          <Loading>
+            <Spinner />
+          </Loading>
+        ) : (
+          <Following following={this.props.user!.following} />
+        )}
       </Wrapper>
     )
   }
 }
 
 export const HomePage = requireLogin<Props>(
-  inject('showStore')(HomePageComponent)
+  inject('user')(observer(HomePageComponent))
 )
+
+const Loading = styled.div`
+  text-align: center;
+  margin-top: 100px;
+`
 
 const Image = styled.img.attrs({
   src: (props: { src?: string }) => props.src
@@ -61,10 +72,10 @@ const NavbarItem = styled(NavLink).attrs({
   cursor: pointer;
   letter-spacing: 1.5px;
   &:hover {
-    border-bottom: 2px solid ${gossamer};
+    border-bottom: 2px solid ${melrose};
   }
   &.${activeClassName} {
-    border-bottom: 2px solid ${manatee};
+    border-bottom: 2px solid ${gossamer};
   }
   margin-top: 20px;
 `

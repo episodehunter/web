@@ -1,41 +1,60 @@
-import { Show, ShowResponse } from './show'
+import { Show } from './show'
+import { ShowResponse } from '../api/responses'
 
 const shows = [
   {
     id: 0,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/260449.jpg'
+    name: '',
+    tvdbId: 260449,
+    episodes: []
   },
   {
     id: 1,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/80379.jpg'
+    name: '',
+    tvdbId: 80379,
+    episodes: []
   },
   {
     id: 2,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/78804.jpg'
+    name: '',
+    tvdbId: 78804,
+    episodes: []
   },
   {
     id: 3,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/175001.jpg'
+    name: '',
+    tvdbId: 175001,
+    episodes: []
   },
   {
     id: 4,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/153021.jpg'
+    name: '',
+    tvdbId: 153021,
+    episodes: []
   },
   {
     id: 5,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/72449.jpg'
+    name: '',
+    tvdbId: 72449,
+    episodes: []
   },
   {
     id: 6,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/247897.jpg'
+    name: '',
+    tvdbId: 247897,
+    episodes: []
   },
   {
     id: 7,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/328724.jpg'
+    name: '',
+    tvdbId: 328724,
+    episodes: []
   },
   {
     id: 8,
-    src: 'https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/270915.jpg'
+    name: '',
+    tvdbId: 270915,
+    episodes: []
   }
 ]
 
