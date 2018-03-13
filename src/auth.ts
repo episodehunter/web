@@ -7,7 +7,7 @@ const AUTH_CONFIG = {
   clientId: 'VsaZiNxg8B4eK2mxmcjOI4y1v0A9ZGPL',
   domain: 'episodehunter.auth0.com',
   audience: 'https://api.episodehunter.tv',
-  callbackUrl: 'http://localhost:1337/login'
+  callbackUrl: 'http://localhost:1337/login_complete'
 }
 
 const AUTH_OPTIONS = {
@@ -38,10 +38,10 @@ export class Auth {
   )
 
   constructor() {
-    this.lock.on('authenticated', this.setSession)
-    this.lock.on('authorization_error', (err: Auth0Error) => {
-      console.log(err)
-    })
+    // this.lock.on('authenticated', this.setSession)
+    // this.lock.on('authorization_error', (err: Auth0Error) => {
+    //   console.log(err)
+    // })
   }
 
   isAuthenticated() {

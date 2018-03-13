@@ -8,6 +8,16 @@ import './styles/global'
 import { store } from './store/store'
 import { HomePage } from './pages/home'
 import { LoginPage } from './pages/login'
+import { Redirect } from 'react-router'
+import { shark } from './utils/colors'
+
+const LoginCompletePage = ({ location }: any) => {
+  const access_token = (location.hash.match(/#access_token=(.*?)&/) || [])[1]
+  const expires_in = '1230837120938129381902381092'
+  localStorage.setItem('access_token', access_token)
+  localStorage.setItem('expires_at', expires_in)
+  return <Redirect to="/" />
+}
 
 const App = () => (
   <Provider {...store}>
@@ -15,6 +25,7 @@ const App = () => (
       <Wrapper>
         <Route exact path="/" component={HomePage} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/login_complete" component={LoginCompletePage} />
       </Wrapper>
     </Router>
   </Provider>
@@ -22,6 +33,7 @@ const App = () => (
 
 const Wrapper = styled.div`
   height: 100%;
+  background-color: ${shark};
 `
 
 ReactDOM.render(<App />, document.getElementById('root'))
