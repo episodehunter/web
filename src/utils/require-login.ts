@@ -1,16 +1,20 @@
 import * as React from 'react'
-import { auth } from '../auth'
 import { history } from '../history'
+import { inject, observer } from 'mobx-react'
+import { User } from '../store/user'
 
 type ComponentType<P> = ((props: P) => JSX.Element) | React.ComponentClass<P>
+type ExtendedProps<P> = P & { user: User }
 
 export const requireLogin = <P>(Component: ComponentType<P>) => {
-  return (props: P) => {
-    if (!auth.isAuthenticated()) {
-      history.replace('/login')
-      return null
-    }
+  return inject('user')(
+    observer((props: ExtendedProps<P>) => {
+      if (!props.user.isAuthenticated) {
+        history.replace('/login')
+        return null
+      }
 
-    return React.createElement(Component, props)
-  }
+      return React.createElement(Component, props)
+    })
+  )
 }

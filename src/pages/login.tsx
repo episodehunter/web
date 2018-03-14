@@ -8,11 +8,16 @@ import { MainDescription } from '../components/main/main-description'
 import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
 import { Redirect } from 'react-router'
-import { auth } from '../auth'
 import { images } from '../images.config'
+import { User } from '../store/user'
+import { inject, observer } from 'mobx-react'
 
-export const LoginPage = () => {
-  if (auth.isAuthenticated()) {
+type Props = {
+  user: User
+}
+
+export const LoginPageComponent = ({ user }: Props) => {
+  if (user.isAuthenticated) {
     return <Redirect to="/" />
   }
   return (
@@ -35,6 +40,8 @@ export const LoginPage = () => {
     </Wrapper>
   )
 }
+
+export const LoginPage = inject('user')(observer(LoginPageComponent))
 
 const MainContent = styled.div`
   background-color: ${shark};

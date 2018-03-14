@@ -1,6 +1,6 @@
 import { useStrict } from 'mobx'
 import { ShowStore } from './show.store'
-import { User } from './user.store'
+import { User } from './user'
 
 useStrict(true)
 
