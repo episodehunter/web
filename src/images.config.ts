@@ -1,4 +1,4 @@
-const cfUrl = 'https://d1lolx4ilifvdr.cloudfront.net/'
+const cfUrl = 'https://d1lolx4ilifvdr.cloudfront.net'
 
 export const images = {
   poster: {
