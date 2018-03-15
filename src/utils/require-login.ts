@@ -10,7 +10,8 @@ export const requireLogin = <P>(Component: ComponentType<P>) => {
   return inject('user')(
     observer((props: ExtendedProps<P>) => {
       if (!props.user.isAuthenticated) {
-        history.replace('/login')
+        history.push('/login')
+        history.go(0)
         return null
       }
 

@@ -3,8 +3,21 @@ export const followingQuery = `{
 		id,
 		tvdbId,
 		name,
+		overview,
+		genre,
+		language,
+		network,
+		runtime,
+		ended,
+		imdbId,
+		firstAired,
+		airsDayOfWeek,
+		airsTime,
 		episodes {
-            name
+			name,
+			tvdbId,
+			firstAired,
+			season
 		}
 	}
 }`

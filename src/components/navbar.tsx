@@ -11,8 +11,10 @@ type Props = {
 
 const NavbarComponent = ({ user }: Props) => (
   <Wrapper>
-    <Item to="/">Following</Item>
-    <Item to="/upcoming">Upcoming</Item>
+    <Item exact to="/">
+      Upcoming
+    </Item>
+    <Item to="/following">Following</Item>
     <Item to="/popular">Popular</Item>
     <Item to="/search">Search</Item>
     <Image
