@@ -12,3 +12,8 @@ export type ShowResponse = {
 export type FollowingResponse = {
   following: ShowResponse[]
 }
+
+export type UserInfoResponse = {
+  nickname: string
+  picture: string
+}

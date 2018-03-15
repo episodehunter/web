@@ -3,31 +3,30 @@ import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { requireLogin } from '../utils/require-login'
 import { shark } from '../utils/colors'
-import { User } from '../store/user'
-import { Following } from '../components/following'
 import { Spinner } from '../components/spinner'
 import { Navbar } from '../components/navbar'
+import { FollowingComponent } from '../components/following'
+import { Following } from '../store/following'
 
 type Props = {
-  user?: User
+  following?: Following
 }
 
 export class HomePageComponent extends React.Component<Props> {
   componentWillMount() {
-    this.props.user!.fetchUserInfo()
-    this.props.user!.fetchFollowing()
+    this.props.following!.fetch()
   }
 
   render() {
     return (
       <Wrapper>
         <Navbar />
-        {this.props.user!.loading ? (
+        {this.props.following!.loading ? (
           <Loading>
             <Spinner />
           </Loading>
         ) : (
-          <Following following={this.props.user!.following} />
+          <FollowingComponent following={this.props.following!.following} />
         )}
       </Wrapper>
     )
@@ -35,7 +34,7 @@ export class HomePageComponent extends React.Component<Props> {
 }
 
 export const HomePage = requireLogin<Props>(
-  inject('user')(observer(HomePageComponent))
+  inject('following')(observer(HomePageComponent))
 )
 
 const Loading = styled.div`

@@ -6,7 +6,7 @@ import { Poster } from './poster'
 type Props = {
   following: Show[]
 }
-export const Following = ({ following }: Props) => (
+export const FollowingComponent = ({ following }: Props) => (
   <FollowingWrapper>
     {following.map(following => (
       <ShowWrapper key={following.id}>

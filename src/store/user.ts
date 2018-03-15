@@ -1,29 +1,21 @@
-import { FollowingResponse } from '../api/responses'
-import { api } from '../api'
-import { Show } from './show'
 import { observable, action, runInAction, computed } from 'mobx'
+import { authApi } from '../api/auth.api'
 
-type Token = string | null
-type ExpiresIn = string | null
-type UserInfoResponse = {
-  nickname: string
-  name: string
-  picture: string
-}
+type NullString = string | null
 
 export class User {
-  @observable token: Token = localStorage.getItem('token')
-  @observable expires: ExpiresIn = localStorage.getItem('expires')
-  @observable nickname: string
-  @observable name: string
-  @observable picture: string
-  @observable loading: boolean = false
-  @observable following: Show[]
+  @observable token: NullString = localStorage.getItem('token')
+  @observable expires: NullString = localStorage.getItem('expires')
+  @observable nickname: NullString = localStorage.getItem('nickname')
+  @observable picture: NullString = localStorage.getItem('picture')
 
   @action
-  setAuthentication = (token: Token, expiresIn: ExpiresIn) => {
+  setAuthentication = (token: string, expires: string) => {
+    localStorage.setItem('token', token)
+    localStorage.setItem('expires', expires)
     this.token = token
-    this.expires = expiresIn
+    this.expires = expires
+    this.fetchUserInfo()
   }
 
   @action
@@ -41,36 +33,13 @@ export class User {
 
   @action
   fetchUserInfo = () => {
-    return fetch('https://episodehunter.auth0.com/userinfo', {
-      headers: {
-        Authorization: 'Bearer ' + this.token
-      }
+    authApi.fetchUser().then(res => {
+      runInAction(() => {
+        localStorage.setItem('nickname', res.nickname)
+        localStorage.setItem('picture', res.picture)
+        this.nickname = res.nickname
+        this.picture = res.picture
+      })
     })
-      .then(resp => resp.json())
-      .then((res: UserInfoResponse) => {
-        runInAction(() => {
-          this.name = res.name
-          this.nickname = res.nickname
-          this.picture = res.picture
-        })
-      })
-  }
-
-  @action
-  fetchFollowing = () => {
-    this.loading = true
-
-    api.user
-      .fetchFollowing()
-      .then((res: FollowingResponse) => {
-        this.following = res.following.map(show =>
-          Show.createFromResponse(show)
-        )
-      })
-      .then(() => {
-        runInAction(() => {
-          this.loading = false
-        })
-      })
   }
 }
