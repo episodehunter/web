@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
-import { requireLogin } from '../utils/require-login'
 import { shark } from '../utils/colors'
 import { Spinner } from '../components/spinner'
 import { FollowingComponent } from '../components/following'
@@ -33,8 +32,8 @@ export class FollowingPageComponent extends React.Component<Props> {
   }
 }
 
-export const FollowingPage = requireLogin<Props>(
-  inject('following')(observer(FollowingPageComponent))
+export const FollowingPage = inject('following')(
+  observer(FollowingPageComponent)
 )
 
 const Loading = styled.div`
