@@ -1,9 +1,9 @@
-import { useStrict } from 'mobx'
+import { configure } from 'mobx'
 import { ShowStore } from './show.store'
 import { User } from './user'
 import { Following } from './following'
 
-useStrict(true)
+configure({ enforceActions: true })
 
 class Store {
   showStore = new ShowStore()
