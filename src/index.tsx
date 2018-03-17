@@ -14,28 +14,39 @@ import { LoginCompletePage } from './pages/login-complete.page'
 import { PopularPage } from './pages/popular.page'
 import { SearchPage } from './pages/search.page'
 import { Navbar } from './components/navbar'
+import { requireLogin } from './utils/require-login'
 
 type Props = {
   exact?: boolean
   path: string
   hideNavbar?: boolean
+  unauthed?: boolean
   component: any
 }
 
-const RouterWrapper = ({ exact, path, hideNavbar, component }: Props) => (
-  <Route
-    exact={exact}
-    path={path}
-    render={props => {
-      return (
-        <Wrapper>
-          {!hideNavbar && <Navbar />}
-          {React.createElement(component, props)}
-        </Wrapper>
-      )
-    }}
-  />
-)
+const RouterWrapper = ({
+  exact,
+  path,
+  hideNavbar,
+  unauthed,
+  component
+}: Props) => {
+  const RenderComponent = unauthed ? component : requireLogin<any>(component)
+  return (
+    <Route
+      exact={exact}
+      path={path}
+      render={props => {
+        return (
+          <Wrapper>
+            {!hideNavbar && <Navbar />}
+            {<RenderComponent {...props} />}
+          </Wrapper>
+        )
+      }}
+    />
+  )
+}
 
 const App = () => (
   <Provider {...store}>
@@ -45,9 +56,15 @@ const App = () => (
         <RouterWrapper path="/following" component={FollowingPage} />
         <RouterWrapper path="/popular" component={PopularPage} />
         <RouterWrapper path="/search" component={SearchPage} />
-        <RouterWrapper hideNavbar path="/login" component={LoginPage} />
         <RouterWrapper
           hideNavbar
+          unauthed
+          path="/login"
+          component={LoginPage}
+        />
+        <RouterWrapper
+          hideNavbar
+          unauthed
           path="/login_complete"
           component={LoginCompletePage}
         />
