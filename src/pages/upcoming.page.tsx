@@ -12,12 +12,6 @@ type Props = {
 }
 
 export class UpcomingPageComponent extends React.Component<Props> {
-  componentWillMount() {
-    if (!this.props.following!.fetched) {
-      this.props.following!.fetch()
-    }
-  }
-
   render() {
     const { following } = this.props
     return (

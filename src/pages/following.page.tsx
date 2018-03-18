@@ -11,12 +11,6 @@ type Props = {
 }
 
 export class FollowingPageComponent extends React.Component<Props> {
-  componentWillMount() {
-    if (!this.props.following!.fetched) {
-      this.props.following!.fetch()
-    }
-  }
-
   render() {
     return (
       <Wrapper>

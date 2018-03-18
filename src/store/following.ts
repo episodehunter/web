@@ -1,4 +1,10 @@
-import { action, observable, runInAction, computed } from 'mobx'
+import {
+  action,
+  observable,
+  runInAction,
+  computed,
+  onBecomeObserved
+} from 'mobx'
 import { Show } from './show'
 import { FollowingResponse, ShowResponse } from '../api/responses'
 import { api } from '../api/api'
@@ -15,6 +21,8 @@ export class Following {
       const following = JSON.parse(storageFollowing) as ShowResponse[]
       this.following = following.map(show => Show.createFromResponse(show))
     }
+
+    onBecomeObserved(this, 'following', this.fetch)
   }
 
   @computed
@@ -62,15 +70,21 @@ export class Following {
 
   @action
   fetch = () => {
+    if (this.fetched) {
+      return
+    }
+
     this.loading = true
 
     api
       .fetchFollowing()
       .then((res: FollowingResponse) => {
-        this.following = res.following.map(show =>
-          Show.createFromResponse(show)
-        )
-        localStorage.setItem('following', JSON.stringify(this.following))
+        runInAction(() => {
+          this.following = res.following.map(show =>
+            Show.createFromResponse(show)
+          )
+          localStorage.setItem('following', JSON.stringify(this.following))
+        })
       })
       .then(() => {
         runInAction(() => {
