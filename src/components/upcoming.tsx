@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Show } from '../store/show'
-import { melrose } from '../utils/colors'
 import { Poster } from './poster'
 import { observer } from 'mobx-react'
 
@@ -31,7 +30,7 @@ export const UpcomingComponent = ({ title, shows }: Props) => {
 export const Upcoming = observer(UpcomingComponent)
 
 const ShowWrapper = styled.div`
-  margin: 20px;
+  margin: 10px 20px 20px 0;
 `
 const ShowsWrapper = styled.div`
   display: grid;
@@ -45,7 +44,5 @@ const Timespan = styled.h1`
   font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
-  font-size: 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid ${melrose};
+  font-size: 14px;
 `
