@@ -10,7 +10,7 @@ type Props = {
 const MainShowsComponent = ({ showStore }: Props) => (
   <React.Fragment>
     {showStore!.shows.map(show => (
-      <Poster key={show.id} tvdbId={show.tvdbId} />
+      <Poster key={show.id} tvdbId={show.tvdbId} zoom />
     ))}
   </React.Fragment>
 )

@@ -28,7 +28,11 @@ export class UpcomingPageComponent extends React.Component<Props> {
           </Loading>
         ) : (
           <UpcomingWrapper>
-            <Upcoming title={'Just aired'} shows={following!.justAired} />
+            <Upcoming
+              title={'Just aired'}
+              shows={following!.justAired}
+              previous
+            />
             <Upcoming title={'Today'} shows={following!.today} />
             <Upcoming title={'The week ahead'} shows={following!.weekAhead} />
             <Upcoming title={'Upcoming'} shows={following!.upcoming} />

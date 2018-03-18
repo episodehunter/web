@@ -3,13 +3,16 @@ import styled from 'styled-components'
 import { Show } from '../store/show'
 import { Poster } from './poster'
 import { observer } from 'mobx-react'
+import { alabaster, melrose } from '../utils/colors'
+import { ddmmm } from '../utils/date.utils'
 
 type Props = {
   title: string
   shows: Show[]
+  previous?: boolean
 }
 
-export const UpcomingComponent = ({ title, shows }: Props) => {
+export const UpcomingComponent = ({ title, shows, previous }: Props) => {
   if (!shows.length) {
     return null
   }
@@ -20,6 +23,14 @@ export const UpcomingComponent = ({ title, shows }: Props) => {
         {shows!.map(show => (
           <ShowWrapper key={show.id}>
             <Poster tvdbId={show.tvdbId} />
+            <ShowInfoWrapper>
+              <ShowName>{show.name}</ShowName>
+              <EpisodeDate>
+                {previous
+                  ? ddmmm(new Date(show.previousEpisode.firstAired))
+                  : ddmmm(new Date(show.nextEpisode.firstAired))}
+              </EpisodeDate>
+            </ShowInfoWrapper>
           </ShowWrapper>
         ))}
       </ShowsWrapper>
@@ -29,6 +40,24 @@ export const UpcomingComponent = ({ title, shows }: Props) => {
 
 export const Upcoming = observer(UpcomingComponent)
 
+const ShowName = styled.div`
+  font-size: 12px;
+`
+
+const EpisodeDate = styled.div`
+  font-size: 14px;
+`
+
+const ShowInfoWrapper = styled.div`
+  color: ${alabaster};
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  margin: 5px 0 10px 0;
+  padding-right: 10px;
+  text-align: right;
+  border-right: 2px solid ${melrose};
+`
 const ShowWrapper = styled.div`
   margin: 10px 20px 20px 0;
 `
