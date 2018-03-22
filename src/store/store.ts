@@ -1,14 +1,18 @@
 import { configure } from 'mobx'
-import { ShowStore } from './show.store'
+import { FrontPageShowStore } from './front-page-show.store'
 import { User } from './user'
 import { Following } from './following'
+import { ShowStore } from './show.store'
 
 configure({ enforceActions: true })
 
+const showStore = new ShowStore()
+
 class Store {
-  showStore = new ShowStore()
+  frontPageShowStore = new FrontPageShowStore()
   user = new User()
-  following = new Following()
+  showStore = showStore
+  following = new Following(showStore)
 }
 
 export const store = new Store()

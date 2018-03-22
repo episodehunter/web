@@ -5,6 +5,7 @@ const gqlClient = new GraphQLClient(apiUrl + '/graphql')
 
 export const gqlRequest = <T>(
   query: string,
+  variables?: { [key: string]: any },
   _token: string | null = localStorage.getItem('token'),
   _client: GraphQLClient = gqlClient
 ): Promise<T> => {
@@ -13,7 +14,7 @@ export const gqlRequest = <T>(
       Authorization: 'Bearer ' + _token
     })
   }
-  return _client.request<T>(query).catch(err => {
+  return _client.request<T>(query, variables).catch(err => {
     console.log(err)
     return Promise.reject(err)
   })

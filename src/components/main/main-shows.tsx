@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { inject } from 'mobx-react'
-import { ShowStore } from '../../store/show.store'
+import { FrontPageShowStore } from '../../store/front-page-show.store'
 import { Poster } from '../poster'
 
 type Props = {
-  showStore?: ShowStore
+  showStore?: FrontPageShowStore
 }
 
 const MainShowsComponent = ({ showStore }: Props) => (
@@ -15,4 +15,4 @@ const MainShowsComponent = ({ showStore }: Props) => (
   </React.Fragment>
 )
 
-export const MainShows = inject('showStore')(MainShowsComponent)
+export const MainShows = inject('frontPageShowStore')(MainShowsComponent)

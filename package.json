@@ -8,7 +8,7 @@
     "test": "jest --watch",
     "test:ci": "jest",
     "build": "webpack --config webpack.prod.js && cp src/index.html build/index.html",
-    "dev": "webpack-dev-server --config webpack.dev.js"
+    "start": "webpack-dev-server --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
@@ -48,8 +48,10 @@
     "auth0-lock": "^11.4.0",
     "graphql-request": "^1.5.1",
     "history": "^4.7.2",
+    "idb-keyval": "^3.0.1",
     "mobx": "^4.1.0",
     "mobx-react": "^5.0.0",
+    "mobx-utils": "^4.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router": "^4.2.0",
