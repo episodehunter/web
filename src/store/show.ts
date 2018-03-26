@@ -1,9 +1,9 @@
+import { observable, computed } from 'mobx'
 import { Episode } from './episode'
 import { ShowResponse } from '../api/responses'
-import { computed, observable } from 'mobx'
 import { yyyymmdd } from '../utils/date.utils'
 
-export class Show {
+export class ShowStore {
   @observable id: number
   @observable tvdbId: number
   @observable name: string
@@ -18,8 +18,8 @@ export class Show {
   @observable airsTime: string
   @observable episodes: Episode[]
 
-  static createFromResponse = (showResponse: ShowResponse) => {
-    const show = new Show()
+  static createFromResponse(showResponse: ShowResponse) {
+    const show = new ShowStore()
     show.id = showResponse.id
     show.tvdbId = showResponse.tvdbId
     show.name = showResponse.name
@@ -32,8 +32,8 @@ export class Show {
     show.firstAired = showResponse.firstAired
     show.airsDayOfWeek = showResponse.airsDayOfWeek
     show.airsTime = showResponse.airsTime
-    show.episodes = showResponse.episodes.map(episode =>
-      Episode.createFromResponse(episode)
+    show.episodes = showResponse.episodes.map(episodeResponse =>
+      Episode.createFromResponse(episodeResponse)
     )
     return show
   }

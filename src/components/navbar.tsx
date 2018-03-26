@@ -3,10 +3,10 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { alabaster, gossamer, melrose } from '../utils/colors'
 import { inject, observer } from 'mobx-react'
-import { User } from '../store/user'
+import { UserStore } from '../store/user'
 
 type Props = {
-  user?: User
+  user?: UserStore
 }
 
 const NavbarComponent = ({ user }: Props) => (

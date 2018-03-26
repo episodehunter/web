@@ -2,25 +2,25 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { shark } from '../utils/colors'
-// import { Spinner } from '../components/spinner'
-// import { FollowingComponent } from '../components/following'
-import { Following } from '../store/following'
+import { Spinner } from '../components/spinner'
+import { FollowingComponent } from '../components/following'
+import { FollowingStore } from '../store/following'
 
 type Props = {
-  following?: Following
+  following: FollowingStore
 }
 
 export class FollowingPageComponent extends React.Component<Props> {
   render() {
     return (
       <Wrapper>
-        {/* {this.props.following!.loading ? (
+        {this.props.following.isLoading ? (
           <Loading>
             <Spinner />
           </Loading>
         ) : (
-          <FollowingComponent following={this.props.following!.following} />
-        )} */}
+          <FollowingComponent following={this.props.following.shows} />
+        )}
       </Wrapper>
     )
   }
@@ -30,10 +30,10 @@ export const FollowingPage = inject('following')(
   observer(FollowingPageComponent)
 )
 
-// const Loading = styled.div`
-//   text-align: center;
-//   margin-top: 100px;
-// `
+const Loading = styled.div`
+  text-align: center;
+  margin-top: 100px;
+`
 
 const Wrapper = styled.div`
   height: 100%;

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { history } from '../history'
 import { inject, observer } from 'mobx-react'
-import { User } from '../store/user'
+import { UserStore } from '../store/user'
 
 type ComponentType<P> = ((props: P) => JSX.Element) | React.ComponentClass<P>
-type ExtendedProps<P> = P & { user: User }
+type ExtendedProps<P> = P & { user: UserStore }
 
 export const requireLogin = <P>(Component: ComponentType<P>) => {
   return inject('user')(

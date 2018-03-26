@@ -1,18 +1,23 @@
 import { configure } from 'mobx'
-import { FrontPageShowStore } from './front-page-show.store'
-import { User } from './user'
-import { Following } from './following'
-import { ShowStore } from './show.store'
+import { UserStore } from './user'
+import { FollowingStore } from './following'
+import { ShowsStore } from './show.store'
+import { UpcomingStore } from './upcoming'
 
 configure({ enforceActions: true })
 
-const showStore = new ShowStore()
-
 class Store {
-  frontPageShowStore = new FrontPageShowStore()
-  user = new User()
-  showStore = showStore
-  following = new Following(showStore)
+  showStore = new ShowsStore()
+  following = new FollowingStore(this.showStore)
+  upcoming = new UpcomingStore(this.following)
+  user = new UserStore(this.following)
+
+  constructor() {
+    // MOVE THIS
+    if (this.user.isAuthenticated) {
+      this.following.fetch()
+    }
+  }
 }
 
 export const store = new Store()

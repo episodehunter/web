@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Show } from '../store/show'
+import { ShowStore } from '../store/show'
 import { Poster } from './poster'
 import { observer } from 'mobx-react'
 import { alabaster, melrose } from '../utils/colors'
@@ -8,7 +8,7 @@ import { ddmmm } from '../utils/date.utils'
 
 type Props = {
   title: string
-  shows: Show[]
+  shows: ShowStore[]
   previous?: boolean
 }
 

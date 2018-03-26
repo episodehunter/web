@@ -1,12 +1,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Show } from '../store/show'
+import { ShowStore } from '../store/show'
 import { Poster } from './poster'
+import { observer } from 'mobx-react'
 
 type Props = {
-  following: Show[]
+  following: ShowStore[]
 }
-export const FollowingComponent = ({ following }: Props) => (
+export const FollowingComponent = observer(({ following }: Props) => (
   <FollowingWrapper>
     {following.map(following => (
       <ShowWrapper key={following.id}>
@@ -14,7 +15,7 @@ export const FollowingComponent = ({ following }: Props) => (
       </ShowWrapper>
     ))}
   </FollowingWrapper>
-)
+))
 
 const ShowWrapper = styled.div`
   margin: 20px;

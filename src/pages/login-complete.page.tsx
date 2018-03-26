@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { Redirect } from 'react-router'
 import { inject } from 'mobx-react'
-import { User } from '../store/user'
+import { UserStore } from '../store/user'
 import { getTokenFromHash, getExpiresFromHash } from '../utils/http.utils'
 
 type Props = {
   location: Location
-  user: User
+  user: UserStore
 }
 
 export const LoginCompletePageComponent = ({ location, user }: Props) => {

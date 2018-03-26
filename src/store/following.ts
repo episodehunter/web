@@ -1,37 +1,61 @@
-import { action, observable, computed, onBecomeObserved } from 'mobx'
-import { fromPromise } from 'mobx-utils'
+import { action, observable } from 'mobx'
 import { FollowingResponse } from '../api/responses'
 import { api } from '../api/api'
-import { ShowStore } from './show.store'
+import { ShowsStore } from './show.store'
+import { ShowStore } from './show'
 
-export class Following {
-  private showStore: ShowStore
+export class FollowingStore {
+  showStore: ShowsStore
   @observable following: number[] = []
-  @observable loading = true
+  @observable shows: ShowStore[] = []
+  @observable isLoading = false
 
-  constructor(showStore: ShowStore) {
+  constructor(showStore: ShowsStore) {
     this.showStore = showStore
-    onBecomeObserved(this, 'loading', () => this.fetch())
-  }
-
-  @computed
-  get shows() {
-    return fromPromise(
-      Promise.all(this.following.map(id => this.showStore.getShow(id)))
-    )
   }
 
   @action
   fetch = () => {
-    this.loading = true
+    this.isLoading = true
     return api
       .fetchFollowing()
       .then(
-        action(
-          (res: FollowingResponse) =>
-            (this.following = res.following.map(result => result.id))
-        )
+        action((res: FollowingResponse) => {
+          this.following = res.following.map(result => result.id)
+          this.following.forEach(id =>
+            this.showStore.getShow(id).then((show: ShowStore) => {
+              this.addShow(show)
+            })
+          )
+        })
       )
-      .then(action(() => (this.loading = false)))
+      .then(action(() => (this.isLoading = false)))
+  }
+
+  @action
+  addShow = (newShow: ShowStore) => {
+    if (this.shows.some(show => show.id === newShow.id)) {
+      this.shows = this.shows.map(
+        show => (show.id === newShow.id ? newShow : show)
+      )
+    } else {
+      this.shows.push(newShow)
+    }
+  }
+
+  removeShow = (id: number) => {
+    this.shows = this.shows.filter(show => show.id !== id)
+  }
+
+  follow = (id: number) => {
+    this.following.push(id)
+    this.showStore.getShow(id).then((show: ShowStore) => {
+      this.addShow(show)
+    })
+  }
+
+  stopFollowing = (id: number) => {
+    this.following = this.following.filter(fid => fid !== id)
+    this.removeShow(id)
   }
 }

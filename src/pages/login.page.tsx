@@ -9,11 +9,11 @@ import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
 import { Redirect } from 'react-router'
 import { images } from '../images.config'
-import { User } from '../store/user'
+import { UserStore } from '../store/user'
 import { inject, observer } from 'mobx-react'
 
 type Props = {
-  user: User
+  user: UserStore
 }
 
 export const LoginPageComponent = ({ user }: Props) => {
