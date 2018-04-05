@@ -6,5 +6,8 @@ export const images = {
   },
   fanart: {
     big: (tvdbId: number) => `${cfUrl}/fanart/${tvdbId}.jpg`
+  },
+  episode: {
+    small: (tvdbId: number) => `${cfUrl}/episode/${tvdbId}.jpg`
   }
 }

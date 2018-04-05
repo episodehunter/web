@@ -13,6 +13,7 @@ import { LoginPage } from './pages/login.page'
 import { LoginCompletePage } from './pages/login-complete.page'
 import { PopularPage } from './pages/popular.page'
 import { SearchPage } from './pages/search.page'
+import { ShowPage } from './pages/show.page'
 import { Navbar } from './components/navbar'
 import { requireLogin } from './utils/require-login'
 
@@ -56,6 +57,7 @@ const App = () => (
         <RouterWrapper path="/following" component={FollowingPage} />
         <RouterWrapper path="/popular" component={PopularPage} />
         <RouterWrapper path="/search" component={SearchPage} />
+        <RouterWrapper path="/show/:id" component={ShowPage} />
         <RouterWrapper
           hideNavbar
           unauthed

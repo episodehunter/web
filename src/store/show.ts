@@ -7,6 +7,7 @@ export class ShowStore {
   @observable id: number
   @observable tvdbId: number
   @observable name: string
+  @observable overview: string
   @observable genre: string[]
   @observable language: string
   @observable network: string
@@ -23,6 +24,7 @@ export class ShowStore {
     show.id = showResponse.id
     show.tvdbId = showResponse.tvdbId
     show.name = showResponse.name
+    show.overview = showResponse.overview
     show.genre = showResponse.genre
     show.language = showResponse.language
     show.network = showResponse.network
@@ -54,5 +56,14 @@ export class ShowStore {
       episode => episode.firstAired < now
     )
     return previousEpisodes[0]
+  }
+
+  @computed
+  get seasons() {
+    return [...new Set(this.episodes.map(episode => episode.season))]
+  }
+
+  episodesPerSeason = (season: number) => {
+    return this.episodes.filter(episode => episode.season === season)
   }
 }

@@ -19,6 +19,7 @@ export const showQuery = gql`
     show(id: $id) {
       id
       name
+      overview
       tvdbId
       overview
       genre

@@ -7,13 +7,13 @@ import { UpcomingStore } from './upcoming'
 configure({ enforceActions: true })
 
 class Store {
-  showStore = new ShowsStore()
-  following = new FollowingStore(this.showStore)
+  showsStore = new ShowsStore()
+  following = new FollowingStore(this.showsStore)
   upcoming = new UpcomingStore(this.following)
   user = new UserStore(this.following)
 
   constructor() {
-    // MOVE THIS
+    // TODO: MOVE THIS
     if (this.user.isAuthenticated) {
       this.following.fetch()
     }

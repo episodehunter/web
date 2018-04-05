@@ -5,6 +5,7 @@ import { Poster } from './poster'
 import { observer } from 'mobx-react'
 import { alabaster, melrose } from '../utils/colors'
 import { ddmmm } from '../utils/date.utils'
+import { UnstyledLink } from './unstyled-link'
 
 type Props = {
   title: string
@@ -21,7 +22,7 @@ export const UpcomingComponent = ({ title, shows, previous }: Props) => {
       <Timespan>{title}</Timespan>
       <ShowsWrapper>
         {shows!.map(show => (
-          <ShowWrapper key={show.id}>
+          <ShowWrapper key={show.id} to={`/show/${show.id}`}>
             <Poster tvdbId={show.tvdbId} />
             <ShowInfoWrapper>
               <ShowName>{show.name}</ShowName>
@@ -58,7 +59,7 @@ const ShowInfoWrapper = styled.div`
   text-align: right;
   border-right: 2px solid ${melrose};
 `
-const ShowWrapper = styled.div`
+const ShowWrapper = styled(UnstyledLink)`
   margin: 10px 20px 20px 0;
 `
 const ShowsWrapper = styled.div`

@@ -9,6 +9,7 @@ export type ShowResponse = {
   id: number
   tvdbId: number
   name: string
+  overview: string
   genre: string[]
   language: string
   network: string
