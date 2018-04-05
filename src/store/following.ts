@@ -1,61 +1,48 @@
-import { action, observable } from 'mobx'
-import { FollowingResponse } from '../api/responses'
+import { action, observable, computed, flow } from 'mobx'
 import { api } from '../api/api'
-import { ShowsStore } from './show.store'
-import { ShowStore } from './show'
+import { ModelStatus } from '../enum/model-status'
+import { ShowStore } from './show.store'
 
-export class FollowingStore {
-  showStore: ShowsStore
-  @observable following: number[] = []
-  @observable shows: ShowStore[] = []
-  @observable isLoading = false
+export class Following {
+  private showStore: ShowStore
+  @observable followingShowsId: number[] = []
+  @observable status = ModelStatus.notLoaded
 
-  constructor(showStore: ShowsStore) {
+  constructor(showStore: ShowStore) {
     this.showStore = showStore
   }
 
-  @action
-  fetch = () => {
-    this.isLoading = true
-    return api
-      .fetchFollowing()
-      .then(
-        action((res: FollowingResponse) => {
-          this.following = res.following.map(result => result.id)
-          this.following.forEach(id =>
-            this.showStore.getShow(id).then((show: ShowStore) => {
-              this.addShow(show)
-            })
-          )
-        })
-      )
-      .then(action(() => (this.isLoading = false)))
+  @computed
+  get shows() {
+    return this.followingShowsId.map(id => this.showStore.getShow(id))
   }
 
-  @action
-  addShow = (newShow: ShowStore) => {
-    if (this.shows.some(show => show.id === newShow.id)) {
-      this.shows = this.shows.map(
-        show => (show.id === newShow.id ? newShow : show)
+  @computed
+  get isLoading() {
+    return this.status === ModelStatus.loading
+  }
+
+  updateFollwing = flow(function*(this: Following) {
+    this.status = ModelStatus.loading
+    try {
+      this.followingShowsId = yield api.fetchFollowing()
+      yield Promise.all(
+        this.followingShowsId.map(id => this.showStore.addShow(id))
       )
-    } else {
-      this.shows.push(newShow)
+      this.status = ModelStatus.loaded
+    } catch (error) {
+      console.error(error)
+      this.status = ModelStatus.error
     }
-  }
+  })
 
-  removeShow = (id: number) => {
-    this.shows = this.shows.filter(show => show.id !== id)
-  }
-
+  @action
   follow = (id: number) => {
-    this.following.push(id)
-    this.showStore.getShow(id).then((show: ShowStore) => {
-      this.addShow(show)
-    })
+    this.followingShowsId.push(id)
   }
 
-  stopFollowing = (id: number) => {
-    this.following = this.following.filter(fid => fid !== id)
-    this.removeShow(id)
+  @action
+  unfollowing = (id: number) => {
+    this.followingShowsId = this.followingShowsId.filter(fid => fid !== id)
   }
 }

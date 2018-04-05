@@ -1,11 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ShowStore } from '../store/show'
+import { Show } from '../store/show'
 import { Poster } from './poster'
 import { observer } from 'mobx-react'
 
 type Props = {
-  following: ShowStore[]
+  following: Show[]
 }
 export const FollowingComponent = observer(({ following }: Props) => (
   <FollowingWrapper>

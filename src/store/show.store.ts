@@ -1,19 +1,25 @@
-import { request } from '../request'
-import { ShowResponse } from '../api/responses'
-import { ShowStore } from './show'
+import { action } from 'mobx'
+import { Show } from './show'
 
-export class ShowsStore {
-  shows: Map<number, ShowStore> = new Map()
+export class ShowStore {
+  shows: Map<number, Show> = new Map()
 
   getShow(id: number) {
-    const fetchingShow = request.show(id).then((showResponse: ShowResponse) => {
-      const show = ShowStore.createFromResponse(showResponse)
-      this.shows.set(id, show)
-      return show
-    })
-    if (this.shows.has(id)) {
-      return Promise.resolve(this.shows.get(id))
+    if (!this.shows.has(id)) {
+      console.error('Could not find show: ' + id)
     }
-    return fetchingShow
+    return this.shows.get(id)
+  }
+
+  @action
+  addShow(id: number) {
+    const show = this.shows.get(id)
+    if (!show) {
+      const newShow = new Show(id)
+      this.shows.set(id, newShow)
+      return newShow.load()
+    } else {
+      return show.load()
+    }
   }
 }

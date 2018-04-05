@@ -30,6 +30,7 @@ export class UpcomingPageComponent extends React.Component<Props> {
             <Upcoming title={'Today'} shows={upcoming.today} />
             <Upcoming title={'The week ahead'} shows={upcoming.weekAhead} />
             <Upcoming title={'Upcoming'} shows={upcoming.upcoming} />
+            <Upcoming title={'TBA'} shows={upcoming.tba} />
           </UpcomingWrapper>
         )}
       </Wrapper>

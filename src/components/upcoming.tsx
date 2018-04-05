@@ -1,15 +1,16 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ShowStore } from '../store/show'
+import { Show } from '../store/show'
 import { Poster } from './poster'
 import { observer } from 'mobx-react'
 import { alabaster, melrose } from '../utils/colors'
 import { ddmmm } from '../utils/date.utils'
 import { UnstyledLink } from './unstyled-link'
+import { Episode } from '../store/episode'
 
 type Props = {
   title: string
-  shows: ShowStore[]
+  shows: Show[]
   previous?: boolean
 }
 
@@ -21,16 +22,14 @@ export const UpcomingComponent = ({ title, shows, previous }: Props) => {
     <UpcomingWrapper>
       <Timespan>{title}</Timespan>
       <ShowsWrapper>
-        {shows!.map(show => (
+        {shows.map(show => (
           <ShowWrapper key={show.id} to={`/show/${show.id}`}>
             <Poster tvdbId={show.tvdbId} />
             <ShowInfoWrapper>
               <ShowName>{show.name}</ShowName>
-              <EpisodeDate>
-                {previous
-                  ? ddmmm(new Date(show.previousEpisode.firstAired))
-                  : ddmmm(new Date(show.nextEpisode.firstAired))}
-              </EpisodeDate>
+              <EpisodeDate
+                episode={previous ? show.previousEpisode : show.nextEpisode}
+              />
             </ShowInfoWrapper>
           </ShowWrapper>
         ))}
@@ -41,11 +40,23 @@ export const UpcomingComponent = ({ title, shows, previous }: Props) => {
 
 export const Upcoming = observer(UpcomingComponent)
 
+const EpisodeDate = ({ episode }: { episode?: Episode }) => {
+  if (!episode) {
+    return <EpisodeDateStyling>TBA</EpisodeDateStyling>
+  } else {
+    return (
+      <EpisodeDateStyling>
+        {ddmmm(new Date(episode.firstAired))}
+      </EpisodeDateStyling>
+    )
+  }
+}
+
 const ShowName = styled.div`
   font-size: 12px;
 `
 
-const EpisodeDate = styled.div`
+const EpisodeDateStyling = styled.div`
   font-size: 14px;
 `
 

@@ -1,21 +1,21 @@
 import { configure } from 'mobx'
 import { UserStore } from './user'
-import { FollowingStore } from './following'
-import { ShowsStore } from './show.store'
+import { Following } from './following'
+import { ShowStore } from './show.store'
 import { UpcomingStore } from './upcoming'
 
 configure({ enforceActions: true })
 
 class Store {
-  showsStore = new ShowsStore()
-  following = new FollowingStore(this.showsStore)
+  showStore = new ShowStore()
+  following = new Following(this.showStore)
   upcoming = new UpcomingStore(this.following)
   user = new UserStore(this.following)
 
   constructor() {
     // TODO: MOVE THIS
     if (this.user.isAuthenticated) {
-      this.following.fetch()
+      this.following.updateFollwing()
     }
   }
 }

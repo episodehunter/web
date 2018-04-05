@@ -1,17 +1,17 @@
 import { observable, action, runInAction, computed } from 'mobx'
 import { authApi } from '../api/auth.api'
-import { FollowingStore } from './following'
+import { Following } from './following'
 
 type NullString = string | null
 
 export class UserStore {
-  following: FollowingStore
+  following: Following
   @observable token: NullString = localStorage.getItem('token')
   @observable expires: NullString = localStorage.getItem('expires')
   @observable nickname: NullString = localStorage.getItem('nickname')
   @observable picture: NullString = localStorage.getItem('picture')
 
-  constructor(following: FollowingStore) {
+  constructor(following: Following) {
     this.following = following
   }
 
@@ -22,7 +22,6 @@ export class UserStore {
     this.token = token
     this.expires = expires
     this.fetchUserInfo()
-    this.following.fetch()
   }
 
   @action

@@ -4,10 +4,10 @@ import { inject, observer } from 'mobx-react'
 import { shark } from '../utils/colors'
 import { Spinner } from '../components/spinner'
 import { FollowingComponent } from '../components/following'
-import { FollowingStore } from '../store/following'
+import { Following } from '../store/following'
 
 type Props = {
-  following: FollowingStore
+  following: Following
 }
 
 export class FollowingPageComponent extends React.Component<Props> {

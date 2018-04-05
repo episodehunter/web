@@ -1,9 +1,10 @@
-import { observable, computed } from 'mobx'
+import { observable, computed, action } from 'mobx'
 import { Episode } from './episode'
 import { ShowResponse } from '../api/responses'
 import { yyyymmdd } from '../utils/date.utils'
+import { request } from '../request'
 
-export class ShowStore {
+export class Show {
   @observable id: number
   @observable tvdbId: number
   @observable name: string
@@ -19,43 +20,68 @@ export class ShowStore {
   @observable airsTime: string
   @observable episodes: Episode[]
 
-  static createFromResponse(showResponse: ShowResponse) {
-    const show = new ShowStore()
-    show.id = showResponse.id
-    show.tvdbId = showResponse.tvdbId
-    show.name = showResponse.name
-    show.overview = showResponse.overview
-    show.genre = showResponse.genre
-    show.language = showResponse.language
-    show.network = showResponse.network
-    show.runtime = showResponse.runtime
-    show.ended = showResponse.ended
-    show.imdbId = showResponse.imdbId
-    show.firstAired = showResponse.firstAired
-    show.airsDayOfWeek = showResponse.airsDayOfWeek
-    show.airsTime = showResponse.airsTime
-    show.episodes = showResponse.episodes.map(episodeResponse =>
+  constructor(id: number) {
+    this.id = id
+  }
+
+  load(): any {
+    return request
+      .show(this.id)
+      .then(action((showResponse: ShowResponse) => this.update(showResponse)))
+  }
+
+  @action
+  update(showResponse: ShowResponse) {
+    this.tvdbId = showResponse.tvdbId
+    this.name = showResponse.name
+    this.overview = showResponse.overview
+    this.genre = showResponse.genre
+    this.language = showResponse.language
+    this.network = showResponse.network
+    this.runtime = showResponse.runtime
+    this.ended = showResponse.ended
+    this.imdbId = showResponse.imdbId
+    this.firstAired = showResponse.firstAired
+    this.airsDayOfWeek = showResponse.airsDayOfWeek
+    this.airsTime = showResponse.airsTime
+    this.episodes = showResponse.episodes.map(episodeResponse =>
       Episode.createFromResponse(episodeResponse)
     )
-    return show
+  }
+
+  @computed
+  get isAirDateForNextEpisodeDateUnknown() {
+    return !this.ended && !Boolean(this.nextEpisode)
   }
 
   @computed
   get nextEpisode() {
     const now = yyyymmdd(new Date())
-    const futureEpisodes = this.episodes.filter(
-      episode => episode.firstAired > now
-    )
-    return futureEpisodes[0]
+    return this.episodes.reduce((prevEpisode, episode) => {
+      if (
+        episode.firstAired &&
+        episode.firstAired > now &&
+        (!prevEpisode || episode.firstAired < prevEpisode.firstAired)
+      ) {
+        return episode
+      }
+      return prevEpisode
+    }, null)
   }
 
   @computed
   get previousEpisode() {
     const now = yyyymmdd(new Date())
-    const previousEpisodes = this.episodes.filter(
-      episode => episode.firstAired < now
-    )
-    return previousEpisodes[0]
+    return this.episodes.reduce((prevEpisode, episode) => {
+      if (
+        episode.firstAired &&
+        episode.firstAired <= now &&
+        (!prevEpisode || episode.firstAired > prevEpisode.firstAired)
+      ) {
+        return episode
+      }
+      return prevEpisode
+    })
   }
 
   @computed

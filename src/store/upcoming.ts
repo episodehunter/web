@@ -1,11 +1,11 @@
-import { FollowingStore } from './following'
+import { Following } from './following'
 import { yyyymmdd } from '../utils/date.utils'
 import { computed } from 'mobx'
 
 export class UpcomingStore {
-  following: FollowingStore
+  following: Following
 
-  constructor(following: FollowingStore) {
+  constructor(following: Following) {
     this.following = following
   }
 
@@ -21,39 +21,45 @@ export class UpcomingStore {
 
   @computed
   get justAired() {
-    const fiveDaysAgo = new Date()
-    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
+    const fiveDaysAgoDate = new Date()
+    fiveDaysAgoDate.setDate(fiveDaysAgoDate.getDate() - 5)
+    const fiveDaysAgo = yyyymmdd(fiveDaysAgoDate)
     return this.shows.filter(
-      show => show.previousEpisode.firstAired > yyyymmdd(fiveDaysAgo)
+      show =>
+        show.previousEpisode && show.previousEpisode.firstAired > fiveDaysAgo
     )
   }
 
   @computed
   get today() {
-    const today = new Date()
+    const today = yyyymmdd(new Date())
     return this.shows.filter(
-      show =>
-        show.nextEpisode && show.nextEpisode.firstAired === yyyymmdd(today)
+      show => show.nextEpisode && show.nextEpisode.firstAired === today
     )
   }
 
   @computed
   get weekAhead() {
-    const weekAhead = new Date()
-    weekAhead.setDate(weekAhead.getDate() + 7)
+    const weekAheadDate = new Date()
+    weekAheadDate.setDate(weekAheadDate.getDate() + 7)
+    const weekAhead = yyyymmdd(weekAheadDate)
     return this.shows.filter(
-      show =>
-        show.nextEpisode && show.nextEpisode.firstAired <= yyyymmdd(weekAhead)
+      show => show.nextEpisode && show.nextEpisode.firstAired <= weekAhead
     )
   }
 
   @computed
   get upcoming() {
-    const weekAhead = new Date()
-    weekAhead.setDate(weekAhead.getDate() + 7)
+    const weekAheadDate = new Date()
+    weekAheadDate.setDate(weekAheadDate.getDate() + 7)
+    const weekAhead = yyyymmdd(weekAheadDate)
     return this.shows.filter(
-      show =>
-        show.nextEpisode && show.nextEpisode.firstAired > yyyymmdd(weekAhead)
+      show => show.nextEpisode && show.nextEpisode.firstAired > weekAhead
     )
+  }
+
+  @computed
+  get tba() {
+    return this.shows.filter(show => show.isAirDateForNextEpisodeDateUnknown)
   }
 }
