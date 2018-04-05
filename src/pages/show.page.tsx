@@ -1,10 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { match } from 'react-router'
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { observer, inject } from 'mobx-react'
-import { ShowsStore } from '../store/show.store'
-import { ShowStore } from '../store/show'
+import { ShowStore } from '../store/show.store'
 import { Spinner } from '../components/spinner'
 import { images } from '../images.config'
 import { alabaster, melrose, gossamer } from '../utils/colors'
@@ -12,21 +11,15 @@ import { Episode } from '../components/episode'
 
 type Props = {
   match: match<{ id: string }>
-  showsStore?: ShowsStore
+  showStore?: ShowStore
 }
 
 class ShowPageComponent extends React.Component<Props> {
-  @observable show: ShowStore
   @observable selectedSeason: number
 
-  componentDidMount() {
-    const { match, showsStore } = this.props
-    showsStore.getShow(Number(match.params.id)).then(
-      action((show: ShowStore) => {
-        this.show = show
-        this.selectedSeason = this.show.seasons[0]
-      })
-    )
+  @computed
+  get show() {
+    return this.props.showStore.getShow(Number(this.props.match.params.id))
   }
 
   @action
@@ -74,7 +67,7 @@ class ShowPageComponent extends React.Component<Props> {
   }
 }
 
-export const ShowPage = inject('showsStore')(observer(ShowPageComponent))
+export const ShowPage = inject('showStore')(observer(ShowPageComponent))
 
 const EpisodesWrapper = styled.div`
   display: grid;
