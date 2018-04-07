@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const merge = require('webpack-merge')
 const common = require('./webpack.base.js')
 
@@ -12,5 +13,6 @@ module.exports = merge(common, {
     historyApiFallback: {
       index: 'index.html'
     }
-  }
+  },
+  plugins: [new webpack.NamedModulesPlugin()]
 })
