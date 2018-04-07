@@ -6,7 +6,9 @@ export class ShowStore {
 
   getShow(id: number) {
     if (!this.shows.has(id)) {
-      console.error('Could not find show: ' + id)
+      const newShow = this.createShow(id)
+      newShow.load()
+      return newShow
     }
     return this.shows.get(id)
   }
@@ -15,11 +17,17 @@ export class ShowStore {
   addShow(id: number) {
     const show = this.shows.get(id)
     if (!show) {
-      const newShow = new Show(id)
-      this.shows.set(id, newShow)
+      const newShow = this.createShow(id)
       return newShow.load()
     } else {
       return show.load()
     }
+  }
+
+  @action
+  createShow(id: number) {
+    const newShow = new Show(id)
+    this.shows.set(id, newShow)
+    return newShow
   }
 }

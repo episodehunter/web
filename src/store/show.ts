@@ -3,8 +3,10 @@ import { Episode } from './episode'
 import { ShowResponse } from '../api/responses'
 import { yyyymmdd } from '../utils/date.utils'
 import { request } from '../request'
+import { ModelStatus } from '../enum/model-status'
 
 export class Show {
+  @observable status: ModelStatus = ModelStatus.notLoaded
   @observable id: number
   @observable tvdbId: number
   @observable name: string
@@ -25,9 +27,17 @@ export class Show {
   }
 
   load(): any {
-    return request
-      .show(this.id)
-      .then(action((showResponse: ShowResponse) => this.update(showResponse)))
+    if (this.status === ModelStatus.loaded) {
+      this.status = ModelStatus.updating
+    } else {
+      this.status = ModelStatus.loading
+    }
+    return request.show(this.id).then(
+      action((showResponse: ShowResponse) => {
+        this.update(showResponse)
+        this.status = ModelStatus.loaded
+      })
+    )
   }
 
   @action
@@ -91,5 +101,10 @@ export class Show {
 
   episodesPerSeason = (season: number) => {
     return this.episodes.filter(episode => episode.season === season)
+  }
+
+  @computed
+  get isLoading() {
+    return this.status === ModelStatus.loading
   }
 }

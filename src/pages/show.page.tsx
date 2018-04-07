@@ -28,8 +28,12 @@ class ShowPageComponent extends React.Component<Props> {
   }
 
   render() {
-    if (!this.show) {
-      return <Spinner />
+    if (this.show.isLoading) {
+      return (
+        <Loading>
+          <Spinner />
+        </Loading>
+      )
     }
     return (
       <Wrapper>
@@ -60,7 +64,7 @@ class ShowPageComponent extends React.Component<Props> {
         <EpisodesWrapper>
           {this.show
             .episodesPerSeason(this.selectedSeason)
-            .map(episode => <Episode episode={episode} />)}
+            .map(episode => <Episode key={episode.tvdbId} episode={episode} />)}
         </EpisodesWrapper>
       </Wrapper>
     )
@@ -68,6 +72,11 @@ class ShowPageComponent extends React.Component<Props> {
 }
 
 export const ShowPage = inject('showStore')(observer(ShowPageComponent))
+
+const Loading = styled.div`
+  text-align: center;
+  margin-top: 100px;
+`
 
 const EpisodesWrapper = styled.div`
   display: grid;
