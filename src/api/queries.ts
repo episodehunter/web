@@ -36,6 +36,7 @@ export const showQuery = gql`
         tvdbId
         firstAired
         season
+        episode
       }
     }
   }

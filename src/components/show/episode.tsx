@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Episode as EpisodeType } from '../store/episode'
-import { images } from '../images.config'
-import { alabaster } from '../utils/colors'
+import { Episode as EpisodeType } from '../../store/episode'
+import { images } from '../../images.config'
+import { alabaster } from '../../utils/colors'
+import { zeroPad } from '../../utils/number'
 
 type Props = {
   episode: EpisodeType
@@ -13,7 +14,7 @@ export const Episode = ({ episode }: Props) => (
       <Poster src={images.episode.small(episode.tvdbId)} />
     </PosterWrapper>
     <DescriptionWrapper>
-      <Name>{episode.name}</Name>
+      <Name>{zeroPad(episode.episode) + ' ' + episode.name}</Name>
     </DescriptionWrapper>
   </EpisodeWrapper>
 )
@@ -23,9 +24,7 @@ const EpisodeWrapper = styled.div`
 `
 
 const PosterWrapper = styled.div``
-const DescriptionWrapper = styled.div`
-  margin: 0 10px;
-`
+const DescriptionWrapper = styled.div``
 
 const Name = styled.div`
   font-size: 12px;

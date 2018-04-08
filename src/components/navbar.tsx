@@ -62,4 +62,8 @@ const Item = styled(NavLink).attrs({
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 `

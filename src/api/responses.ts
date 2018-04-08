@@ -3,6 +3,7 @@ export type EpisodeResponse = {
   tvdbId: number
   firstAired: string
   season: number
+  episode: number
 }
 
 export type ShowResponse = {

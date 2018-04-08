@@ -6,6 +6,7 @@ export class Episode {
   @observable tvdbId: number
   @observable firstAired: string
   @observable season: number
+  @observable episode: number
 
   static createFromResponse = (episodeResponse: EpisodeResponse) => {
     const episode = new Episode()
@@ -13,6 +14,7 @@ export class Episode {
     episode.tvdbId = episodeResponse.tvdbId
     episode.firstAired = episodeResponse.firstAired
     episode.season = episodeResponse.season
+    episode.episode = episodeResponse.episode
     return episode
   }
 }
