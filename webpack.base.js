@@ -1,12 +1,12 @@
 const path = require('path')
 
 module.exports = {
-  entry: ['@babel/polyfill', './src/index.tsx'],
+  entry: ['./src/index.tsx'],
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: ['babel-loader', 'ts-loader'],
+        use: ['babel-loader'],
         exclude: /node_modules/
       }
     ]

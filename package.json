@@ -8,7 +8,7 @@
     "test": "jest --watch",
     "test:ci": "jest",
     "build": "webpack --config webpack.prod.js && cp src/index.html build/index.html",
-    "start": "webpack-dev-server --hot --inline --config webpack.dev.js"
+    "start": "webpack-dev-server --hot --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
@@ -28,9 +28,10 @@
   "homepage": "https://github.com/episodehunter/web#readme",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.44",
-    "@babel/polyfill": "^7.0.0-beta.44",
-    "@babel/preset-env": "^7.0.0-beta.44",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.44",
+    "@babel/plugin-proposal-decorators": "^7.0.0-beta.44",
     "@babel/preset-react": "^7.0.0-beta.44",
+    "@babel/preset-typescript": "^7.0.0-beta.44",
     "@types/history": "^4.6.2",
     "@types/jest": "^22.2.0",
     "@types/react": "^16.0.40",
