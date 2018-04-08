@@ -7,6 +7,7 @@ import { alabaster, melrose } from '../utils/colors'
 import { ddmmm } from '../utils/date.utils'
 import { UnstyledLink } from './unstyled-link'
 import { Episode } from '../store/episode'
+import { media } from '../styles/media-queries'
 
 type Props = {
   title: string
@@ -75,7 +76,10 @@ const ShowWrapper = styled(UnstyledLink)`
 `
 const ShowsWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  ${media.giant`grid-template-columns: repeat(6, 1fr);`};
+  ${media.desktop`grid-template-columns: repeat(6, 1fr);`};
+  ${media.tablet`grid-template-columns: repeat(4, 1fr);`};
+  grid-template-columns: repeat(2, 1fr);
 `
 const UpcomingWrapper = styled.div`
   margin-bottom: 40px;

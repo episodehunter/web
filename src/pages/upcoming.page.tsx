@@ -6,6 +6,7 @@ import { shark } from '../utils/colors'
 import { Spinner } from '../components/spinner'
 import { UpcomingStore } from '../store/upcoming'
 import { Upcoming } from '../components/upcoming'
+import { media } from '../styles/media-queries'
 
 type Props = {
   upcoming: UpcomingStore
@@ -43,7 +44,10 @@ export const UpcomingPage = requireLogin<Props>(
 )
 
 const UpcomingWrapper = styled.div`
-  width: 80%;
+  ${media.giant`width: 80%;`};
+  ${media.desktop`width: 80%;`};
+  ${media.tablet`width: 90%;`};
+  width: 95%;
 `
 
 const Loading = styled.div`
