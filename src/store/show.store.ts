@@ -14,13 +14,13 @@ export class ShowStore {
   }
 
   @action
-  addShow(id: number) {
+  addShow(id: number): void {
     const show = this.shows.get(id)
     if (!show) {
       const newShow = this.createShow(id)
-      return newShow.load()
+      newShow.load()
     } else {
-      return show.load()
+      show.load()
     }
   }
 

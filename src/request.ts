@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/observable'
+import { Observer } from 'rxjs/Observer'
 import { api } from './api/api'
 import { storage } from './storage'
 import { ShowResponse } from './api/responses'
@@ -5,17 +7,23 @@ import { ShowResponse } from './api/responses'
 const oneDayAgo = Date.now() - 1 * 24 * 60 * 60 * 1000
 
 export const request = {
-  show: (id: number): Promise<ShowResponse> => {
-    const fetchShow = () =>
-      api.fetchShow(id).then(show => storage.show.set(show).then(() => show))
-    return storage.show.get(id).then(show => {
-      if (!show) {
-        return fetchShow()
-      } else if (show.date.getTime() < oneDayAgo) {
-        return fetchShow()
-      } else {
-        return show.data
-      }
+  show: (id: number): Observable<ShowResponse> => {
+    return Observable.create((observer: Observer<ShowResponse>) => {
+      storage.show
+        .get(id)
+        .then(show => {
+          if (show) {
+            observer.next(show.data)
+          }
+          if (!show || show.date.getTime() < oneDayAgo) {
+            return api
+              .fetchShow(id)
+              .then(storage.show.set)
+              .then(show => observer.next(show))
+          }
+        })
+        .then(() => observer.complete())
+        .catch(error => observer.error(error))
     })
   }
 }

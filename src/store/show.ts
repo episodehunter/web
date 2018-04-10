@@ -26,18 +26,16 @@ export class Show {
     this.id = id
   }
 
+  @action
   load(): any {
-    if (this.status === ModelStatus.loaded) {
-      this.status = ModelStatus.updating
-    } else {
-      this.status = ModelStatus.loading
+    if (
+      this.status === ModelStatus.loaded ||
+      this.status === ModelStatus.loading
+    ) {
+      return
     }
-    return request.show(this.id).then(
-      action((showResponse: ShowResponse) => {
-        this.update(showResponse)
-        this.status = ModelStatus.loaded
-      })
-    )
+    this.status = ModelStatus.loading
+    request.show(this.id).subscribe(show => this.update(show))
   }
 
   @action
@@ -57,6 +55,7 @@ export class Show {
     this.episodes = showResponse.episodes.map(episodeResponse =>
       Episode.createFromResponse(episodeResponse)
     )
+    this.status = ModelStatus.loaded
   }
 
   @computed

@@ -19,16 +19,17 @@ export class Following {
 
   @computed
   get isLoading() {
-    return this.status === ModelStatus.loading
+    return (
+      this.status === ModelStatus.loading ||
+      this.shows.some(show => show.isLoading)
+    )
   }
 
   updateFollwing = flow(function*(this: Following) {
     this.status = ModelStatus.loading
     try {
       this.followingShowsId = yield api.fetchFollowing()
-      yield Promise.all(
-        this.followingShowsId.map(id => this.showStore.addShow(id))
-      )
+      this.followingShowsId.forEach(id => this.showStore.addShow(id))
       this.status = ModelStatus.loaded
     } catch (error) {
       console.error(error)
