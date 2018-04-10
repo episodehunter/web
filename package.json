@@ -32,6 +32,7 @@
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
     "@types/react-router-dom": "^4.2.5",
+    "graphql": "^0.10.5",
     "jest": "^22.4.2",
     "ts-graphql-plugin": "^1.1.2",
     "ts-jest": "^22.4.1",

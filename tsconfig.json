@@ -18,6 +18,7 @@
         "name": "ts-graphql-plugin",
         "schema": {
           "http": {
+            "method": "POST",
             "url": "http://devapi.episodehunter.tv/graphql"
           }
         },
