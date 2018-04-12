@@ -1,0 +1,8 @@
+{
+  "presets": ["@babel/preset-react", "@babel/preset-typescript"],
+  "plugins": [
+    "@babel/plugin-proposal-decorators",
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    "react-hot-loader/babel"
+  ]
+}

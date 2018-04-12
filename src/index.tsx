@@ -16,6 +16,7 @@ import { SearchPage } from './pages/search.page'
 import { ShowPage } from './pages/show.page'
 import { Navbar } from './components/navbar'
 import { requireLogin } from './utils/require-login'
+import { hot } from 'react-hot-loader'
 
 type Props = {
   exact?: boolean
@@ -49,7 +50,7 @@ const RouterWrapper = ({
   )
 }
 
-const App = () => (
+const AppComponent = () => (
   <Provider {...store}>
     <Router history={history}>
       <Wrapper>
@@ -79,5 +80,7 @@ const Wrapper = styled.div`
   height: 100%;
   background-color: ${shark};
 `
+
+const App = hot(module)(AppComponent)
 
 ReactDOM.render(<App />, document.getElementById('root'))
