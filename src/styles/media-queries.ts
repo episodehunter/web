@@ -24,7 +24,17 @@ const desktop = (strings: TemplateStringsArray, ...args: string[]) => {
   `
 }
 
+const tablet = (strings: TemplateStringsArray, ...args: string[]) => {
+  return css`
+    @media (min-width: ${sizes.tablet}px) and (max-width: ${sizes.desktop -
+        1}px) {
+      ${css(strings, ...args)};
+    }
+  `
+}
+
 export const media = {
   giant,
-  desktop
+  desktop,
+  tablet
 }
