@@ -55,7 +55,7 @@ const Loading = styled.div`
 `
 
 const Wrapper = styled.div`
-  margin-top: 70px;
+  padding-top: 70px;
   height: 100%;
   background-color: ${shark};
   display: flex;

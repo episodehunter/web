@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { alabaster, gossamer, melrose } from '../utils/colors'
+import { alabaster, gossamer, melrose, shark } from '../utils/colors'
 import { inject, observer } from 'mobx-react'
 import { UserStore } from '../store/user'
 import { media } from '../styles/media-queries'
@@ -39,12 +39,14 @@ class NavbarComponent extends React.Component<Props> {
     const { user } = this.props
     return (
       <>
-        <Wide className="wide">
+        <Wide>
           <NavItems user={user} />
         </Wide>
-        <Narrow className="narrow">
-          <Hamburger open={this.open} onToggle={this.toggle} />
-          {this.open && <NavItems user={user} />}
+        <Narrow>
+          <InnerNarrow>
+            <Hamburger open={this.open} onToggle={this.toggle} />
+            {this.open && <NavItems user={user} />}
+          </InnerNarrow>
         </Narrow>
       </>
     )
@@ -70,7 +72,15 @@ const Narrow = styled.div`
   ${media.desktop`display: none;`};
   ${media.tablet`display: none;`};
   display: block;
-  margin: 20px;
+
+  position: fixed;
+  z-index: 1;
+  background-color: ${shark};
+  width: 100%;
+`
+
+const InnerNarrow = styled.div`
+  padding: 20px;
 `
 
 const Image = styled.img.attrs({

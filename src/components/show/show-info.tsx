@@ -19,9 +19,9 @@ export const ShowInfo = ({ show }: Props) => (
 )
 
 const InfoWrapper = styled.div`
-  ${media.giant`width: 20%;`};
-  ${media.desktop`width: 20%;`};
-  ${media.tablet`width: 30%;`};
+  ${media.giant`width: 40%;`};
+  ${media.desktop`width: 40%;`};
+  ${media.tablet`width: 50%;`};
   width: 100%;
   margin: 60px 0;
 `
@@ -50,13 +50,9 @@ const Fanart = styled.div`
   position: relative;
   width: 100%;
   height: 70vh;
-  background-image: ${(props: { src?: string }) => `linear-gradient(
-      to right,
-      rgba(26, 28, 33, 1) 15%,
-      rgba(26, 28, 33, 0.97) 18%, 
-      rgba(26, 28, 33, 0.92) 21%,
-      rgba(0, 0, 0, 0) 45%
-    ),
+  background-image: ${(props: {
+    src?: string
+  }) => `linear-gradient(rgba(51, 51, 51, 0.9), rgba(0,0,0,.8)),
     url(${props.src})`};
   background-size: cover;
 `

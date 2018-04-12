@@ -21,7 +21,7 @@ const Container = styled.div`
 `
 const Bar = styled.div`
   width: 35px;
-  height: 5px;
+  height: 3px;
   background-color: ${alabaster};
   margin: 6px 0;
   transition: 0.4s;
@@ -30,8 +30,7 @@ const BarOne = styled(Bar)`
   ${({ open }: { open: boolean }) =>
     open &&
     css`
-      -webkit-transform: rotate(-45deg) translate(-9px, 6px);
-      transform: rotate(-45deg) translate(-9px, 6px);
+      transform: translatey(9px) rotate(45deg);
     `};
 `
 const BarTwo = styled(Bar)`
@@ -45,7 +44,6 @@ const BarThree = styled(Bar)`
   ${({ open }: { open: boolean }) =>
     open &&
     css`
-      -webkit-transform: rotate(45deg) translate(-8px, -8px);
-      transform: rotate(45deg) translate(-8px, -8px);
+      transform: translatey(-9px) rotate(-45deg);
     `};
 `
