@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Poster } from '../poster'
+import { SmallShowPoster } from '../poster/small-show-poster'
 
 const mainShows = [
   { tvdbId: 260449 },
@@ -16,7 +16,7 @@ const mainShows = [
 export const MainShows = () => (
   <React.Fragment>
     {mainShows.map(show => (
-      <Poster key={show.tvdbId} tvdbId={show.tvdbId} zoom />
+      <SmallShowPoster key={show.tvdbId} tvdbId={show.tvdbId} />
     ))}
   </React.Fragment>
 )

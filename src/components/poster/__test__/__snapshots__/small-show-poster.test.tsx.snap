@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SmallShowPoster renders correctly 1`] = `
+<img
+  defaultImage="https://www.placecage.com/g/185/273"
+  height={273}
+  image="https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/123.jpg"
+  width={185}
+/>
+`;

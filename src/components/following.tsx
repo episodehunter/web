@@ -1,17 +1,18 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Show } from '../store/show'
-import { Poster } from './poster'
 import { observer } from 'mobx-react'
+import { SmallShowPoster } from './poster/small-show-poster'
 
 type Props = {
   following: Show[]
 }
+
 export const FollowingComponent = observer(({ following }: Props) => (
   <FollowingWrapper>
     {following.map(following => (
       <ShowWrapper key={following.id}>
-        <Poster tvdbId={following.tvdbId} />
+        <SmallShowPoster tvdbId={following.tvdbId} />
       </ShowWrapper>
     ))}
   </FollowingWrapper>

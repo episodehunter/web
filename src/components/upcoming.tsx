@@ -1,13 +1,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Show } from '../store/show'
-import { Poster } from './poster'
 import { observer } from 'mobx-react'
 import { alabaster, melrose } from '../utils/colors'
 import { ddmmm } from '../utils/date.utils'
 import { UnstyledLink } from './unstyled-link'
 import { Episode } from '../store/episode'
 import { media } from '../styles/media-queries'
+import { SmallShowPoster } from './poster/small-show-poster'
 
 type Props = {
   title: string
@@ -25,7 +25,7 @@ export const UpcomingComponent = ({ title, shows, previous }: Props) => {
       <ShowsWrapper>
         {shows.map(show => (
           <ShowWrapper key={show.id} to={`/show/${show.id}`}>
-            <Poster tvdbId={show.tvdbId} />
+            <SmallShowPoster tvdbId={show.tvdbId} />
             <ShowInfoWrapper>
               <ShowName>{show.name}</ShowName>
               <EpisodeDate

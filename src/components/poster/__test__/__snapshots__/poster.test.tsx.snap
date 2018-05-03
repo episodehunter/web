@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Poster renders correctly 1`] = `
+<img
+  defaultImage="https://www.placecage.com/g/100/200"
+  height={200}
+  image="some-path"
+  width={100}
+/>
+`;
