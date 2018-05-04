@@ -40,7 +40,7 @@
     "@types/react-test-renderer": "16.0.1",
     "babel-loader": "8.0.0-beta.2",
     "graphql": "0.10.5",
-    "jest": "22.4.2",
+    "jest": "22.4.3",
     "react-test-renderer": "16.3.2",
     "ts-graphql-plugin": "1.1.2",
     "ts-jest": "22.4.1",
