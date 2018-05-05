@@ -4,29 +4,30 @@ import { Show } from './show'
 export class ShowStore {
   shows: Map<number, Show> = new Map()
 
-  getShow(id: number) {
-    if (!this.shows.has(id)) {
-      const newShow = this.createShow(id)
-      newShow.load()
-      return newShow
+  getShow(id: number): Show {
+    const show = this.shows.get(id)
+    if (!show) {
+      return this.createAndLoadShow(id)
+    } else {
+      return show
     }
-    return this.shows.get(id)
   }
 
   @action
   addShow(id: number): void {
     const show = this.shows.get(id)
     if (!show) {
-      const newShow = this.createShow(id)
-      newShow.load()
+      this.createAndLoadShow(id)
     } else {
+      console.warn('Should not load existing store on add')
       show.load()
     }
   }
 
   @action
-  createShow(id: number) {
+  private createAndLoadShow(id: number) {
     const newShow = new Show(id)
+    newShow.load()
     this.shows.set(id, newShow)
     return newShow
   }

@@ -19,7 +19,7 @@ class ShowPageComponent extends React.Component<Props> {
 
   @computed
   get show() {
-    return this.props.showStore.getShow(Number(this.props.match.params.id))
+    return this.props.showStore!.getShow(Number(this.props.match.params.id))
   }
 
   @action

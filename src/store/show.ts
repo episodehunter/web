@@ -66,11 +66,11 @@ export class Show {
   @computed
   get nextEpisode() {
     const now = yyyymmdd(new Date())
-    return this.episodes.reduce((prevEpisode, episode) => {
+    return this.episodes.reduce((prevEpisode: null | Episode, episode) => {
       if (
         episode.firstAired &&
         episode.firstAired > now &&
-        (!prevEpisode || episode.firstAired < prevEpisode.firstAired)
+        (prevEpisode === null || episode.firstAired < prevEpisode.firstAired)
       ) {
         return episode
       }

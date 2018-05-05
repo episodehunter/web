@@ -3,15 +3,16 @@
     "module": "CommonJS",
     "target": "es2015",
     "jsx": "react",
+    "noEmit": true,
     "moduleResolution": "node",
     "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "strictPropertyInitialization": false
   },
   "exclude": ["node_modules"]

@@ -41,7 +41,7 @@ export const UpcomingComponent = ({ title, shows, previous }: Props) => {
 
 export const Upcoming = observer(UpcomingComponent)
 
-const EpisodeDate = ({ episode }: { episode?: Episode }) => {
+const EpisodeDate = ({ episode }: { episode?: Episode | null }) => {
   if (!episode) {
     return <EpisodeDateStyling>TBA</EpisodeDateStyling>
   } else {
