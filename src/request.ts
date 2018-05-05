@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs/observable'
-import { Observer } from 'rxjs/Observer'
+import { Observable, Observer } from 'rxjs'
 import { api } from './api/api'
 import { storage } from './storage'
 import { ShowResponse } from './api/responses'
