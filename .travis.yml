@@ -3,6 +3,7 @@ node_js:
   - node
 
 install:
+  - npm i -g npm@6
   - npm ci
 
 script:
