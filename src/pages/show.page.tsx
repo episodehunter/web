@@ -1,13 +1,13 @@
+import { action, computed, observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import styled from 'styled-components'
 import { match } from 'react-router'
-import { observable, action, computed } from 'mobx'
-import { observer, inject } from 'mobx-react'
-import { ShowStore } from '../store/show.store'
-import { Spinner } from '../components/spinner'
-import { Seasons } from '../components/show/seasons'
+import styled from 'styled-components'
 import { Episodes } from '../components/show/episodes'
+import { Seasons } from '../components/show/seasons'
 import { ShowInfo } from '../components/show/show-info'
+import { Spinner } from '../components/spinner'
+import { ShowStore } from '../store/show.store'
 
 type Props = {
   match: match<{ id: string }>
@@ -28,7 +28,7 @@ class ShowPageComponent extends React.Component<Props> {
   }
 
   render() {
-    if (this.show.isLoading) {
+    if (this.show.loader.isLoading) {
       return (
         <Loading>
           <Spinner />

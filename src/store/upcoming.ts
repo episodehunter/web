@@ -1,12 +1,22 @@
-import { Following } from './following'
-import { yyyymmdd } from '../utils/date.utils'
+import { isSameDay } from 'date-fns'
 import { computed } from 'mobx'
+import {
+  Today,
+  isAfterDaysFrom,
+  isBeforeDaysFrom,
+  today
+} from '../utils/date.utils'
+import { hasNextEpisode, hasPreviousEpisode } from '../utils/show.util'
+import { Following } from './following'
+import { Show, ShowWithNextEpisode, ShowWithPreviousEpisode } from './show'
 
 export class UpcomingStore {
   following: Following
+  private today: Today
 
-  constructor(following: Following) {
+  constructor(following: Following, _today: Today = today) {
     this.following = following
+    this.today = _today
   }
 
   @computed
@@ -20,46 +30,38 @@ export class UpcomingStore {
   }
 
   @computed
-  get justAired() {
-    const fiveDaysAgoDate = new Date()
-    fiveDaysAgoDate.setDate(fiveDaysAgoDate.getDate() - 5)
-    const fiveDaysAgo = yyyymmdd(fiveDaysAgoDate)
-    return this.shows.filter(
-      show =>
-        show.previousEpisode && show.previousEpisode.firstAired > fiveDaysAgo
-    )
-  }
-
-  @computed
-  get today() {
-    const today = yyyymmdd(new Date())
-    return this.shows.filter(
-      show => show.nextEpisode && show.nextEpisode.firstAired === today
-    )
-  }
-
-  @computed
-  get weekAhead() {
-    const weekAheadDate = new Date()
-    weekAheadDate.setDate(weekAheadDate.getDate() + 7)
-    const weekAhead = yyyymmdd(weekAheadDate)
-    return this.shows.filter(
-      show => show.nextEpisode && show.nextEpisode.firstAired <= weekAhead
-    )
-  }
-
-  @computed
   get upcoming() {
-    const weekAheadDate = new Date()
-    weekAheadDate.setDate(weekAheadDate.getDate() + 7)
-    const weekAhead = yyyymmdd(weekAheadDate)
-    return this.shows.filter(
-      show => show.nextEpisode && show.nextEpisode.firstAired > weekAhead
-    )
-  }
-
-  @computed
-  get tba() {
-    return this.shows.filter(show => show.isAirDateForNextEpisodeDateUnknown)
+    const upcoming = {
+      justAired: [] as ShowWithPreviousEpisode[],
+      today: [] as ShowWithNextEpisode[],
+      weekAhead: [] as ShowWithNextEpisode[],
+      upcoming: [] as ShowWithNextEpisode[],
+      tba: [] as Show[]
+    }
+    const today = this.today()
+    const isAfterFiveDaysAgo = isAfterDaysFrom(-5, today)
+    const isBeforeAWeekFromNow = isBeforeDaysFrom(7, today)
+    for (let show of this.shows) {
+      if (
+        hasPreviousEpisode(show) &&
+        isAfterFiveDaysAgo(show.previousEpisode.firstAired)
+      ) {
+        upcoming.justAired.push(show)
+      }
+      if (show.isAirDateForNextEpisodeDateUnknown) {
+        upcoming.tba.push(show)
+      }
+      if (!hasNextEpisode(show)) {
+        continue
+      }
+      if (isSameDay(today, show.nextEpisode.firstAired)) {
+        upcoming.today.push(show)
+      } else if (isBeforeAWeekFromNow(show.nextEpisode.firstAired)) {
+        upcoming.weekAhead.push(show)
+      } else {
+        upcoming.upcoming.push(show)
+      }
+    }
+    return upcoming
   }
 }

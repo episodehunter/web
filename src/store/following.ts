@@ -1,4 +1,4 @@
-import { action, observable, computed, flow } from 'mobx'
+import { action, computed, flow, observable } from 'mobx'
 import { api } from '../api/api'
 import { ModelStatus } from '../enum/model-status'
 import { ShowStore } from './show.store'
@@ -21,7 +21,7 @@ export class Following {
   get isLoading() {
     return (
       this.status === ModelStatus.loading ||
-      this.shows.some(show => show.isLoading)
+      this.shows.some(show => show.loader.isLoading)
     )
   }
 

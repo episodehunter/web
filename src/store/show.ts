@@ -1,12 +1,11 @@
-import { observable, computed, action } from 'mobx'
-import { Episode } from './episode'
+import { action, computed, observable } from 'mobx'
 import { ShowResponse } from '../api/responses'
-import { yyyymmdd } from '../utils/date.utils'
 import { request } from '../request'
-import { ModelStatus } from '../enum/model-status'
+import { nextEpisode, previousEpisode } from '../utils/episode.util'
+import { ModelLoader } from '../utils/model-loader.util'
+import { Episode, EpisodeWithAirDate } from './episode'
 
 export class Show {
-  @observable status: ModelStatus = ModelStatus.notLoaded
   @observable id: number
   @observable tvdbId: number
   @observable name: string
@@ -21,21 +20,16 @@ export class Show {
   @observable airsDayOfWeek: string
   @observable airsTime: string
   @observable episodes: Episode[]
+  loader = new ModelLoader()
 
   constructor(id: number) {
     this.id = id
+    this.loader.register(() => request.show(this.id))(show => this.update(show))
   }
 
   @action
-  load(): any {
-    if (
-      this.status === ModelStatus.loaded ||
-      this.status === ModelStatus.loading
-    ) {
-      return
-    }
-    this.status = ModelStatus.loading
-    request.show(this.id).subscribe(show => this.update(show))
+  load(): void {
+    this.loader.load()
   }
 
   @action
@@ -55,7 +49,6 @@ export class Show {
     this.episodes = showResponse.episodes.map(episodeResponse =>
       Episode.createFromResponse(episodeResponse)
     )
-    this.status = ModelStatus.loaded
   }
 
   @computed
@@ -65,32 +58,12 @@ export class Show {
 
   @computed
   get nextEpisode() {
-    const now = yyyymmdd(new Date())
-    return this.episodes.reduce((prevEpisode: null | Episode, episode) => {
-      if (
-        episode.firstAired &&
-        episode.firstAired > now &&
-        (prevEpisode === null || episode.firstAired < prevEpisode.firstAired)
-      ) {
-        return episode
-      }
-      return prevEpisode
-    }, null)
+    return nextEpisode(this.episodes)
   }
 
   @computed
   get previousEpisode() {
-    const now = yyyymmdd(new Date())
-    return this.episodes.reduce((prevEpisode, episode) => {
-      if (
-        episode.firstAired &&
-        episode.firstAired <= now &&
-        (!prevEpisode || episode.firstAired > prevEpisode.firstAired)
-      ) {
-        return episode
-      }
-      return prevEpisode
-    })
+    return previousEpisode(this.episodes)
   }
 
   @computed
@@ -101,9 +74,12 @@ export class Show {
   episodesPerSeason = (season: number) => {
     return this.episodes.filter(episode => episode.season === season)
   }
+}
 
-  @computed
-  get isLoading() {
-    return this.status === ModelStatus.loading
-  }
+export interface ShowWithPreviousEpisode extends Show {
+  previousEpisode: EpisodeWithAirDate
+}
+
+export interface ShowWithNextEpisode extends Show {
+  nextEpisode: EpisodeWithAirDate
 }

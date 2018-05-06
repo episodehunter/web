@@ -1,12 +1,12 @@
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { inject, observer } from 'mobx-react'
-import { requireLogin } from '../utils/require-login'
-import { shark } from '../utils/colors'
 import { Spinner } from '../components/spinner'
-import { UpcomingStore } from '../store/upcoming'
 import { Upcoming } from '../components/upcoming'
+import { UpcomingStore } from '../store/upcoming'
 import { media } from '../styles/media-queries'
+import { shark } from '../utils/colors'
+import { requireLogin } from '../utils/require-login'
 
 type Props = {
   upcoming: UpcomingStore
@@ -14,24 +14,25 @@ type Props = {
 
 export class UpcomingPageComponent extends React.Component<Props> {
   render() {
-    const { upcoming } = this.props
+    const {
+      upcoming: {
+        isLoading,
+        upcoming: { justAired, tba, today, upcoming, weekAhead }
+      }
+    } = this.props
     return (
       <Wrapper>
-        {upcoming.isLoading ? (
+        {isLoading ? (
           <Loading>
             <Spinner />
           </Loading>
         ) : (
           <UpcomingWrapper>
-            <Upcoming
-              title={'Just aired'}
-              shows={upcoming.justAired}
-              previous
-            />
-            <Upcoming title={'Today'} shows={upcoming.today} />
-            <Upcoming title={'The week ahead'} shows={upcoming.weekAhead} />
-            <Upcoming title={'Upcoming'} shows={upcoming.upcoming} />
-            <Upcoming title={'TBA'} shows={upcoming.tba} />
+            <Upcoming title={'Just aired'} shows={justAired} previous />
+            <Upcoming title={'Today'} shows={today} />
+            <Upcoming title={'The week ahead'} shows={weekAhead} />
+            <Upcoming title={'Upcoming'} shows={upcoming} />
+            <Upcoming title={'TBA'} shows={tba} />
           </UpcomingWrapper>
         )}
       </Wrapper>

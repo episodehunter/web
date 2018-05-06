@@ -26,3 +26,5 @@ export const request = {
     })
   }
 }
+
+export type Request = typeof request

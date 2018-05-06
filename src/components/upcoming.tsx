@@ -1,13 +1,13 @@
+import { observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { EpisodeWithAirDate } from '../store/episode'
 import { Show } from '../store/show'
-import { observer } from 'mobx-react'
+import { media } from '../styles/media-queries'
 import { alabaster, melrose } from '../utils/colors'
 import { ddmmm } from '../utils/date.utils'
-import { UnstyledLink } from './unstyled-link'
-import { Episode } from '../store/episode'
-import { media } from '../styles/media-queries'
 import { SmallShowPoster } from './poster/small-show-poster'
+import { UnstyledLink } from './unstyled-link'
 
 type Props = {
   title: string
@@ -41,15 +41,11 @@ export const UpcomingComponent = ({ title, shows, previous }: Props) => {
 
 export const Upcoming = observer(UpcomingComponent)
 
-const EpisodeDate = ({ episode }: { episode?: Episode | null }) => {
+const EpisodeDate = ({ episode }: { episode?: EpisodeWithAirDate | null }) => {
   if (!episode) {
     return <EpisodeDateStyling>TBA</EpisodeDateStyling>
   } else {
-    return (
-      <EpisodeDateStyling>
-        {ddmmm(new Date(episode.firstAired))}
-      </EpisodeDateStyling>
-    )
+    return <EpisodeDateStyling>{ddmmm(episode.firstAired)}</EpisodeDateStyling>
   }
 }
 

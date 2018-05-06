@@ -6,6 +6,7 @@ type Props = {
   tvdbId: number
 }
 
-export const SmallShowPoster = ({ tvdbId }: Props) => (
-  <Poster width={185} height={273} imagePath={images.poster.small(tvdbId)} />
-)
+export const SmallShowPoster = ({ tvdbId }: Props) =>
+  Boolean(tvdbId) ? (
+    <Poster width={185} height={273} imagePath={images.poster.small(tvdbId)} />
+  ) : null
