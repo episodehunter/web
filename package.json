@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc --noEmit",
     "test": "jest --watch",
-    "test:ci": "jest",
+    "test:ci": "jest --coverage",
     "build": "webpack --config webpack.prod.js && cp src/index.html build/index.html",
     "start": "webpack-dev-server --hot --config webpack.dev.js"
   },
@@ -79,7 +79,8 @@
       "tsx",
       "js",
       "json"
-    ]
+    ],
+    "coverageDirectory": "./coverage/"
   },
   "prettier": {
     "printWidth": 80,

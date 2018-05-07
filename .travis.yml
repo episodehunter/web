@@ -2,12 +2,18 @@ language: node_js
 node_js:
   - node
 
+before_install:
+  - npm install -g npm@6
+  - npm install -g codecov
+
 install:
-  - npm i -g npm@6
   - npm ci
 
 script:
   - npm run test:ci
+
+after_script:
+  - codecov
 
 before_deploy:
   - npm run build
