@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PosterCard renders correctly 1`] = `
+<a
+  className="sc-bxivhb exDgKY sc-bdVaJa cxUmkD"
+  to="some-url"
+>
+  <img
+    src="some-image.jpg"
+  />
+  <div
+    className="sc-ifAKCX jHqQRB"
+  >
+    <div
+      className="sc-bwzfXH uTxCW"
+    >
+      TopRight
+    </div>
+    <div
+      className="sc-htpNat buBeEl"
+    >
+      BottomRightText
+    </div>
+  </div>
+</a>
+`;
