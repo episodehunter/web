@@ -1,13 +1,19 @@
+import { format } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import { match } from 'react-router'
 import styled from 'styled-components'
-import { Episodes } from '../components/show/episodes'
-import { Seasons } from '../components/show/seasons'
-import { ShowInfo } from '../components/show/show-info'
+import { EllipsisText } from '../components/ellipsis-text'
+import { EpisodeImage } from '../components/episode/episode-image'
+import { ShowFanart } from '../components/fanart/show-fanart'
+import { SmallShowPoster } from '../components/poster/small-show-poster'
+import { GapProgress } from '../components/progress/gap-progress'
 import { Spinner } from '../components/spinner'
+import { H1, H3, P } from '../components/text'
+import { Show } from '../store/show'
 import { ShowStore } from '../store/show.store'
+import { melrose } from '../utils/colors'
 
 type Props = {
   match: match<{ id: string }>
@@ -35,19 +41,75 @@ class ShowPageComponent extends React.Component<Props> {
         </Loading>
       )
     }
+    const show = this.show
     return (
-      <Wrapper>
-        <ShowInfo show={this.show} />
-        <Seasons
-          seasons={this.show.seasons}
-          selectedSeason={this.selectedSeason}
-          onSetSeason={this.setSeason}
-        />
-        <Episodes episodes={this.show.episodesPerSeason(this.selectedSeason)} />
-      </Wrapper>
+      <>
+        <ShowFanart tvdbId={this.show.tvdbId} />
+        <Wrapper>
+          <PosterAndTitleWrapper>
+            <SmallShowPoster tvdbId={this.show.tvdbId} />
+            <ShowTitleAndOverview>
+              <H1>{this.show.name}</H1>
+              <EllipsisText length={500}>{this.show.overview}</EllipsisText>
+            </ShowTitleAndOverview>
+          </PosterAndTitleWrapper>
+          <Content>
+            <FactWarpper>
+              <H3>Facts</H3>
+              <Facts show={show} />
+            </FactWarpper>
+            <ProgressWarpper>
+              <H3>Your progress</H3>
+              <GapProgress percent={70} height="100px" width="100px" />
+            </ProgressWarpper>
+            <NextEpisodeWarpper>
+              <H3>Next episode to watch</H3>
+              <EpisodeImage episode={show.previousEpisode} />
+            </NextEpisodeWarpper>
+          </Content>
+        </Wrapper>
+
+        {/* <Wrapper>
+          <ShowInfo show={this.show} />
+          <Seasons
+            seasons={this.show.seasons}
+            selectedSeason={this.selectedSeason}
+            onSetSeason={this.setSeason}
+          />
+          <Episodes
+            episodes={this.show.episodesPerSeason(this.selectedSeason)}
+          />
+        </Wrapper> */}
+      </>
     )
   }
 }
+
+const Facts = ({ show }: { show: Show }) => (
+  <ul style={{ listStyle: 'none', padding: 0 }}>
+    <FactLine
+      headline="Airs"
+      info={`${show.airsDayOfWeek} at ${show.airsTime} on ${show.network}`}
+    />
+    <FactLine
+      headline="Premiered"
+      info={format(show.firstAired, 'YYYY-mm-DD')}
+    />
+    <FactLine headline="Language" info={show.language} />
+    <FactLine headline="Runtime" info={String(show.runtime)} />
+    <FactLine headline="Genres" info={show.genre.join(', ')} />
+    <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
+    <FactLine headline="Followers" info="-" />
+  </ul>
+)
+
+const FactLine = ({ headline, info }: { headline: string; info: string }) => (
+  <li>
+    <P style={{ margin: 0 }}>
+      <span style={{ color: melrose }}>{headline}:</span> {info}
+    </P>
+  </li>
+)
 
 export const ShowPage = inject('showStore')(observer(ShowPageComponent))
 
@@ -56,8 +118,37 @@ const Loading = styled.div`
   margin-top: 100px;
 `
 
+const Content = styled.div`
+  width: 900px;
+  display: flex;
+`
+
+const PosterAndTitleWrapper = styled(Content)`
+  margin-top: -66px;
+`
+
+const ShowTitleAndOverview = styled.div`
+  margin: 66px 0 0 20px;
+`
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+`
+
+const FactWarpper = styled.div`
+  flex: 1;
+`
+
+const ProgressWarpper = styled(FactWarpper)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const NextEpisodeWarpper = styled(FactWarpper)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `

@@ -1,5 +1,5 @@
 import { isBefore, isValid, startOfDay } from 'date-fns'
-import { observable } from 'mobx'
+import { computed, observable } from 'mobx'
 import { EpisodeResponse } from '../api/responses'
 import { Today, isSameDayOrAfter, today } from '../utils/date.utils'
 
@@ -27,16 +27,29 @@ export class Episode {
     return episode
   }
 
+  @computed
+  get seasonAndEpisodeNumber() {
+    return (
+      'S' +
+      String(this.season).padStart(2, '0') +
+      'E' +
+      String(this.episode).padStart(2, '0')
+    )
+  }
+
+  @computed
   get hasValidAirDate() {
     return Boolean(this.firstAired && isValid(this.firstAired))
   }
 
+  @computed
   get hasAird() {
     return (
       this.hasValidAirDate && isBefore(this.firstAired as Date, this.today())
     )
   }
 
+  @computed
   get willAirInTheFuture() {
     const { hasValidAirDate, firstAired, today } = this
     return hasValidAirDate && isSameDayOrAfter(firstAired as Date, today)

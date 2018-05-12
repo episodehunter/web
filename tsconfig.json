@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "es2015",
+    "target": "es2017",
+    "lib": ["dom", "es2017"],
     "jsx": "react",
     "noEmit": true,
     "moduleResolution": "node",
