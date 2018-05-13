@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
@@ -13,7 +12,10 @@ import { Spinner } from '../components/spinner'
 import { H1, H3, P } from '../components/text'
 import { Show } from '../store/show'
 import { ShowStore } from '../store/show.store'
+import { safeJoin } from '../utils/array.util'
 import { melrose } from '../utils/colors'
+import { format } from '../utils/date.utils'
+import { safeStringConvertion } from '../utils/string.util'
 
 type Props = {
   match: match<{ id: string }>
@@ -85,19 +87,28 @@ class ShowPageComponent extends React.Component<Props> {
   }
 }
 
+const buildAirsString = (
+  airsDayOfWeek: string,
+  airsTime: string,
+  network: string
+) =>
+  Boolean(airsDayOfWeek && airsTime && network)
+    ? `${airsDayOfWeek} at ${airsTime} on ${network}`
+    : ''
+
 const Facts = ({ show }: { show: Show }) => (
   <ul style={{ listStyle: 'none', padding: 0 }}>
     <FactLine
       headline="Airs"
-      info={`${show.airsDayOfWeek} at ${show.airsTime} on ${show.network}`}
+      info={buildAirsString(show.airsDayOfWeek, show.airsTime, show.network)}
     />
     <FactLine
       headline="Premiered"
-      info={format(show.firstAired, 'YYYY-mm-DD')}
+      info={format(show.firstAired, 'Do MMM -YY')}
     />
-    <FactLine headline="Language" info={show.language} />
-    <FactLine headline="Runtime" info={String(show.runtime)} />
-    <FactLine headline="Genres" info={show.genre.join(', ')} />
+    <FactLine headline="Language" info={safeStringConvertion(show.language)} />
+    <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
+    <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
     <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
     <FactLine headline="Followers" info="-" />
   </ul>

@@ -17,7 +17,7 @@ export type ShowResponse = {
   runtime: number
   ended: boolean
   imdbId: string
-  firstAired: Date
+  firstAired: string
   airsDayOfWeek: string
   airsTime: string
   episodes: EpisodeResponse[]

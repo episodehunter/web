@@ -1,22 +1,27 @@
-import './styles/global'
+import { Provider } from 'mobx-react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import { hot } from 'react-hot-loader'
+import { Route, Router } from 'react-router-dom'
 import styled from 'styled-components'
-import { Router, Route } from 'react-router-dom'
-import { Provider } from 'mobx-react'
-import { history } from './history'
-import { store } from './store/store'
-import { shark } from './utils/colors'
-import { UpcomingPage } from './pages/upcoming.page'
+import { createDispatch } from './actions/dispatcher'
+import { Navbar } from './components/navbar'
+import { createHistory } from './history'
 import { FollowingPage } from './pages/following.page'
-import { LoginPage } from './pages/login.page'
 import { LoginCompletePage } from './pages/login-complete.page'
+import { LoginPage } from './pages/login.page'
 import { PopularPage } from './pages/popular.page'
 import { SearchPage } from './pages/search.page'
 import { ShowPage } from './pages/show.page'
-import { Navbar } from './components/navbar'
+import { UpcomingPage } from './pages/upcoming.page'
+import { Store } from './store/store'
+import './styles/global'
+import { shark } from './utils/colors'
 import { requireLogin } from './utils/require-login'
-import { hot } from 'react-hot-loader'
+
+const dispatch = createDispatch(() => store)
+const store = new Store(dispatch)
+const history = createHistory(dispatch.navigate)
 
 type Props = {
   exact?: boolean
@@ -51,7 +56,7 @@ const RouterWrapper = ({
 }
 
 const AppComponent = () => (
-  <Provider {...store}>
+  <Provider {...store} history={history}>
     <Router history={history}>
       <Wrapper>
         <RouterWrapper exact path="/" component={UpcomingPage} />

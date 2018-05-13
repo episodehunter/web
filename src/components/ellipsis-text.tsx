@@ -12,11 +12,11 @@ export class EllipsisText extends React.Component<Props, State> {
   showAllText = () => this.setState({ showAllText: true })
 
   render() {
-    if (this.state.showAllText) {
-      return <P style={this.props.style}>{this.props.children}</P>
+    if (!this.props.children) {
+      return null
     }
     const textLength = this.props.children.length
-    if (textLength < this.props.length) {
+    if (this.state.showAllText || textLength < this.props.length) {
       return <P style={this.props.style}>{this.props.children}</P>
     }
     return (

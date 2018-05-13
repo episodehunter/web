@@ -7,4 +7,6 @@ type Props = {
 }
 
 export const ShowFanart = ({ tvdbId }: Props) =>
-  createElement(Fanart, { imagePath: images.fanart.big(tvdbId) })
+  tvdbId
+    ? createElement(Fanart, { imagePath: images.fanart.big(tvdbId) })
+    : null

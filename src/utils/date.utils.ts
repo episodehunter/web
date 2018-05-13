@@ -1,6 +1,18 @@
-import { addDays, format, isAfter, isBefore, startOfToday } from 'date-fns'
+import {
+  addDays,
+  format as fromatDate,
+  isAfter,
+  isBefore,
+  isValid as isValidDate,
+  startOfToday
+} from 'date-fns'
 
 export const yyyymmdd = (date: Date) => date.toISOString().slice(0, 10)
+
+export const isValid = (date: Date) => Boolean(date && isValidDate(date))
+
+export const format = (date: Date, dateFormat: string) =>
+  isValid(date) ? fromatDate(date, dateFormat) : ''
 
 export const ddmmm = (date: Date): string =>
   format(date, 'D MMMM').toUpperCase()

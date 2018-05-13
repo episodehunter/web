@@ -38,13 +38,6 @@ export const EpisodeImage = ({ episode }: Props) =>
           <BottomText>{dateFormat(episode.firstAired)}</BottomText>
         </BottomTextWrapper>
       </LazyLoadBackgroundImage>
-      {/* <LazyLoadImage
-        width={250}
-        height={140}
-        style={{ borderRadius: 5 }}
-        defaultImage={`https://www.placecage.com/g/${250}/${140}`}
-        image={images.episode.small(episode.tvdbId)}
-      /> */}
     </>
   )
 

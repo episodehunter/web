@@ -21,9 +21,9 @@ export class ModelLoader {
           switchMap(load),
           tap(() => this.setLoadingState(LoadingState.loaded)),
           catchError(error => {
+            console.error(error)
             this.rollBackLoadingState()
             this.setErrorState(ErrorState.error)
-            console.error(error)
             return never()
           })
         )

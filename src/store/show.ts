@@ -1,3 +1,4 @@
+import { startOfDay } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 import { ShowResponse } from '../api/responses'
 import { request } from '../request'
@@ -24,7 +25,9 @@ export class Show {
 
   constructor(id: number) {
     this.id = id
-    this.loader.register(() => request.show(this.id))(show => this.update(show))
+    const requestShow = () => request.show(this.id)
+    const updateShow = show => this.update(show)
+    this.loader.register(requestShow)(updateShow)
   }
 
   @action
@@ -43,7 +46,7 @@ export class Show {
     this.runtime = showResponse.runtime
     this.ended = showResponse.ended
     this.imdbId = showResponse.imdbId
-    this.firstAired = showResponse.firstAired
+    this.firstAired = startOfDay(new Date(showResponse.firstAired))
     this.airsDayOfWeek = showResponse.airsDayOfWeek
     this.airsTime = showResponse.airsTime
     this.episodes = showResponse.episodes.map(episodeResponse =>
