@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { alabaster, gossamer, melrose, shark } from '../utils/colors'
 import { inject, observer } from 'mobx-react'
@@ -7,19 +6,20 @@ import { UserStore } from '../store/user'
 import { media } from '../styles/media-queries'
 import { observable, action } from 'mobx'
 import { Hamburger } from './hamburger'
+import { withNavigation } from '../router/withNavigation'
+import { Navigate } from '../router/router.types'
 
 type Props = {
   user?: UserStore
+  navigate: Navigate
 }
 
-const NavItems = ({ user }: Props) => (
+const NavItems = ({ user, navigate }: Props) => (
   <>
-    <Item exact to="/">
-      Upcoming
-    </Item>
-    <Item to="/following">Following</Item>
-    <Item to="/popular">Popular</Item>
-    <Item to="/search">Search</Item>
+    <Item onClick={() => navigate('/')}>Upcoming</Item>
+    <Item onClick={() => navigate('/following')}>Following</Item>
+    <Item onClick={() => navigate('/popular')}>Popular</Item>
+    <Item onClick={() => navigate('/search')}>Search</Item>
     <Image
       onClick={() => user!.logout()}
       src={user!.picture || 'https://episodehunter.tv/img/logga.png'}
@@ -36,16 +36,16 @@ class NavbarComponent extends React.Component<Props> {
   }
 
   render() {
-    const { user } = this.props
+    const { user, navigate } = this.props
     return (
       <>
         <Wide>
-          <NavItems user={user} />
+          <NavItems navigate={navigate} user={user} />
         </Wide>
         <Narrow>
           <InnerNarrow>
             <Hamburger open={this.open} onToggle={this.toggle} />
-            {this.open && <NavItems user={user} />}
+            {this.open && <NavItems navigate={navigate} user={user} />}
           </InnerNarrow>
         </Narrow>
       </>
@@ -53,7 +53,7 @@ class NavbarComponent extends React.Component<Props> {
   }
 }
 
-export const Navbar = inject('user')(observer(NavbarComponent))
+export const Navbar = withNavigation(inject('user')(observer(NavbarComponent)))
 
 const Wide = styled.div`
   justify-content: flex-end;
@@ -95,9 +95,7 @@ const Image = styled.img.attrs({
 `
 
 const activeClassName = 'active-link'
-const Item = styled(NavLink).attrs({
-  activeClassName
-})`
+const Item = styled.a`
   display: flex;
   color: ${alabaster};
   font-family: 'Lato', sans-serif;

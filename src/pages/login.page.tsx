@@ -7,19 +7,22 @@ import { MainShows } from '../components/main/main-shows'
 import { MainDescription } from '../components/main/main-description'
 import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
-import { Redirect } from 'react-router'
 import { images } from '../images.config'
 import { UserStore } from '../store/user'
 import { inject, observer } from 'mobx-react'
+import { withNavigation } from '../router/withNavigation'
+import { Navigate } from '../router/router.types'
 
 type Props = {
   user: UserStore
+  navigate: Navigate
 }
 
-export const LoginPageComponent = ({ user }: Props) => {
-  if (user.isAuthenticated) {
-    return <Redirect to="/" />
-  }
+export const LoginPageComponent = ({ user, navigate }: Props) => {
+  // if (user.isAuthenticated) {
+  //   navigate('/')
+  //   return null
+  // }
   return (
     <Wrapper>
       <TopImage>
@@ -41,7 +44,9 @@ export const LoginPageComponent = ({ user }: Props) => {
   )
 }
 
-export const LoginPage = inject('user')(observer(LoginPageComponent))
+export const LoginPage = withNavigation(
+  inject('user')(observer(LoginPageComponent))
+)
 
 const MainContent = styled.div`
   background-color: ${shark};

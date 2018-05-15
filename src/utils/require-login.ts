@@ -1,31 +1,30 @@
-import { History } from 'history'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
+import { Navigate } from '../router/router.types'
+import { withNavigation } from '../router/withNavigation'
 import { UserStore } from '../store/user'
 
 type ComponentType<P> = ((props: P) => JSX.Element) | React.ComponentClass<P>
-type ExtendedProps<P> = P & { user: UserStore; history: History }
+type ExtendedProps<P> = P & { user: UserStore; navigate: Navigate }
 
 export const requireLogin = <P>(Component: ComponentType<P>) => {
-  class RequireLogin extends React.Component<ExtendedProps<P>> {
-    componentDidMount() {
-      if (!this.props.user.isAuthenticated) {
-        this.props.history.push('/login')
-        this.props.history.go(0)
-      }
-    }
+  return withNavigation(
+    inject('user')(
+      observer(
+        class extends React.Component<ExtendedProps<P>> {
+          componentDidMount() {
+            const { user, navigate } = this.props
+            if (!user.isAuthenticated) {
+              navigate('/login')
+            }
+          }
 
-    shouldComponentUpdate() {
-      return false
-    }
-
-    render() {
-      if (!this.props.user.isAuthenticated) {
-        return null
-      }
-
-      return React.createElement(Component, this.props as any)
-    }
-  }
-  return inject('user', 'history')(RequireLogin)
+          render() {
+            const { user, navigate, ...props } = this.props as any
+            return React.createElement(Component, props)
+          }
+        }
+      )
+    )
+  )
 }

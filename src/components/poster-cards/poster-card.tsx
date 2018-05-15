@@ -2,21 +2,25 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { alabaster, melrose } from '../../utils/colors'
 import { UnstyledLink } from '../unstyled-link'
+import { Navigate } from '../../router/router.types'
+import { withNavigation } from '../../router/withNavigation'
 
 type Props = {
   linkUrl: string
   poster: JSX.Element
   topRight?: JSX.Element | string
   bottomRight?: JSX.Element | string
+  navigate: Navigate
 }
 
-export const PosterCard = ({
+const PosterCardComponent = ({
+  navigate,
   linkUrl,
   poster,
   bottomRight,
   topRight
 }: Props) => (
-  <Wrapper to={linkUrl}>
+  <Wrapper onClick={() => navigate(linkUrl)}>
     {poster}
     <InfoWrapper>
       <TopRight>{topRight}</TopRight>
@@ -24,6 +28,8 @@ export const PosterCard = ({
     </InfoWrapper>
   </Wrapper>
 )
+
+export const PosterCard = withNavigation(PosterCardComponent)
 
 const TopRight = styled.div``
 const BottomRight = styled.div`

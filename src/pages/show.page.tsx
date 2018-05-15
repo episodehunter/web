@@ -1,7 +1,6 @@
 import { action, computed, observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { match } from 'react-router'
 import styled from 'styled-components'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ShowFanart } from '../components/fanart/show-fanart'
@@ -19,7 +18,6 @@ import { format } from '../utils/date.utils'
 import { safeStringConvertion } from '../utils/string.util'
 
 type Props = {
-  match: match<{ id: string }>
   showStore?: ShowStore
 }
 
@@ -28,7 +26,8 @@ class ShowPageComponent extends React.Component<Props> {
 
   @computed
   get show() {
-    return this.props.showStore!.getShow(Number(this.props.match.params.id))
+    //return this.props.showStore!.getShow(Number(this.props.match.params.id))
+    return this.props.showStore!.getShow(Number('123'))
   }
 
   setSeason(season: number) {
