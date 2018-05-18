@@ -1,4 +1,4 @@
-export class Dispatcher {
+export class RouterEvents {
   listeners = {}
 
   dispatch(event, data) {

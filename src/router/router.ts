@@ -2,9 +2,9 @@ import * as React from 'react'
 import { RouterProvider, routerInitialState } from './router.context'
 import { matchRoutes } from './router.utils'
 import { MatchedRoute, RouteSettings, RouterParams } from './router.types'
-import { Dispatcher } from '../dispatcher'
+import { RouterEvents } from './router.events'
 
-export const dispatcher = new Dispatcher()
+export const routerEvents = new RouterEvents()
 
 export const createRouter = (settings: RouteSettings) => {
   return class extends React.Component {
@@ -24,7 +24,7 @@ export const createRouter = (settings: RouteSettings) => {
         state => ({ ...state, url }),
         () => {
           callback && callback()
-          dispatcher.dispatch('navigation', {
+          routerEvents.dispatch('navigation', {
             state: this.state
           })
         }
