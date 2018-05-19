@@ -7,7 +7,6 @@ import { Show } from '../store/show'
 import { UpcomingStore } from '../store/upcoming'
 import { media } from '../styles/media-queries'
 import { shark } from '../utils/colors'
-import { requireLogin } from '../utils/require-login'
 
 type Props = {
   upcoming: UpcomingStore
@@ -66,9 +65,7 @@ export const extractNextEpisodeAirDate = (show: Show) =>
 export const extractPrevEpisodeAirDate = (show: Show) =>
   show.previousEpisode && show.previousEpisode.firstAired
 
-export const UpcomingPage = requireLogin<Props>(
-  inject('upcoming')(observer(UpcomingPageComponent))
-)
+export const UpcomingPage = inject('upcoming')(observer(UpcomingPageComponent))
 
 const UpcomingWrapper = styled.div`
   ${media.giant`width: 80%;`};

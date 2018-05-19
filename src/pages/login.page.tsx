@@ -18,30 +18,35 @@ type Props = {
   navigate: Navigate
 }
 
-export const LoginPageComponent = ({ user, navigate }: Props) => {
-  // if (user.isAuthenticated) {
-  //   navigate('/')
-  //   return null
-  // }
-  return (
-    <Wrapper>
-      <TopImage>
-        <MainHeader />
-        <MainAbout />
-      </TopImage>
-      <MainContent>
-        <ShowsWrapper>
-          <MainShows />
-        </ShowsWrapper>
-        <DescriptionWrapper>
-          <MainDescription />
-        </DescriptionWrapper>
-      </MainContent>
-      <BottomImage>
-        <MainFooter />
-      </BottomImage>
-    </Wrapper>
-  )
+export class LoginPageComponent extends React.Component<Props> {
+  componentDidMount() {
+    const { user, navigate } = this.props
+    if (user.isAuthenticated) {
+      navigate('/')
+    }
+  }
+
+  render() {
+    return (
+      <Wrapper>
+        <TopImage>
+          <MainHeader />
+          <MainAbout />
+        </TopImage>
+        <MainContent>
+          <ShowsWrapper>
+            <MainShows />
+          </ShowsWrapper>
+          <DescriptionWrapper>
+            <MainDescription />
+          </DescriptionWrapper>
+        </MainContent>
+        <BottomImage>
+          <MainFooter />
+        </BottomImage>
+      </Wrapper>
+    )
+  }
 }
 
 export const LoginPage = withNavigation(

@@ -11,24 +11,28 @@ export const createRouter = (settings: RouteSettings) => {
     state = routerInitialState
 
     componentDidMount() {
-      window.addEventListener('popstate', () => {
-        this.updateState(window.location.pathname)
-      })
+      window.addEventListener('popstate', () =>
+        this.updateState(state => ({
+          ...state,
+          url: window.location.pathname,
+          hash: window.location.hash
+        }))
+      )
     }
 
     navigate = (url: string) =>
-      this.updateState(url, () => window.history.pushState(null, '', url))
-
-    updateState = (url, callback?) => {
-      this.setState(
+      this.updateState(
         state => ({ ...state, url }),
-        () => {
-          callback && callback()
-          routerEvents.dispatch('navigation', {
-            state: this.state
-          })
-        }
+        () => window.history.pushState(null, '', url)
       )
+
+    updateState = (updateFn, callback?) => {
+      this.setState(updateFn, () => {
+        callback && callback()
+        routerEvents.dispatch('navigation', {
+          state: this.state
+        })
+      })
     }
 
     render() {

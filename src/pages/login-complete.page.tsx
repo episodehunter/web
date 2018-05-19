@@ -1,23 +1,24 @@
-import * as React from 'react'
 import { inject } from 'mobx-react'
 import { UserStore } from '../store/user'
 import { getTokenFromHash, getExpiresFromHash } from '../utils/http.utils'
 import { withNavigation } from '../router/withNavigation'
-import { Navigate } from '../router/router.types'
+import { Navigate, RouterState } from '../router/router.types'
 
 type Props = {
-  location: Location
+  state: RouterState
   user: UserStore
   navigate: Navigate
 }
 
 export const LoginCompletePageComponent = ({
-  location,
+  state,
   user,
   navigate
 }: Props) => {
-  const token = getTokenFromHash(location.hash)
-  const expires = getExpiresFromHash(location.hash)
+  var hash = state.url.substring(state.url.indexOf('#') + 1)
+  console.log('HASH', hash)
+  const token = getTokenFromHash(hash)
+  const expires = getExpiresFromHash(hash)
 
   user.setAuthentication(token, expires)
 

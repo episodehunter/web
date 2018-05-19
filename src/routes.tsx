@@ -12,10 +12,10 @@ import { UpcomingPage } from './pages/upcoming.page'
 import styled from 'styled-components'
 import { shark } from './utils/colors'
 
-type Props = {
+type RouteComponent = any
+type RouteOptions = {
   hideNavbar?: boolean
   unauthed?: boolean
-  component: any
 }
 
 export const routes = {
@@ -24,54 +24,45 @@ export const routes = {
     {
       path: '/',
       exact: true,
-      component: RouteWrapper({
-        component: UpcomingPage
-      })
+      component: RouteLayout(UpcomingPage)
     },
     {
       path: '/following',
-      component: RouteWrapper({
-        component: FollowingPage
-      })
+      component: RouteLayout(FollowingPage)
     },
     {
       path: '/popular',
-      component: RouteWrapper({
-        component: PopularPage
-      })
+      component: RouteLayout(PopularPage)
     },
     {
       path: '/search',
-      component: RouteWrapper({
-        component: SearchPage
-      })
+      component: RouteLayout(SearchPage)
     },
     {
       path: '/show:id',
-      component: RouteWrapper({
-        component: ShowPage
-      })
+      component: RouteLayout(ShowPage)
     },
     {
       path: '/login',
-      component: RouteWrapper({
+      component: RouteLayout(LoginPage, {
         hideNavbar: true,
-        unauthed: true,
-        component: LoginPage
+        unauthed: true
       })
     },
     {
       path: '/login_complete',
-      component: RouteWrapper({
+      component: RouteLayout(LoginCompletePage, {
         hideNavbar: true,
-        unauthed: true,
-        component: LoginCompletePage
+        unauthed: true
       })
     }
   ]
 }
 
-function RouteWrapper({ hideNavbar, unauthed, component }: Props) {
+function RouteLayout(
+  component: RouteComponent,
+  { hideNavbar, unauthed }: RouteOptions = {}
+) {
   const RenderComponent = unauthed ? component : requireLogin<any>(component)
   return () => (
     <Wrapper>

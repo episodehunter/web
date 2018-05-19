@@ -1,5 +1,6 @@
 export type RouterState = {
   url: string
+  hash?: string
 }
 
 export type Navigate = (url: string) => void

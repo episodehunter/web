@@ -2,13 +2,12 @@ import * as React from 'react'
 import { RouterParams } from './router.types'
 
 export const routerInitialState = {
-  url: window.location.pathname
+  url: window.location.pathname,
+  hash: window.location.hash
 }
 
 const Context = React.createContext<RouterParams>({
-  state: {
-    url: window.location.pathname
-  }
+  state: routerInitialState
 } as any)
 
 const { Provider, Consumer } = Context

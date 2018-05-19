@@ -5,8 +5,8 @@ import { RouterParams } from './router.types'
 export function withNavigation(Component: any) {
   return props => (
     <RouterConsumer>
-      {({ navigate }: RouterParams) => (
-        <Component navigate={navigate} {...props} />
+      {({ state, navigate }: RouterParams) => (
+        <Component state={state} navigate={navigate} {...props} />
       )}
     </RouterConsumer>
   )
