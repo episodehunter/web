@@ -15,17 +15,21 @@ export const LoginCompletePageComponent = ({
   user,
   navigate
 }: Props) => {
-  var hash = state.url.substring(state.url.indexOf('#') + 1)
-  console.log('HASH', hash)
-  const token = getTokenFromHash(hash)
-  const expires = getExpiresFromHash(hash)
+  const { hash } = state
 
-  user.setAuthentication(token, expires)
+  if (!hash) {
+    navigate('/login')
+  } else {
+    const token = getTokenFromHash(hash)
+    const expires = getExpiresFromHash(hash)
+    user.setAuthentication(token, expires)
 
-  navigate('/')
+    navigate('/')
+  }
+
   return null
 }
 
-export const LoginCompletePage = withNavigation(inject('user')(
-  LoginCompletePageComponent
-) as any)
+export const LoginCompletePage = withNavigation(
+  inject('user')(LoginCompletePageComponent)
+)
