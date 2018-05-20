@@ -77,7 +77,7 @@ class ShowPageComponent extends React.Component<Props> {
         </Wrapper>
 
         <Wrapper>
-          <Content>
+          <SeasonButtonsWrapper>
             {show.seasons.map(season => (
               <Button
                 key={season}
@@ -87,7 +87,7 @@ class ShowPageComponent extends React.Component<Props> {
                 Season {season}
               </Button>
             ))}
-          </Content>
+          </SeasonButtonsWrapper>
           <Content>
             <Episodes episodes={show.episodesPerSeason(this.selectedSeason)} />
           </Content>
@@ -164,6 +164,10 @@ const Loading = styled.div`
 const Content = styled.div`
   width: 1000px;
   display: flex;
+`
+
+const SeasonButtonsWrapper = styled(Content)`
+  flex-wrap: wrap;
 `
 
 const PosterAndTitleWrapper = styled(Content)`
