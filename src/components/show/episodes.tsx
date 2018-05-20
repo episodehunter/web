@@ -1,8 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Episode } from './episode'
 import { Episode as EpisodeModel } from '../../store/episode'
-import { media } from '../../styles/media-queries'
+import { Episode } from './episode'
 
 type Props = {
   episodes: EpisodeModel[]
@@ -17,9 +16,6 @@ export const Episodes = ({ episodes }: Props) => (
 )
 
 const Wrapper = styled.div`
-  display: grid;
-  ${media.giant`grid-template-columns: repeat(8, 1fr);`};
-  ${media.desktop`grid-template-columns: repeat(6, 1fr);`};
-  ${media.tablet`grid-template-columns: repeat(4, 1fr);`};
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
 `

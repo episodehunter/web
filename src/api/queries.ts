@@ -37,6 +37,7 @@ export const showQuery = gql`
         firstAired
         season
         episode
+        overview
       }
     }
   }

@@ -4,6 +4,7 @@ export type EpisodeResponse = {
   firstAired: string
   season: number
   episode: number
+  overview: string
 }
 
 export type ShowResponse = {

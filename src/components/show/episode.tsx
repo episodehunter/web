@@ -1,40 +1,67 @@
+import { inject } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { Episode as EpisodeType } from '../../store/episode'
-import { images } from '../../images.config'
-import { alabaster } from '../../utils/colors'
-import { zeroPad } from '../../utils/number'
+import { Today, dateReleaseFormat, format } from '../../utils/date.utils'
+import { EllipsisText } from '../ellipsis-text'
+import { EpisodeImage } from '../episode/episode-image'
+import { H4, HighlightSpan, P, SmallText } from '../text'
 
 type Props = {
   episode: EpisodeType
+  today?: Today
 }
-export const Episode = ({ episode }: Props) => (
+
+export const EpisodeComponent = ({ episode, today }: Props) => (
   <EpisodeWrapper>
-    <PosterWrapper>
-      <Poster src={images.episode.small(episode.tvdbId)} />
-    </PosterWrapper>
+    <EpisodeImage tvdbId={episode.tvdbId} style={{ flexShrink: 0 }}>
+      <P
+        margin={0}
+        title={`You wached this episode at ${format(
+          episode.firstAired,
+          'Do MMM YYYY'
+        )}`}
+      >
+        ✅ {dateReleaseFormat(episode.firstAired)}
+      </P>
+    </EpisodeImage>
     <DescriptionWrapper>
-      <Name>{zeroPad(episode.episode) + ' ' + episode.name}</Name>
+      <H4 margin={0}>
+        <HighlightSpan>{episode.seasonAndEpisodeNumber}</HighlightSpan>{' '}
+        {episode.name}
+      </H4>
+      <Air firstAired={episode.firstAired} today={today as Today} />
+      <EllipsisText length={350} style={{ margin: '10px 0 0 0' }}>
+        {episode.overview}
+      </EllipsisText>
     </DescriptionWrapper>
   </EpisodeWrapper>
 )
 
+export const Episode = inject('today')(EpisodeComponent)
+
+const Air = ({
+  firstAired,
+  today
+}: {
+  firstAired: Date | null
+  today: Today
+}) => {
+  return (
+    <SmallText>
+      {dateReleaseFormat(
+        firstAired,
+        { future: date => `📅 Airs ${date}`, past: date => `📅 Aird ${date}` },
+        today()
+      )}
+    </SmallText>
+  )
+}
+
 const EpisodeWrapper = styled.div`
-  margin: 10px;
+  display: flex;
+  margin-bottom: 20px;
 `
-
-const PosterWrapper = styled.div``
-const DescriptionWrapper = styled.div``
-
-const Name = styled.div`
-  font-size: 12px;
-  color: ${alabaster};
-  font-family: 'Lato', sans-serif;
-  margin-bottom: 10px;
-`
-
-const Poster = styled.img.attrs({
-  src: (props: { src?: string }) => props.src
-})`
-  width: 100%;
+const DescriptionWrapper = styled.div`
+  margin-left: 20px;
 `

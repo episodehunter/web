@@ -20,7 +20,7 @@ export class Show {
   @observable firstAired: Date
   @observable airsDayOfWeek: string
   @observable airsTime: string
-  @observable episodes: Episode[]
+  @observable episodes: Episode[] = []
   loader = new ModelLoader()
 
   constructor(id: number) {

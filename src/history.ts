@@ -1,4 +1,4 @@
-import { Location } from 'history'
+import { History, Location } from 'history'
 import createBrowserHistory from 'history/createBrowserHistory'
 
 export function createHistory(navigateCallback: (location: Location) => any) {
@@ -13,3 +13,5 @@ export function createHistory(navigateCallback: (location: Location) => any) {
   history.listen(navigateCallback)
   return history
 }
+
+export type History = History

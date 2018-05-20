@@ -9,6 +9,7 @@ export class Episode {
   @observable firstAired: Date | null
   @observable season: number
   @observable episode: number
+  @observable overview: string
 
   constructor(private today: Today) {}
 
@@ -24,6 +25,7 @@ export class Episode {
       : null
     episode.season = episodeResponse.season
     episode.episode = episodeResponse.episode
+    episode.overview = episodeResponse.overview
     return episode
   }
 
