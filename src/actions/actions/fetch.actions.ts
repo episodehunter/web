@@ -1,12 +1,23 @@
-type FetchShowAction = {
-  type: 'FETCH_SHOW'
+type FetchPartialShowAction = {
+  type: 'FETCH_PARTIAL_SHOW'
   payload: {
     showId: number
   }
 }
-export const fetchShow = (showId: number): FetchShowAction => ({
-  type: 'FETCH_SHOW',
+export const fetchParialShow = (showId: number): FetchPartialShowAction => ({
+  type: 'FETCH_PARTIAL_SHOW',
   payload: { showId }
 })
 
-export type FetchActions = FetchShowAction
+type FetchFullShowAction = {
+  type: 'FETCH_FULL_SHOW'
+  payload: {
+    showId: number
+  }
+}
+export const fetchFullShow = (showId: number): FetchFullShowAction => ({
+  type: 'FETCH_FULL_SHOW',
+  payload: { showId }
+})
+
+export type FetchActions = FetchPartialShowAction | FetchFullShowAction

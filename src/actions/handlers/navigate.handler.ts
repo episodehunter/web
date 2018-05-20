@@ -9,7 +9,7 @@ export const navigateHandler = (
 ) => {
   switch (action.type) {
     case 'NAVIGATE_SHOW':
-      dispatch.fetchShow(action.payload.showId)
+      dispatch.fetchFullShow(action.payload.showId)
       break
   }
 }

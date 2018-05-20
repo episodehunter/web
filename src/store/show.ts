@@ -1,6 +1,7 @@
 import { startOfDay } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 import { ShowResponse } from '../api/responses'
+import { ShowRequestType } from '../enum/request-type'
 import { request } from '../request'
 import { nextEpisode, previousEpisode } from '../utils/episode.util'
 import { ModelLoader } from '../utils/model-loader.util'
@@ -21,18 +22,18 @@ export class Show {
   @observable airsDayOfWeek: string
   @observable airsTime: string
   @observable episodes: Episode[] = []
-  loader = new ModelLoader()
+  loader = new ModelLoader<ShowRequestType>()
 
   constructor(id: number) {
     this.id = id
-    const requestShow = () => request.show(this.id)
+    const requestShow = (type: ShowRequestType) => request.show(this.id, type)
     const updateShow = show => this.update(show)
     this.loader.register(requestShow)(updateShow)
   }
 
   @action
-  load(): void {
-    this.loader.load()
+  load(type: ShowRequestType): void {
+    this.loader.load(type)
   }
 
   @action

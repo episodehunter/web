@@ -34,7 +34,7 @@ export class Following {
       this.followingShowsId = yield api.fetchFollowing()
       this.followingShowsId.forEach(id => {
         this.showStore.addShow(id)
-        this.dispatch.fetchShow(id)
+        this.dispatch.fetchParialShow(id)
       })
       this.status = ModelStatus.loaded
     } catch (error) {
