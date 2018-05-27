@@ -15,10 +15,12 @@ import { ShowStore } from '../store/show.store'
 import { safeJoin } from '../utils/array.util'
 import { alabaster, capeCod, melrose } from '../utils/colors'
 import { format } from '../utils/date.utils'
+import { composeHOC } from '../utils/function.util'
 import { safeStringConvertion } from '../utils/string.util'
 
 type Props = {
   showStore?: ShowStore
+  params: any
 }
 
 class ShowPageComponent extends React.Component<Props> {
@@ -26,8 +28,7 @@ class ShowPageComponent extends React.Component<Props> {
 
   @computed
   get show() {
-    //return this.props.showStore!.getShow(Number(this.props.match.params.id))
-    return this.props.showStore!.getShow(Number('123'))
+    return this.props.showStore!.getShow(Number(this.props.params.id))
   }
 
   setSeason(season: number) {
@@ -153,7 +154,9 @@ const FactLine = ({ headline, info }: { headline: string; info: string }) => (
   </li>
 )
 
-export const ShowPage = inject('showStore')(observer(ShowPageComponent))
+export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
+  ShowPageComponent
+)
 
 const Loading = styled.div`
   text-align: center;

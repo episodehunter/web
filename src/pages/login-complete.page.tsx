@@ -1,8 +1,9 @@
 import { inject } from 'mobx-react'
-import { UserStore } from '../store/user'
-import { getTokenFromHash, getExpiresFromHash } from '../utils/http.utils'
-import { withNavigation } from '../router/withNavigation'
 import { Navigate, RouterState } from '../router/router.types'
+import { withNavigation } from '../router/withNavigation'
+import { Routes } from '../routes'
+import { UserStore } from '../store/user'
+import { getExpiresFromHash, getTokenFromHash } from '../utils/http.utils'
 
 type Props = {
   state: RouterState
@@ -18,13 +19,13 @@ export const LoginCompletePageComponent = ({
   const { hash } = state
 
   if (!hash) {
-    navigate('/login')
+    navigate(Routes.login)
   } else {
     const token = getTokenFromHash(hash)
     const expires = getExpiresFromHash(hash)
     user.setAuthentication(token, expires)
 
-    navigate('/')
+    navigate(Routes.upcoming)
   }
 
   return null

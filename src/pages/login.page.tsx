@@ -1,17 +1,18 @@
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { shark } from '../utils/colors'
-import { media } from '../styles/media-queries'
 import { MainAbout } from '../components/main/main-about'
-import { MainShows } from '../components/main/main-shows'
 import { MainDescription } from '../components/main/main-description'
-import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
+import { MainHeader } from '../components/main/main-header'
+import { MainShows } from '../components/main/main-shows'
 import { images } from '../images.config'
-import { UserStore } from '../store/user'
-import { inject, observer } from 'mobx-react'
-import { withNavigation } from '../router/withNavigation'
 import { Navigate } from '../router/router.types'
+import { withNavigation } from '../router/withNavigation'
+import { Routes } from '../routes'
+import { UserStore } from '../store/user'
+import { media } from '../styles/media-queries'
+import { shark } from '../utils/colors'
 
 type Props = {
   user: UserStore
@@ -22,7 +23,7 @@ export class LoginPageComponent extends React.Component<Props> {
   componentDidMount() {
     const { user, navigate } = this.props
     if (user.isAuthenticated) {
-      navigate('/')
+      navigate(Routes.upcoming)
     }
   }
 

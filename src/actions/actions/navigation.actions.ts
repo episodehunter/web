@@ -1,7 +1,4 @@
-import { Location } from 'history'
-
-export function navigate(location: Location): NavigateAction {
-  const pathname = location.pathname
+export function navigate(pathname: string): NavigateAction {
   if (pathname === '/') {
     return navigateUpcoming()
   }

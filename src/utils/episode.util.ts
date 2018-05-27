@@ -1,4 +1,4 @@
-import * as closestIndexTo from 'date-fns/closest_index_to'
+import closestIndexTo from 'date-fns/closest_index_to'
 import { Episode, EpisodeWithAirDate } from '../store/episode'
 import { today } from './date.utils'
 import { composeNull } from './function.util'

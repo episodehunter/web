@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { RouterProvider, routerInitialState } from './router.context'
-import { matchRoutes } from './router.utils'
-import { MatchedRoute, RouteSettings, RouterParams } from './router.types'
 import { RouterEvents } from './router.events'
+import { MatchedRoute, RouteSettings, RouterParams } from './router.types'
+import { matchRoutes } from './router.utils'
 
 export const routerEvents = new RouterEvents()
 
@@ -11,6 +11,7 @@ export const createRouter = (settings: RouteSettings) => {
     state = routerInitialState
 
     componentDidMount() {
+      this.dispatchState()
       window.addEventListener('popstate', () =>
         this.updateState(state => ({
           ...state,
@@ -29,9 +30,13 @@ export const createRouter = (settings: RouteSettings) => {
     updateState = (updateFn, callback?) => {
       this.setState(updateFn, () => {
         callback && callback()
-        routerEvents.dispatch('navigation', {
-          state: this.state
-        })
+        this.dispatchState()
+      })
+    }
+
+    dispatchState() {
+      routerEvents.dispatch('navigation', {
+        ...this.state
       })
     }
 

@@ -3,7 +3,7 @@
 exports[`Poster renders correctly 1`] = `
 <a
   className="sc-bxivhb exDgKY sc-bdVaJa cxUmkD"
-  to="/show/5"
+  onClick={[Function]}
 >
   <img
     defaultImage="https://www.placecage.com/g/185/273"

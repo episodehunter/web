@@ -1,5 +1,5 @@
 import pathToRegexp from 'path-to-regexp'
-import { Route, MatchedRoute } from './router.types'
+import { MatchedRoute, Route } from './router.types'
 
 export function decodePath(path, exact = false, url) {
   const keys = []

@@ -3,7 +3,7 @@
 exports[`PosterCard renders correctly 1`] = `
 <a
   className="sc-bxivhb exDgKY sc-bdVaJa cxUmkD"
-  to="some-url"
+  onClick={[Function]}
 >
   <img
     src="some-image.jpg"

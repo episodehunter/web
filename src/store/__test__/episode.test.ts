@@ -1,4 +1,4 @@
-import * as startOfDay from 'date-fns/start_of_day'
+import startOfDay from 'date-fns/start_of_day'
 import { Episode } from '../episode'
 
 const today = () => startOfDay(new Date('2018-04-06'))

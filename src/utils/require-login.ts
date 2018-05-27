@@ -2,6 +2,7 @@ import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import { Navigate } from '../router/router.types'
 import { withNavigation } from '../router/withNavigation'
+import { Routes } from '../routes'
 import { UserStore } from '../store/user'
 
 type ComponentType<P> = ((props: P) => JSX.Element) | React.ComponentClass<P>
@@ -15,7 +16,7 @@ export const requireLogin = <P>(Component: ComponentType<P>) => {
           componentDidMount() {
             const { user, navigate } = this.props
             if (!user.isAuthenticated) {
-              navigate('/login')
+              navigate(Routes.login)
             }
           }
 
