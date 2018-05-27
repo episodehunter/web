@@ -1,47 +1,58 @@
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { shark } from '../utils/colors'
-import { media } from '../styles/media-queries'
 import { MainAbout } from '../components/main/main-about'
-import { MainShows } from '../components/main/main-shows'
 import { MainDescription } from '../components/main/main-description'
-import { MainHeader } from '../components/main/main-header'
 import { MainFooter } from '../components/main/main-footer'
-import { Redirect } from 'react-router'
+import { MainHeader } from '../components/main/main-header'
+import { MainShows } from '../components/main/main-shows'
 import { images } from '../images.config'
+import { Navigate } from '../router/router.types'
+import { withNavigation } from '../router/withNavigation'
+import { Routes } from '../routes'
 import { UserStore } from '../store/user'
-import { inject, observer } from 'mobx-react'
+import { media } from '../styles/media-queries'
+import { shark } from '../utils/colors'
 
 type Props = {
   user: UserStore
+  navigate: Navigate
 }
 
-export const LoginPageComponent = ({ user }: Props) => {
-  if (user.isAuthenticated) {
-    return <Redirect to="/" />
+export class LoginPageComponent extends React.Component<Props> {
+  componentDidMount() {
+    const { user, navigate } = this.props
+    if (user.isAuthenticated) {
+      navigate(Routes.upcoming)
+    }
   }
-  return (
-    <Wrapper>
-      <TopImage>
-        <MainHeader />
-        <MainAbout />
-      </TopImage>
-      <MainContent>
-        <ShowsWrapper>
-          <MainShows />
-        </ShowsWrapper>
-        <DescriptionWrapper>
-          <MainDescription />
-        </DescriptionWrapper>
-      </MainContent>
-      <BottomImage>
-        <MainFooter />
-      </BottomImage>
-    </Wrapper>
-  )
+
+  render() {
+    return (
+      <Wrapper>
+        <TopImage>
+          <MainHeader />
+          <MainAbout />
+        </TopImage>
+        <MainContent>
+          <ShowsWrapper>
+            <MainShows />
+          </ShowsWrapper>
+          <DescriptionWrapper>
+            <MainDescription />
+          </DescriptionWrapper>
+        </MainContent>
+        <BottomImage>
+          <MainFooter />
+        </BottomImage>
+      </Wrapper>
+    )
+  }
 }
 
-export const LoginPage = inject('user')(observer(LoginPageComponent))
+export const LoginPage = withNavigation(
+  inject('user')(observer(LoginPageComponent))
+)
 
 const MainContent = styled.div`
   background-color: ${shark};

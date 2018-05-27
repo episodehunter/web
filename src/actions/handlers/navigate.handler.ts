@@ -4,7 +4,7 @@ import { Dispatch } from '../dispatcher'
 
 export const navigateHandler = (
   action: NavigateAction,
-  store: Store,
+  _: Store,
   dispatch: Dispatch
 ) => {
   switch (action.type) {

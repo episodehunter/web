@@ -1,21 +1,36 @@
-import * as React from 'react'
-import { Redirect } from 'react-router'
 import { inject } from 'mobx-react'
+import { Navigate, RouterState } from '../router/router.types'
+import { withNavigation } from '../router/withNavigation'
+import { Routes } from '../routes'
 import { UserStore } from '../store/user'
-import { getTokenFromHash, getExpiresFromHash } from '../utils/http.utils'
+import { getExpiresFromHash, getTokenFromHash } from '../utils/http.utils'
 
 type Props = {
-  location: Location
+  state: RouterState
   user: UserStore
+  navigate: Navigate
 }
 
-export const LoginCompletePageComponent = ({ location, user }: Props) => {
-  const token = getTokenFromHash(location.hash)
-  const expires = getExpiresFromHash(location.hash)
+export const LoginCompletePageComponent = ({
+  state,
+  user,
+  navigate
+}: Props) => {
+  const { hash } = state
 
-  user.setAuthentication(token, expires)
+  if (!hash) {
+    navigate(Routes.login)
+  } else {
+    const token = getTokenFromHash(hash)
+    const expires = getExpiresFromHash(hash)
+    user.setAuthentication(token, expires)
 
-  return <Redirect to="/" />
+    navigate(Routes.upcoming)
+  }
+
+  return null
 }
 
-export const LoginCompletePage = inject('user')(LoginCompletePageComponent)
+export const LoginCompletePage = withNavigation(
+  inject('user')(LoginCompletePageComponent)
+)

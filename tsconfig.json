@@ -14,7 +14,8 @@
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "strict": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules"]
 }
