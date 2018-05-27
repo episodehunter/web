@@ -1,23 +1,29 @@
-import { configure } from 'mobx'
-import { UserStore } from './user'
+import { configure, reaction } from 'mobx'
+import { Dispatch } from '../actions/dispatcher'
 import { Following } from './following'
 import { ShowStore } from './show.store'
 import { UpcomingStore } from './upcoming'
+import { UserStore } from './user'
 
 configure({ enforceActions: true })
 
-class Store {
-  showStore = new ShowStore()
-  following = new Following(this.showStore)
-  upcoming = new UpcomingStore(this.following)
-  user = new UserStore(this.following)
+export class Store {
+  showStore: ShowStore
+  following: Following
+  upcoming: UpcomingStore
+  user: UserStore
 
-  constructor() {
+  constructor(dispatch: Dispatch) {
+    this.showStore = new ShowStore()
+    this.following = new Following(this.showStore, dispatch)
+    this.upcoming = new UpcomingStore(this.following)
+    this.user = new UserStore(this.following)
+
     // TODO: MOVE THIS
-    if (this.user.isAuthenticated) {
-      this.following.updateFollwing()
-    }
+    reaction(
+      () => this.user.isAuthenticated,
+      isAuthenticated => isAuthenticated && this.following.updateFollwing(),
+      { fireImmediately: true }
+    )
   }
 }
-
-export const store = new Store()

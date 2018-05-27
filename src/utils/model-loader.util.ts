@@ -1,29 +1,29 @@
 import { action, computed, observable } from 'mobx'
-import { toStream } from 'mobx-utils'
-import { Observable, Subject, Subscription, from, never } from 'rxjs'
-import { catchError, filter, switchMap, takeUntil, tap } from 'rxjs/operators'
+import { Observable, Subject, Subscription, never } from 'rxjs'
+import { catchError, filter, switchMap, tap } from 'rxjs/operators'
 import { ErrorState, LoadingState } from '../enum'
 
-export class ModelLoader {
+export class ModelLoader<R extends number> {
   @observable private loadingState = LoadingState.notLoaded
   @observable private errorState: ErrorState
-  private loadingState$ = from(toStream(() => this.loadingState))
-  private queue = new Subject()
+  private queue = new Subject<R>()
 
-  register<T>(load: () => Observable<T>) {
+  register<T>(load: (type: R) => Observable<T>) {
     return (next?: (v: T) => void): Subscription => {
-      const hasLoaded$ = this.loadingState$.pipe(filter(hasLoaded))
+      let currentType = -1
       return this.queue
         .pipe(
-          filter(() => !this.isFetching),
-          takeUntil(hasLoaded$),
+          filter(type => !this.isFetching || currentType < type),
           tap(() => this.setNextLoadingState()),
-          switchMap(load),
+          switchMap(type => {
+            currentType = type
+            return load(type)
+          }),
           tap(() => this.setLoadingState(LoadingState.loaded)),
           catchError(error => {
+            console.error(error)
             this.rollBackLoadingState()
             this.setErrorState(ErrorState.error)
-            console.error(error)
             return never()
           })
         )
@@ -31,8 +31,8 @@ export class ModelLoader {
     }
   }
 
-  load() {
-    this.queue.next(true)
+  load(type: R) {
+    this.queue.next(type)
   }
 
   @action

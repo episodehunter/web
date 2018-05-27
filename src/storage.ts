@@ -1,24 +1,30 @@
 import { get, set } from 'idb-keyval'
 import { ShowResponse } from './api/responses'
+import { ShowRequestType } from './enum/request-type'
 
 const SHOW_PREFIX = 'show'
 
 export const storage = {
   show: {
-    set(show: ShowResponse): Promise<ShowResponse> {
-      const showObject = {
+    set(
+      show: ShowResponse,
+      requestType: ShowRequestType
+    ): Promise<ShowResponse> {
+      const showObject: StorageObject<ShowResponse, ShowRequestType> = {
         date: new Date(),
-        data: show
+        data: show,
+        requestType
       }
       return set(`${SHOW_PREFIX}_${show.id}`, showObject).then(() => show)
     },
-    get(id: number): Promise<StorageObject<ShowResponse>> {
+    get(id: number): Promise<StorageObject<ShowResponse, ShowRequestType>> {
       return get(`${SHOW_PREFIX}_${id}`)
     }
   }
 }
 
-interface StorageObject<T> {
+interface StorageObject<T, R> {
   date: Date
   data: T
+  requestType: R
 }

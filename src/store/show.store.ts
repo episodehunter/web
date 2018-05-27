@@ -7,27 +7,24 @@ export class ShowStore {
   getShow(id: number): Show {
     const show = this.shows.get(id)
     if (!show) {
-      return this.createAndLoadShow(id)
+      return this.createShow(id)
     } else {
       return show
     }
   }
 
   @action
-  addShow(id: number): void {
+  addShow(id: number): Show {
     const show = this.shows.get(id)
     if (!show) {
-      this.createAndLoadShow(id)
-    } else {
-      console.warn('Should not load existing store on add')
-      show.load()
+      return this.createShow(id)
     }
+    return show
   }
 
   @action
-  private createAndLoadShow(id: number) {
+  private createShow(id: number) {
     const newShow = new Show(id)
-    newShow.load()
     this.shows.set(id, newShow)
     return newShow
   }

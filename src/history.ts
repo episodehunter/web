@@ -1,3 +1,17 @@
-import createHistory from 'history/createBrowserHistory'
+import { History, Location } from 'history'
+import createBrowserHistory from 'history/createBrowserHistory'
 
-export const history = createHistory({})
+export function createHistory(navigateCallback: (location: Location) => any) {
+  const history = createBrowserHistory({})
+  navigateCallback({
+    pathname: window.location.pathname,
+    search: window.location.search,
+    hash: window.location.hash,
+    state: window.history.state,
+    key: ''
+  })
+  history.listen(navigateCallback)
+  return history
+}
+
+export type History = History

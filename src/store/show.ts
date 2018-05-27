@@ -1,5 +1,7 @@
+import { startOfDay } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 import { ShowResponse } from '../api/responses'
+import { ShowRequestType } from '../enum/request-type'
 import { request } from '../request'
 import { nextEpisode, previousEpisode } from '../utils/episode.util'
 import { ModelLoader } from '../utils/model-loader.util'
@@ -19,17 +21,19 @@ export class Show {
   @observable firstAired: Date
   @observable airsDayOfWeek: string
   @observable airsTime: string
-  @observable episodes: Episode[]
-  loader = new ModelLoader()
+  @observable episodes: Episode[] = []
+  loader = new ModelLoader<ShowRequestType>()
 
   constructor(id: number) {
     this.id = id
-    this.loader.register(() => request.show(this.id))(show => this.update(show))
+    const requestShow = (type: ShowRequestType) => request.show(this.id, type)
+    const updateShow = show => this.update(show)
+    this.loader.register(requestShow)(updateShow)
   }
 
   @action
-  load(): void {
-    this.loader.load()
+  load(type: ShowRequestType): void {
+    this.loader.load(type)
   }
 
   @action
@@ -43,7 +47,7 @@ export class Show {
     this.runtime = showResponse.runtime
     this.ended = showResponse.ended
     this.imdbId = showResponse.imdbId
-    this.firstAired = showResponse.firstAired
+    this.firstAired = startOfDay(new Date(showResponse.firstAired))
     this.airsDayOfWeek = showResponse.airsDayOfWeek
     this.airsTime = showResponse.airsTime
     this.episodes = showResponse.episodes.map(episodeResponse =>

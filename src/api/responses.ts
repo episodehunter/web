@@ -4,6 +4,7 @@ export type EpisodeResponse = {
   firstAired: string
   season: number
   episode: number
+  overview: string
 }
 
 export type ShowResponse = {
@@ -17,7 +18,7 @@ export type ShowResponse = {
   runtime: number
   ended: boolean
   imdbId: string
-  firstAired: Date
+  firstAired: string
   airsDayOfWeek: string
   airsTime: string
   episodes: EpisodeResponse[]

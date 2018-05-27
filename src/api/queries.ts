@@ -1,12 +1,4 @@
-export function gql(strings: any, ...keys: any[]): string {
-  const lastIndex = strings.length - 1
-  return (
-    strings
-      .slice(0, lastIndex)
-      .reduce((p: any, s: any, i: any) => p + s + keys[i], '') +
-    strings[lastIndex]
-  )
-}
+import { ShowRequestType } from '../enum/request-type'
 
 export const followingQuery = `{
 	following {
@@ -14,30 +6,42 @@ export const followingQuery = `{
 	}
 }`
 
-export const showQuery = gql`
-  query getShow($id: Int!) {
-    show(id: $id) {
-      id
-      name
-      overview
-      tvdbId
-      overview
-      genre
-      language
-      network
-      runtime
-      ended
-      imdbId
-      firstAired
-      airsDayOfWeek
-      airsTime
-      episodes {
-        name
-        tvdbId
-        firstAired
-        season
-        episode
+export const showQuery = (() => {
+  const fragmentShow = `
+    id
+    name
+    overview
+    tvdbId
+    overview
+    genre
+    language
+    network
+    runtime
+    ended
+    imdbId
+    firstAired
+    airsDayOfWeek
+    airsTime
+  `
+  const partialEpisode = `
+    name
+    tvdbId
+    firstAired
+    season
+    episode
+  `
+  const fullEpisode = `
+    ${partialEpisode}
+    overview
+  `
+  return (type: ShowRequestType) => `
+    query getShow($id: Int!) {
+      show(id: $id) {
+        ${fragmentShow}
+        episodes {
+          ${type === ShowRequestType.partial ? partialEpisode : fullEpisode}
+        }
       }
     }
-  }
-`
+  `
+})()
