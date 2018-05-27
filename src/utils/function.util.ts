@@ -32,3 +32,6 @@ export const composeHOC = <P>(
 ): ((
   comp: ((props: P) => JSX.Element) | ComponentClass<P>
 ) => ComponentClass<P>) => hocs.reduceRight((a, b) => arg => b(a(arg)))
+
+export const args2 = <A1, A2, R>(fn: (a: A1, b: A2) => R) => (a: A1, b: A2) =>
+  fn(a, b)
