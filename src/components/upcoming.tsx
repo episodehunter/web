@@ -54,5 +54,6 @@ const Timespan = styled.h1`
   font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
-  font-size: 14px;
+  font-weight: lighter;
+  font-size: 32px;
 `
