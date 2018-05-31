@@ -1,9 +1,9 @@
 import { inject } from 'mobx-react'
-import { Navigate, RouterState } from '../router/router.types'
-import { withNavigation } from '../router/withNavigation'
 import { Routes } from '../routes'
 import { UserStore } from '../store/user'
 import { getExpiresFromHash, getTokenFromHash } from '../utils/http.utils'
+import { RouterState, Navigate } from '@vieriksson/the-react-router/dist/types'
+import { withNavigation } from '@vieriksson/the-react-router'
 
 type Props = {
   state: RouterState

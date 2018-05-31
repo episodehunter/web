@@ -7,12 +7,12 @@ import { MainFooter } from '../components/main/main-footer'
 import { MainHeader } from '../components/main/main-header'
 import { MainShows } from '../components/main/main-shows'
 import { images } from '../images.config'
-import { Navigate } from '../router/router.types'
-import { withNavigation } from '../router/withNavigation'
 import { Routes } from '../routes'
 import { UserStore } from '../store/user'
 import { media } from '../styles/media-queries'
 import { shark } from '../utils/colors'
+import { Navigate } from '@vieriksson/the-react-router/dist/types'
+import { withNavigation } from '@vieriksson/the-react-router'
 
 type Props = {
   user: UserStore

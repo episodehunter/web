@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Navigate } from '../../router/router.types'
 import { media } from '../../styles/media-queries'
 import { alabaster, gossamer, melrose } from '../../utils/colors'
+import { Navigate } from '@vieriksson/the-react-router/dist/types'
 
 type Props = {
   navigate: Navigate
