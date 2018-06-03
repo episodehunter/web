@@ -1,9 +1,8 @@
-import * as React from 'react'
+import { Navigate, withNavigation } from '@vieriksson/the-react-router'
+import React from 'react'
 import styled from 'styled-components'
 import { alabaster, melrose } from '../../utils/colors'
 import { UnstyledLink } from '../unstyled-link'
-import { Navigate } from '../../router/router.types'
-import { withNavigation } from '../../router/withNavigation'
 
 type Props = {
   linkUrl: string

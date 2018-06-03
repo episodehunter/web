@@ -1,18 +1,17 @@
-import { inject, observer } from 'mobx-react'
-import * as React from 'react'
-import styled from 'styled-components'
-import { MainAbout } from '../components/main/main-about'
-import { MainDescription } from '../components/main/main-description'
-import { MainFooter } from '../components/main/main-footer'
-import { MainHeader } from '../components/main/main-header'
-import { MainShows } from '../components/main/main-shows'
-import { images } from '../images.config'
-import { Navigate } from '../router/router.types'
-import { withNavigation } from '../router/withNavigation'
-import { Routes } from '../routes'
-import { UserStore } from '../store/user'
-import { media } from '../styles/media-queries'
-import { shark } from '../utils/colors'
+import { Navigate, withNavigation } from '@vieriksson/the-react-router';
+import { inject, observer } from 'mobx-react';
+import * as React from 'react';
+import styled from 'styled-components';
+import { MainAbout } from '../components/main/main-about';
+import { MainDescription } from '../components/main/main-description';
+import { MainFooter } from '../components/main/main-footer';
+import { MainHeader } from '../components/main/main-header';
+import { MainShows } from '../components/main/main-shows';
+import { images } from '../images.config';
+import { Routes } from '../routes';
+import { UserStore } from '../store/user';
+import { media } from '../styles/media-queries';
+import { shark } from '../utils/colors';
 
 type Props = {
   user: UserStore

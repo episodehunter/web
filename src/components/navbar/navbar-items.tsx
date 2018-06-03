@@ -1,6 +1,6 @@
+import { Navigate } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
-import { Navigate } from '../../router/router.types'
 import { Routes } from '../../routes'
 import { UserStore } from '../../store/user'
 import { NavbarItem } from './navbar-item'

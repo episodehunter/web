@@ -1,14 +1,13 @@
-import { action, observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import * as React from 'react'
-import styled from 'styled-components'
-import { Navigate, RouterState } from '../../router/router.types'
-import { withNavigation } from '../../router/withNavigation'
-import { UserStore } from '../../store/user'
-import { media } from '../../styles/media-queries'
-import { shark } from '../../utils/colors'
-import { Hamburger } from '../hamburger'
-import { NavbarItems } from './navbar-items'
+import { Navigate, RouterState, withNavigation } from '@vieriksson/the-react-router';
+import { action, observable } from 'mobx';
+import { inject, observer } from 'mobx-react';
+import * as React from 'react';
+import styled from 'styled-components';
+import { UserStore } from '../../store/user';
+import { media } from '../../styles/media-queries';
+import { shark } from '../../utils/colors';
+import { Hamburger } from '../hamburger';
+import { NavbarItems } from './navbar-items';
 
 type Props = {
   user?: UserStore

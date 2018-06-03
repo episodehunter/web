@@ -1,7 +1,6 @@
+import { Navigate, withNavigation } from '@vieriksson/the-react-router'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { Navigate } from '../router/router.types'
-import { withNavigation } from '../router/withNavigation'
 import { Routes } from '../routes'
 import { UserStore } from '../store/user'
 
