@@ -1,9 +1,13 @@
+import {
+  Navigate,
+  RouterState,
+  withNavigation
+} from '@vieriksson/the-react-router'
 import { inject } from 'mobx-react'
+import React from 'react'
 import { Routes } from '../routes'
 import { UserStore } from '../store/user'
 import { getExpiresFromHash, getTokenFromHash } from '../utils/http.utils'
-import { RouterState, Navigate } from '@vieriksson/the-react-router/dist/types'
-import { withNavigation } from '@vieriksson/the-react-router'
 
 type Props = {
   state: RouterState
@@ -28,7 +32,7 @@ export const LoginCompletePageComponent = ({
     navigate(Routes.upcoming)
   }
 
-  return null
+  return <div />
 }
 
 export const LoginCompletePage = withNavigation(

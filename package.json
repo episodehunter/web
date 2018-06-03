@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@tjoskar/react-lazyload-img": "^1.0.4",
-    "@vieriksson/the-react-router": "^1.0.0",
+    "@vieriksson/the-react-router": "^1.1.1",
     "auth0-lock": "^11.4.0",
     "date-fns": "^1.29.0",
     "graphql-request": "^1.5.1",

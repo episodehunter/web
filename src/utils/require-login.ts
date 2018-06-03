@@ -1,9 +1,8 @@
+import { Navigate, withNavigation } from '@vieriksson/the-react-router'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import { Routes } from '../routes'
 import { UserStore } from '../store/user'
-import { withNavigation } from '@vieriksson/the-react-router'
-import { Navigate } from '@vieriksson/the-react-router/dist/types'
 
 type ComponentType<P> = ((props: P) => JSX.Element) | React.ComponentClass<P>
 type ExtendedProps<P> = P & { user: UserStore; navigate: Navigate }
