@@ -1,6 +1,7 @@
 import { configure, reaction } from 'mobx'
 import { Dispatch } from '../actions/dispatcher'
 import { Following } from './following'
+import { SearchStore } from './search.store'
 import { ShowStore } from './show.store'
 import { TitlesStore } from './titles.store'
 import { UpcomingStore } from './upcoming'
@@ -14,6 +15,7 @@ export class Store {
   upcoming: UpcomingStore
   user: UserStore
   titles: TitlesStore
+  search: SearchStore
 
   constructor(dispatch: Dispatch) {
     this.showStore = new ShowStore()
@@ -22,6 +24,7 @@ export class Store {
     this.upcoming = new UpcomingStore(this.following)
     this.user = new UserStore(this.following)
     this.titles = new TitlesStore()
+    this.search = new SearchStore()
 
     // TODO: MOVE THIS
     reaction(

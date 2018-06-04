@@ -5,13 +5,13 @@ import { media } from '../../styles/media-queries'
 import { alabaster, gossamer, melrose } from '../../utils/colors'
 
 type Props = {
-  navigate: Navigate
+  onClick: () => void
   path: string
   title: string
   selected: boolean
 }
-export const NavbarItem = ({ navigate, path, selected, title }: Props) => (
-  <Item selected={selected} onClick={() => navigate(path)}>
+export const NavbarItem = ({ selected, title, onClick }: Props) => (
+  <Item selected={selected} onClick={onClick}>
     {title}
   </Item>
 )

@@ -11,6 +11,7 @@ import { Routes } from '../routes'
 import { shark } from '../utils/colors'
 import { requireLogin } from '../utils/require-login'
 import { Navbar } from './navbar/navbar'
+import { Search } from './search'
 
 type RouteComponent = any
 type RouteOptions = {
@@ -59,6 +60,7 @@ function RouteLayout(
   const RenderComponent = unauthed ? component : requireLogin<any>(component)
   return props => (
     <Wrapper>
+      <Search />
       {!hideNavbar && <Navbar />}
       {<RenderComponent {...props} />}
     </Wrapper>
