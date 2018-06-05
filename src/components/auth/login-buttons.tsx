@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { alabaster, mountainMeadow, melrose } from '../utils/colors'
-import { auth } from '../auth'
+import { auth } from '../../auth'
+import { alabaster, melrose, mountainMeadow } from '../../utils/colors'
 
 export const RegisterButton = () => {
   const openLock = () => {

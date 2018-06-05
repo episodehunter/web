@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { RegisterButton, LoginButton } from '../login-buttons'
+import { LoginButton, RegisterButton } from '../auth/login-buttons'
 
-export const MainHeader = () => (
+export const FlotingLoginButtons = () => (
   <Wrapper>
     <ButtonWrapper>
       <RegisterButton />
@@ -14,9 +14,10 @@ export const MainHeader = () => (
 )
 
 const Wrapper = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
   display: flex;
-  align-self: flex-end;
-  margin-top: 20px;
 `
 const ButtonWrapper = styled.div`
   margin-right: 20px;

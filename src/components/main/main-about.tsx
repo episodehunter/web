@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { gossamer, alabaster } from '../../utils/colors'
 import { media } from '../../styles/media-queries'
+import { alabaster, gossamer } from '../../utils/colors'
 
 export const MainAbout = () => (
   <Wrapper>
@@ -36,7 +36,7 @@ const Header = styled.h1`
 
 const Wrapper = styled.div`
   color: ${alabaster};
-  align-items: flex-end;
+  align-self: flex-end;
   font-family: 'Lato', sans-serif;
 `
 
