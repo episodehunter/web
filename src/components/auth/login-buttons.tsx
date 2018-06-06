@@ -1,19 +1,26 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { auth } from '../../auth'
+import { AuthFormState } from '../../enum'
 import { alabaster, melrose, mountainMeadow } from '../../utils/colors'
 
-export const RegisterButton = () => {
-  const openLock = () => {
-    auth.register()
-  }
-  return <Register onClick={openLock}>Register</Register>
+type Props = {
+  changeFormState(newState: AuthFormState): void
 }
-export const LoginButton = () => {
-  const openLock = () => {
-    auth.login()
+
+export const RegisterButton = ({ changeFormState }: Props) => {
+  const onClick = () => {
+    changeFormState(AuthFormState.register)
+    window.scrollTo(0, document.body.scrollHeight)
   }
-  return <Login onClick={openLock}>Login</Login>
+  return <Register onClick={onClick}>Register</Register>
+}
+
+export const LoginButton = ({ changeFormState }: Props) => {
+  const onClick = () => {
+    changeFormState(AuthFormState.login)
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+  return <Login onClick={onClick}>Login</Login>
 }
 
 const Button = styled.div`

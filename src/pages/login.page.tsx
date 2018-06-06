@@ -1,11 +1,13 @@
 import { Navigate, withNavigation } from '@vieriksson/the-react-router'
+import { action, observable, reaction } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { LoginFormComponent } from '../components/auth/login-form'
+import { LoginForm } from '../components/auth/login-form'
 import { FlotingLoginButtons } from '../components/main/floting-login-buttons'
 import { MainAbout } from '../components/main/main-about'
 import { MainFooter } from '../components/main/main-footer'
+import { AuthFormState } from '../enum'
 import { images } from '../images.config'
 import { Routes } from '../routes'
 import { UserStore } from '../store/user'
@@ -17,24 +19,45 @@ type Props = {
 }
 
 export class LoginPageComponent extends React.Component<Props> {
-  componentDidMount() {
-    const { user, navigate } = this.props
-    if (user.isAuthenticated) {
-      navigate(Routes.upcoming)
+  disposeReaction: () => void
+  @observable authFormState = AuthFormState.login
+
+  constructor(props, context) {
+    super(props, context)
+    this.disposeReaction = reaction(
+      () => props.user.isAuthenticated,
+      isAuthenticated => isAuthenticated && props.navigate(Routes.upcoming),
+      { fireImmediately: true }
+    )
+  }
+
+  componentWillUnmount() {
+    this.disposeReaction()
+  }
+
+  @action
+  changeFormState(newState: AuthFormState) {
+    this.authFormState = newState
+  }
+
+  renderAuthForm() {
+    if (this.authFormState === AuthFormState.login) {
+      return <LoginForm login={(e, p) => this.props.user.login(e, p)} />
     }
+    return null
   }
 
   render() {
     return (
       <Wrapper>
-        <FlotingLoginButtons />
+        <FlotingLoginButtons
+          changeFormState={state => this.changeFormState(state)}
+        />
         <TopImage>
           <MainAbout />
         </TopImage>
         <BottomSection>
-          <FormWrapper>
-            <LoginFormComponent />
-          </FormWrapper>
+          <FormWrapper>{this.renderAuthForm()}</FormWrapper>
           <MainFooter />
         </BottomSection>
       </Wrapper>

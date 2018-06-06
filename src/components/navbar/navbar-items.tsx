@@ -11,6 +11,26 @@ type Props = {
   stateUrl: string
 }
 
+export const NavbarItems = ({ user, navigate, stateUrl }: Props) => {
+  return (
+    <>
+      {items.map(item => (
+        <NavbarItem
+          key={item.path}
+          navigate={navigate}
+          path={item.path}
+          title={item.title}
+          selected={isPathEqual(item.path, stateUrl)}
+        />
+      ))}
+      <Image
+        onClick={() => user!.signOut()}
+        src={'https://episodehunter.tv/img/logga.png'}
+      />
+    </>
+  )
+}
+
 const items = [
   {
     path: Routes.upcoming,
@@ -31,26 +51,6 @@ const items = [
 ]
 
 const isPathEqual = (urlPath, statePath) => urlPath === statePath
-
-export const NavbarItems = ({ user, navigate, stateUrl }: Props) => {
-  return (
-    <>
-      {items.map(item => (
-        <NavbarItem
-          key={item.path}
-          navigate={navigate}
-          path={item.path}
-          title={item.title}
-          selected={isPathEqual(item.path, stateUrl)}
-        />
-      ))}
-      <Image
-        onClick={() => user!.logout()}
-        src={user!.picture || 'https://episodehunter.tv/img/logga.png'}
-      />
-    </>
-  )
-}
 
 const Image = styled.img.attrs({
   src: (props: { src?: string }) => props.src

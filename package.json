@@ -32,7 +32,6 @@
     "@babel/plugin-proposal-decorators": "7.0.0-beta.47",
     "@babel/preset-react": "7.0.0-beta.47",
     "@babel/preset-typescript": "7.0.0-beta.47",
-    "@types/auth0-lock": "11.4.3",
     "@types/history": "4.6.2",
     "@types/jest": "23.0.0",
     "@types/react": "16.3.14",
@@ -53,8 +52,8 @@
   "dependencies": {
     "@tjoskar/react-lazyload-img": "^1.0.4",
     "@vieriksson/the-react-router": "^1.1.1",
-    "auth0-lock": "^11.4.0",
     "date-fns": "^1.29.0",
+    "firebase": "^5.0.4",
     "graphql-request": "^1.5.1",
     "idb-keyval": "^3.0.3",
     "mobx": "^4.2.1",

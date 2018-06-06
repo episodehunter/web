@@ -3,11 +3,22 @@ import { gqlRequest } from '../utils/http.utils'
 import { followingQuery, showQuery } from './queries'
 import { FollowingResponse, ShowResponse } from './responses'
 
-export const api = {
+export interface UserApiClient {
+  fetchFollowing: () => Promise<number[]>
+}
+
+export const createUserApiClient = (
+  userToken: () => Promise<string>
+): UserApiClient => ({
   fetchFollowing: () =>
-    gqlRequest<FollowingResponse>(followingQuery).then(result =>
-      result.following.map(f => f.id)
-    ),
+    userToken().then(token =>
+      gqlRequest<FollowingResponse>(followingQuery, undefined, token).then(
+        result => result.following.map(f => f.id)
+      )
+    )
+})
+
+export const api = {
   fetchShow: (id: number, type: ShowRequestType) =>
     gqlRequest<{ show: ShowResponse }>(showQuery(type), { id }).then(
       response => response.show

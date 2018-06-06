@@ -15,9 +15,9 @@ export class Store {
 
   constructor(dispatch: Dispatch) {
     this.showStore = new ShowStore()
-    this.following = new Following(this.showStore, dispatch)
+    this.user = new UserStore()
+    this.following = new Following(this.showStore, this.user, dispatch)
     this.upcoming = new UpcomingStore(this.following)
-    this.user = new UserStore(this.following)
 
     // TODO: MOVE THIS
     reaction(

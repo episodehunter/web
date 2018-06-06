@@ -2,7 +2,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Fallback } from '../pages/fallback.page'
 import { FollowingPage } from '../pages/following.page'
-import { LoginCompletePage } from '../pages/login-complete.page'
 import { LoginPage } from '../pages/login.page'
 import { PopularPage } from '../pages/popular.page'
 import { SearchPage } from '../pages/search.page'
@@ -46,13 +45,6 @@ export const routes = {
     {
       path: Routes.login,
       component: RouteLayout(LoginPage, {
-        hideNavbar: true,
-        unauthed: true
-      })
-    },
-    {
-      path: Routes.loginComplete,
-      component: RouteLayout(LoginCompletePage, {
         hideNavbar: true,
         unauthed: true
       })
