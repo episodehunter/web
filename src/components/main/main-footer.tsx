@@ -1,44 +1,18 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { manatee } from '../../utils/colors'
-import { RegisterButton, LoginButton } from '../login-buttons'
 import { media } from '../../styles/media-queries'
+import { manatee } from '../../utils/colors'
 
 export const MainFooter = () => (
-  <Wrapper>
-    <ButtonsWrapper>
-      <ButtonWrapper>
-        <RegisterButton />
-      </ButtonWrapper>
-      <ButtonWrapper>
-        <LoginButton />
-      </ButtonWrapper>
-    </ButtonsWrapper>
-    <FooterWrapper>
-      <FooterItem>©EpisodeHunter 2018</FooterItem>
-      <FooterItem>Privacy Policy</FooterItem>
-      <FooterItem>Terms of Service</FooterItem>
-      <FooterItem>XBMC</FooterItem>
-    </FooterWrapper>
-  </Wrapper>
+  <FooterWrapper>
+    <FooterItem>©EpisodeHunter 2018</FooterItem>
+    <FooterItem>Privacy Policy</FooterItem>
+    <FooterItem>Terms of Service</FooterItem>
+    <FooterItem>Kodi</FooterItem>
+    <FooterItem>Plex</FooterItem>
+    <FooterItem>Github</FooterItem>
+  </FooterWrapper>
 )
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`
-
-const ButtonsWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`
-
-const ButtonWrapper = styled.div`
-  margin: 20px;
-`
 
 const FooterWrapper = styled.div`
   height: 50px;
@@ -48,7 +22,7 @@ const FooterWrapper = styled.div`
 
 const FooterItem = styled.div`
   font-family: 'Lato', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   color: ${manatee};
   cursor: pointer;
   ${media.giant`margin: 0 40px;`};

@@ -1,51 +1,38 @@
-import { observable, action, runInAction, computed } from 'mobx'
-import { authApi } from '../api/auth.api'
-import { Following } from './following'
-
-type NullString = string | null
+import { User } from 'firebase'
+import { action, computed, observable } from 'mobx'
+import { UserApiClient, createUserApiClient } from '../api/api'
+import {
+  authStateChange$,
+  getIdToken,
+  signInWithEmailAndPassword,
+  signOut
+} from '../utils/auth.util'
 
 export class UserStore {
-  following: Following
-  @observable token: NullString = localStorage.getItem('token')
-  @observable expires: NullString = localStorage.getItem('expires')
-  @observable nickname: NullString = localStorage.getItem('nickname')
-  @observable picture: NullString = localStorage.getItem('picture')
+  @observable.ref user: User | null | undefined = undefined
+  apiClient: UserApiClient
 
-  constructor(following: Following) {
-    this.following = following
+  constructor() {
+    authStateChange$.subscribe(user => this.setUser(user))
+    this.apiClient = createUserApiClient(getIdToken)
   }
 
   @action
-  setAuthentication = (token: string, expires: string) => {
-    localStorage.setItem('token', token)
-    localStorage.setItem('expires', expires)
-    this.token = token
-    this.expires = expires
-    this.fetchUserInfo()
-  }
-
-  @action
-  logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('expires')
-    this.token = null
-    this.expires = null
+  setUser(user) {
+    this.user = user
   }
 
   @computed
   get isAuthenticated() {
-    return this.expires && new Date().getTime() < Number(this.expires)
+    return Boolean(this.user)
   }
 
-  @action
-  fetchUserInfo = () => {
-    authApi.fetchUser().then(res => {
-      runInAction(() => {
-        localStorage.setItem('nickname', res.nickname)
-        localStorage.setItem('picture', res.picture)
-        this.nickname = res.nickname
-        this.picture = res.picture
-      })
-    })
+  signOut() {
+    signOut()
+  }
+
+  login(email: string, password: string) {
+    console.log('login in with', email, password)
+    return signInWithEmailAndPassword(email, password)
   }
 }

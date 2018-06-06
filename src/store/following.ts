@@ -1,17 +1,19 @@
 import { action, computed, flow, observable } from 'mobx'
 import { Dispatch } from '../actions/dispatcher'
-import { api } from '../api/api'
 import { ModelStatus } from '../enum/model-status'
 import { ShowStore } from './show.store'
+import { UserStore } from './user'
 
 export class Following {
   private showStore: ShowStore
+  private userStore: UserStore
   private dispatch: Dispatch
   @observable followingShowsId: number[] = []
   @observable status = ModelStatus.notLoaded
 
-  constructor(showStore: ShowStore, dispatch: Dispatch) {
+  constructor(showStore: ShowStore, userStore: UserStore, dispatch: Dispatch) {
     this.showStore = showStore
+    this.userStore = userStore
     this.dispatch = dispatch
   }
 
@@ -31,7 +33,7 @@ export class Following {
   updateFollwing = flow(function*(this: Following) {
     this.status = ModelStatus.loading
     try {
-      this.followingShowsId = yield api.fetchFollowing()
+      this.followingShowsId = yield this.userStore.apiClient.fetchFollowing()
       this.followingShowsId.forEach(id => {
         this.showStore.addShow(id)
         this.dispatch.fetchParialShow(id)
