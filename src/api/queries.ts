@@ -49,6 +49,7 @@ export const showQuery = (() => {
 export const titlesQuery = `{
   hollowShows {
 		id,
-    name
+    name,
+    tvdbId
   }
 }`

@@ -1,11 +1,11 @@
+import { withNavigation } from '@vieriksson/the-react-router'
+import { observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { Show } from '../store/show'
-import { observer } from 'mobx-react'
-import { SmallShowPoster } from './poster/small-show-poster'
 import { media } from '../styles/media-queries'
-import { withNavigation } from '../router/withNavigation'
 import { PosterCard } from './poster-cards/poster-card'
+import { SmallShowPoster } from './poster/small-show-poster'
 
 type Props = {
   following: Show[]

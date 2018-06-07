@@ -4,7 +4,6 @@ import { Fallback } from '../pages/fallback.page'
 import { FollowingPage } from '../pages/following.page'
 import { LoginPage } from '../pages/login.page'
 import { PopularPage } from '../pages/popular.page'
-import { SearchPage } from '../pages/search.page'
 import { ShowPage } from '../pages/show.page'
 import { UpcomingPage } from '../pages/upcoming.page'
 import { Routes } from '../routes'
@@ -34,10 +33,6 @@ export const routes = {
     {
       path: Routes.popular,
       component: RouteLayout(PopularPage)
-    },
-    {
-      path: Routes.search,
-      component: RouteLayout(SearchPage)
     },
     {
       path: Routes.show,

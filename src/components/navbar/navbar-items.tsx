@@ -11,7 +11,7 @@ type Props = {
   user?: UserStore
   navigate: Navigate
   stateUrl: string
-  search: SearchStore
+  search?: SearchStore
 }
 
 const isPathEqual = (urlPath, statePath) => urlPath === statePath
@@ -46,7 +46,7 @@ export const NavbarItemsComponent = ({
         path={Routes.search}
         title="Search"
         selected={isPathEqual(Routes.search, stateUrl)}
-        onClick={() => search.toggleShow()}
+        onClick={() => search!.toggleShow()}
       />
       <Image
         onClick={() => user!.signOut()}

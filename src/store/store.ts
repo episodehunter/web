@@ -22,9 +22,9 @@ export class Store {
     this.user = new UserStore()
     this.following = new Following(this.showStore, this.user, dispatch)
     this.upcoming = new UpcomingStore(this.following)
-    this.user = new UserStore(this.following)
+    this.user = new UserStore()
     this.titles = new TitlesStore()
-    this.search = new SearchStore()
+    this.search = new SearchStore(this.user)
 
     // TODO: MOVE THIS
     reaction(

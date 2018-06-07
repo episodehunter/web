@@ -5,8 +5,10 @@ import { ModelStatus } from '../enum'
 import { TitlesStorageObject, storage } from '../storage'
 import { ModelLoader } from '../utils/model-loader.util'
 
-type Title = {
+export type Title = {
+  id: string
   name: string
+  tvdbId: number
 }
 
 export class TitlesStore {

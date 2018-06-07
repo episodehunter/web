@@ -1,14 +1,24 @@
-import { observable, action } from 'mobx'
+import { action, observable, reaction } from 'mobx'
 import { fromEvent } from 'rxjs'
-import { scan, filter, debounceTime } from 'rxjs/operators'
+import { debounceTime, filter, scan } from 'rxjs/operators'
+import { UserStore } from './user'
 
 export class SearchStore {
   @observable show: boolean = false
   @observable searchText: string = ''
   subscription
 
-  constructor() {
-    this.createSubscription()
+  constructor(user: UserStore) {
+    reaction(
+      () => user.isAuthenticated,
+      isAuthenticated => {
+        if (isAuthenticated) {
+          this.createSubscription()
+        } else {
+          this.removeSubscription()
+        }
+      }
+    )
   }
 
   createSubscription() {
@@ -34,9 +44,15 @@ export class SearchStore {
   toggleShow() {
     this.show = !this.show
     if (this.show) {
-      this.subscription.unsubscribe()
+      this.removeSubscription()
+      this.setSearchText('')
     } else {
       this.createSubscription()
     }
+  }
+
+  @action
+  removeSubscription() {
+    this.subscription.unsubscribe()
   }
 }

@@ -34,6 +34,7 @@ export type UserInfoResponse = {
 }
 
 export type TitlesResponse = {
-  id: number
+  id: string
   name: string
+  tvdbId: number
 }[]
