@@ -2,7 +2,7 @@
 
 exports[`Poster renders correctly 1`] = `
 <a
-  className="sc-bxivhb exDgKY sc-bdVaJa cxUmkD"
+  className="sc-bxivhb goOUWs sc-bdVaJa cxUmkD"
   onClick={[Function]}
 >
   <img

@@ -24,7 +24,7 @@ export class SearchComponent extends React.Component<Props> {
   componentDidMount() {
     this.subscription = fromEvent<KeyboardEvent>(document, 'keydown').subscribe(
       keyEvent => {
-        if (keyEvent.key.toLowerCase() === 'escape') {
+        if (keyIsEscape(keyEvent.key)) {
           this.props.search!.toggleShow()
         }
       }
@@ -37,20 +37,18 @@ export class SearchComponent extends React.Component<Props> {
 
   onPress(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault()
-    // this.props.navigate!(`/show/${id}`)
   }
 
   render() {
     const { search, titles } = this.props
-    this.fuse = new Fuse(titles!.titles, {
-      shouldSort: true,
-      keys: ['name'],
-      maxPatternLength: 32,
-      minMatchCharLength: 2,
-      threshold: 0.6,
-      distance: 100
-    })
-    const res = this.fuse.search<Title>(search!.searchText)
+    this.fuse = new Fuse(titles!.titles, fuseOptions)
+
+    let res
+    if (searchTextToShort(search!.searchText)) {
+      res = []
+    } else {
+      res = this.fuse.search<Title>(search!.searchText)
+    }
     return search!.show ? (
       <OverlayWrapper onClick={() => search!.toggleShow()}>
         <Wrapper>
@@ -62,7 +60,7 @@ export class SearchComponent extends React.Component<Props> {
             />
           </SearchWrapper>
           <ResultWrapper>
-            {res.slice(0, 16).map(title => (
+            {res.slice(0, 15).map(title => (
               <ResultItem key={title.id} onClick={event => this.onPress(event)}>
                 <PosterCard
                   linkUrl={`/show/${title.id}`}
@@ -80,6 +78,18 @@ export class SearchComponent extends React.Component<Props> {
   }
 }
 
+const fuseOptions = {
+  shouldSort: true,
+  keys: ['name'],
+  maxPatternLength: 32,
+  minMatchCharLength: 2,
+  threshold: 0.6,
+  distance: 100
+}
+
+const searchTextToShort = searchText => searchText.length < 3
+const keyIsEscape = key => key.toLowerCase() === 'escape'
+
 export const Search = composeHOC<Props>(
   withNavigation,
   inject('search', 'titles'),
@@ -88,14 +98,20 @@ export const Search = composeHOC<Props>(
 
 const ResultWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   margin-top: 20px;
+  margin-bottom: 40px;
 `
 
-const ResultItem = styled.div``
+const ResultItem = styled.div`
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+`
 
 const Wrapper = styled.div`
-  width 60%;
+  width 80%;
+  height: 100%;
 `
 
 const SearchBox = styled.input`
@@ -130,4 +146,5 @@ const OverlayWrapper = styled.div`
   position: fixed;
   display: flex;
   justify-content: center;
+  overflow-y: scroll;
 `
