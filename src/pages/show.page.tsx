@@ -71,7 +71,7 @@ class ShowPageComponent extends React.Component<Props> {
             </ProgressWarpper>
             <NextEpisodeWarpper>
               <H3>Next episode to watch</H3>
-              <NextEpisode episode={show.previousEpisode} />
+              <NextEpisode show={show} />
             </NextEpisodeWarpper>
           </Content>
         </Wrapper>

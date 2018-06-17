@@ -6,6 +6,18 @@ export const followingQuery = `{
 	}
 }`
 
+export const watchedEpisodes = `
+  query getWatchedEpisodes($showId: Int!) {
+    watchedEpisodes(showId: $showId) {
+      showId,
+      season,
+      episode,
+      time,
+      type
+    }
+  }
+`
+
 export const showQuery = (() => {
   const fragmentShow = `
     id

@@ -17,5 +17,8 @@ export const fetchHandler = (
     case 'FETCH_FULL_SHOW':
       store.showStore.getShow(action.payload.showId).load(ShowRequestType.full)
       break
+    case 'FETCH_SHOW_HISTORY':
+      store.history.load(action.payload.showId)
+      break
   }
 }

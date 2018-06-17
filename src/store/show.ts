@@ -1,11 +1,18 @@
 import { startOfDay } from 'date-fns'
 import { action, computed, observable } from 'mobx'
-import { ShowResponse } from '../api/responses'
+import { ShowResponse, WatchedEpisode } from '../api/responses'
 import { ShowRequestType } from '../enum/request-type'
-import { request } from '../request'
-import { nextEpisode, previousEpisode } from '../utils/episode.util'
+import { Request } from '../request'
+import {
+  isHigherEpisode,
+  nextEpisode,
+  previousEpisode
+} from '../utils/episode.util'
+import { compose } from '../utils/function.util'
+import { filter, findBest } from '../utils/iterable.util'
 import { ModelLoader } from '../utils/model-loader.util'
 import { Episode, EpisodeWithAirDate } from './episode'
+import { HistoryStore } from './history.store'
 
 export class Show {
   @observable id: number
@@ -23,15 +30,16 @@ export class Show {
   @observable airsTime: string
   @observable episodes: Episode[] = []
   loader = new ModelLoader<ShowRequestType>()
+  private history: HistoryStore
 
-  constructor(id: number) {
+  constructor(request: Request, history: HistoryStore, id: number) {
     this.id = id
+    this.history = history
     const requestShow = (type: ShowRequestType) => request.show(this.id, type)
     const updateShow = show => this.update(show)
     this.loader.register(requestShow)(updateShow)
   }
 
-  @action
   load(type: ShowRequestType): void {
     this.loader.load(type)
   }
@@ -53,6 +61,26 @@ export class Show {
     this.episodes = showResponse.episodes.map(episodeResponse =>
       Episode.createFromResponse(episodeResponse)
     )
+  }
+
+  @computed
+  get nextEpisodeToWatch(): EpisodeWithAirDate | undefined {
+    const latesWatchedEpisode = findBest<WatchedEpisode>((prev, curr) =>
+      isHigherEpisode(curr, prev)
+    )(this.history.getHistoryForShow(this.id))
+
+    if (!latesWatchedEpisode) {
+      if (this.episodes.length === 0 || !this.episodes[0].hasValidAirDate) {
+        return undefined
+      }
+      return this.episodes[0] as EpisodeWithAirDate
+    }
+
+    return compose(
+      findBest<Episode>((prev, curr) => isHigherEpisode(prev, curr)),
+      filter<Episode>(e => isHigherEpisode(e, latesWatchedEpisode)),
+      filter<Episode>(e => e.hasValidAirDate)
+    )(this.episodes)
   }
 
   @computed

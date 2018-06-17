@@ -43,3 +43,23 @@ export function previousEpisode(
     filterOutAirdEpisodes
   )(episodes)
 }
+
+export function isSameEpisode(
+  a: { episode: number; season: number },
+  b: { episode: number; season: number }
+) {
+  return a.episode === b.episode && a.season === b.season
+}
+
+export function isHigherEpisode(
+  a: { episode: number; season: number },
+  b: { episode: number; season: number }
+) {
+  if (a.season < b.season) {
+    return false
+  } else if (a.season > b.season) {
+    return true
+  } else {
+    return a.episode > b.episode
+  }
+}
