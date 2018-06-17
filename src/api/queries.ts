@@ -54,6 +54,11 @@ export const showQuery = (() => {
           ${type === ShowRequestType.partial ? partialEpisode : fullEpisode}
         }
       }
+      ${
+        type === ShowRequestType.partial
+          ? ''
+          : 'numberOfShowFollowers(showId: $id)'
+      }
     }
   `
 })()

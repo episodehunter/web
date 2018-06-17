@@ -22,6 +22,7 @@ export type ShowResponse = {
   airsDayOfWeek: string
   airsTime: string
   episodes: EpisodeResponse[]
+  numberOfFollowers?: number
 }
 
 export type FollowingResponse = {

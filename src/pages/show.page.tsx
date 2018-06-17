@@ -142,7 +142,10 @@ const Facts = ({ show }: { show: Show }) => (
     <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
     <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
     <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
-    <FactLine headline="Followers" info="-" />
+    <FactLine
+      headline="Followers"
+      info={safeStringConvertion(show.numberOfFollowers)}
+    />
   </ul>
 )
 

@@ -32,7 +32,12 @@ export const createApiClient = (
     ),
 
   fetchShow: (id: number, type: ShowRequestType) =>
-    gqlRequest<{ show: ShowResponse }>(showQuery(type), { id }).then(
-      response => response.show
+    gqlRequest<{ show: ShowResponse; numberOfShowFollowers?: number }>(
+      showQuery(type),
+      { id }
+    ).then(response =>
+      Object.assign(response.show, {
+        numberOfFollowers: response.numberOfShowFollowers
+      })
     )
 })

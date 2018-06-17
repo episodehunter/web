@@ -28,6 +28,7 @@ export class Show {
   @observable firstAired: Date
   @observable airsDayOfWeek: string
   @observable airsTime: string
+  @observable numberOfFollowers?: number
   @observable episodes: Episode[] = []
   loader = new ModelLoader<ShowRequestType>()
   private history: HistoryStore
@@ -58,6 +59,7 @@ export class Show {
     this.firstAired = startOfDay(new Date(showResponse.firstAired))
     this.airsDayOfWeek = showResponse.airsDayOfWeek
     this.airsTime = showResponse.airsTime
+    this.numberOfFollowers = showResponse.numberOfFollowers
     this.episodes = showResponse.episodes.map(episodeResponse =>
       Episode.createFromResponse(episodeResponse)
     )
