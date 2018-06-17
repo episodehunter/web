@@ -1,10 +1,12 @@
 import { startOfDay } from 'date-fns'
 import { action, computed, observable } from 'mobx'
+import { uniqWith } from 'ramda'
 import { ShowResponse, WatchedEpisode } from '../api/responses'
 import { ShowRequestType } from '../enum/request-type'
 import { Request } from '../request'
 import {
   isHigherEpisode,
+  isSameEpisode,
   nextEpisode,
   previousEpisode
 } from '../utils/episode.util'
@@ -83,6 +85,12 @@ export class Show {
       filter<Episode>(e => isHigherEpisode(e, latesWatchedEpisode)),
       filter<Episode>(e => e.hasValidAirDate)
     )(this.episodes)
+  }
+
+  @computed
+  get numberOfWatchedEpisodes() {
+    return uniqWith(isSameEpisode, this.history.getHistoryForShow(this.id))
+      .length
   }
 
   @computed

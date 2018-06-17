@@ -31,6 +31,37 @@ class ShowPageComponent extends React.Component<Props> {
     return this.props.showStore!.getShow(Number(this.props.params.id))
   }
 
+  @computed
+  get numberOfHoursLeft() {
+    return Math.round(
+      ((this.show.episodes.length - this.show.numberOfWatchedEpisodes) *
+        (this.show.runtime || 60)) /
+        60
+    )
+  }
+
+  @computed
+  get numberOfepisodesToWatchPercent() {
+    if (this.show.episodes.length === 0) {
+      return 0
+    }
+    return Math.round(
+      (this.show.numberOfWatchedEpisodes * 100) / this.show.episodes.length
+    )
+  }
+
+  get hoursLeftText() {
+    if (!this.numberOfHoursLeft) {
+      return null
+    }
+    return (
+      <>
+        That means you have about{' '}
+        <HighlightSpan>{this.numberOfHoursLeft}</HighlightSpan> hours left
+      </>
+    )
+  }
+
   setSeason(season: number) {
     return action(() => (this.selectedSeason = season))
   }
@@ -62,15 +93,23 @@ class ShowPageComponent extends React.Component<Props> {
             </FactWarpper>
             <ProgressWarpper>
               <H3>Your progress</H3>
-              <GapProgress percent={70} height="100px" width="100px" />
+              <GapProgress
+                percent={this.numberOfepisodesToWatchPercent}
+                height="100px"
+                width="100px"
+              />
               <P2 center={true}>
-                You've seen <HighlightSpan>10</HighlightSpan> out of{' '}
-                <HighlightSpan>15</HighlightSpan> episodes. <br />That means you
-                have about <HighlightSpan>5</HighlightSpan> hours left
+                You've seen{' '}
+                <HighlightSpan>
+                  {this.show.numberOfWatchedEpisodes}
+                </HighlightSpan>{' '}
+                out of{' '}
+                <HighlightSpan>{this.show.episodes.length}</HighlightSpan>{' '}
+                episodes. <br />
+                {this.hoursLeftText}
               </P2>
             </ProgressWarpper>
             <NextEpisodeWarpper>
-              <H3>Next episode to watch</H3>
               <NextEpisode show={show} />
             </NextEpisodeWarpper>
           </Content>

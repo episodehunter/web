@@ -4,7 +4,7 @@ import { Show } from '../../store/show'
 import { Today, dateReleaseFormat } from '../../utils/date.utils'
 import { composeHOC } from '../../utils/function.util'
 import { EpisodeImage } from '../episode/episode-image'
-import { P2 } from '../text'
+import { H3, P2 } from '../text'
 
 type Props = {
   show: Show
@@ -16,19 +16,22 @@ const NextEpisodeComponent = ({ show, today }: Props) => {
     return null
   }
   return (
-    <EpisodeImage tvdbId={show.nextEpisodeToWatch.tvdbId}>
-      <P2 margin={0}>
-        {show.nextEpisodeToWatch.seasonAndEpisodeNumber}{' '}
-        {show.nextEpisodeToWatch.name}
-      </P2>
-      <P2 margin={0}>
-        {dateReleaseFormat(
-          show.nextEpisodeToWatch.firstAired,
-          { future: date => `Airs ${date}`, past: date => `Aird ${date}` },
-          (today as Today)()
-        )}
-      </P2>
-    </EpisodeImage>
+    <>
+      <H3>Next episode to watch</H3>
+      <EpisodeImage tvdbId={show.nextEpisodeToWatch.tvdbId}>
+        <P2 margin={0}>
+          {show.nextEpisodeToWatch.seasonAndEpisodeNumber}{' '}
+          {show.nextEpisodeToWatch.name}
+        </P2>
+        <P2 margin={0}>
+          {dateReleaseFormat(
+            show.nextEpisodeToWatch.firstAired,
+            { future: date => `Airs ${date}`, past: date => `Aird ${date}` },
+            (today as Today)()
+          )}
+        </P2>
+      </EpisodeImage>
+    </>
   )
 }
 
