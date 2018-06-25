@@ -24,7 +24,7 @@ export class Store {
     this.upcoming = new UpcomingStore(this.following)
     this.user = new UserStore()
     this.titles = new TitlesStore()
-    this.search = new SearchStore(this.user)
+    this.search = new SearchStore(this.user, this.titles)
 
     // TODO: MOVE THIS
     reaction(

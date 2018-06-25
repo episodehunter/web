@@ -1,11 +1,10 @@
 import { Navigate, withNavigation } from '@vieriksson/the-react-router'
-import Fuse from 'fuse.js'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { Subscription, fromEvent } from 'rxjs'
 import styled from 'styled-components'
 import { SearchStore } from '../store/search.store'
-import { Title, TitlesStore } from '../store/titles.store'
+import { TitlesStore } from '../store/titles.store'
 import { alabaster, shark } from '../utils/colors'
 import { composeHOC } from '../utils/function.util'
 import { PosterCard } from './poster-cards/poster-card'
@@ -19,7 +18,6 @@ type Props = {
 
 export class SearchComponent extends React.Component<Props> {
   subscription: Subscription
-  fuse: Fuse
 
   componentDidMount() {
     this.subscription = fromEvent<KeyboardEvent>(document, 'keydown').subscribe(
@@ -40,15 +38,7 @@ export class SearchComponent extends React.Component<Props> {
   }
 
   render() {
-    const { search, titles } = this.props
-    this.fuse = new Fuse(titles!.titles, fuseOptions)
-
-    let res
-    if (searchTextToShort(search!.searchText)) {
-      res = []
-    } else {
-      res = this.fuse.search<Title>(search!.searchText)
-    }
+    const { search } = this.props
     return search!.show ? (
       <OverlayWrapper onClick={() => search!.toggleShow()}>
         <Wrapper>
@@ -60,7 +50,7 @@ export class SearchComponent extends React.Component<Props> {
             />
           </SearchWrapper>
           <ResultWrapper>
-            {res.slice(0, 15).map(title => (
+            {search!.result.map(title => (
               <ResultItem key={title.id} onClick={event => this.onPress(event)}>
                 <PosterCard
                   linkUrl={`/show/${title.id}`}
@@ -78,16 +68,6 @@ export class SearchComponent extends React.Component<Props> {
   }
 }
 
-const fuseOptions = {
-  shouldSort: true,
-  keys: ['name'],
-  maxPatternLength: 32,
-  minMatchCharLength: 2,
-  threshold: 0.6,
-  distance: 100
-}
-
-const searchTextToShort = searchText => searchText.length < 3
 const keyIsEscape = key => key.toLowerCase() === 'escape'
 
 export const Search = composeHOC<Props>(
