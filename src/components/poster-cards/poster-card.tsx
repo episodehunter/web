@@ -37,6 +37,7 @@ const BottomRight = styled.div`
 
 const Wrapper = styled(UnstyledLink)`
   justify-self: center;
+  cursor: pointer;
 `
 
 const InfoWrapper = styled.div`

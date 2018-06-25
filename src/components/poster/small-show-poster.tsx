@@ -4,9 +4,17 @@ import { Poster } from './poster'
 
 type Props = {
   tvdbId: number
+  scale?: number
 }
 
-export const SmallShowPoster = ({ tvdbId }: Props) =>
-  Boolean(tvdbId) ? (
-    <Poster width={185} height={273} imagePath={images.poster.small(tvdbId)} />
+export const SmallShowPoster = ({ tvdbId, scale }: Props) => {
+  const width = 185 * (scale || 1)
+  const height = 273 * (scale || 1)
+  return Boolean(tvdbId) ? (
+    <Poster
+      width={width}
+      height={height}
+      imagePath={images.poster.small(tvdbId)}
+    />
   ) : null
+}

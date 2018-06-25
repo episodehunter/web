@@ -4,13 +4,13 @@ import { Fallback } from '../pages/fallback.page'
 import { FollowingPage } from '../pages/following.page'
 import { LoginPage } from '../pages/login.page'
 import { PopularPage } from '../pages/popular.page'
-import { SearchPage } from '../pages/search.page'
 import { ShowPage } from '../pages/show.page'
 import { UpcomingPage } from '../pages/upcoming.page'
 import { Routes } from '../routes'
 import { shark } from '../utils/colors'
 import { requireLogin } from '../utils/require-login'
 import { Navbar } from './navbar/navbar'
+import { Search } from './search'
 
 type RouteComponent = any
 type RouteOptions = {
@@ -35,10 +35,6 @@ export const routes = {
       component: RouteLayout(PopularPage)
     },
     {
-      path: Routes.search,
-      component: RouteLayout(SearchPage)
-    },
-    {
       path: Routes.show,
       component: RouteLayout(ShowPage)
     },
@@ -59,6 +55,7 @@ function RouteLayout(
   const RenderComponent = unauthed ? component : requireLogin<any>(component)
   return props => (
     <Wrapper>
+      <Search />
       {!hideNavbar && <Navbar />}
       {<RenderComponent {...props} />}
     </Wrapper>

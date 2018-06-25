@@ -38,4 +38,7 @@ const Loading = styled.div`
 const Wrapper = styled.div`
   height: 100%;
   background-color: ${shark};
+  display: flex;
+  justify-content: center;
+  padding-top: 70px;
 `
