@@ -1,7 +1,6 @@
 import { Navigate } from '@vieriksson/the-react-router'
 import { inject } from 'mobx-react'
 import React from 'react'
-import styled from 'styled-components'
 import { Routes } from '../../routes'
 import { SearchStore } from '../../store/search.store'
 import { UserStore } from '../../store/user'
@@ -16,12 +15,7 @@ type Props = {
 
 const isPathEqual = (urlPath, statePath) => urlPath === statePath
 
-export const NavbarItemsComponent = ({
-  user,
-  search,
-  navigate,
-  stateUrl
-}: Props) => {
+export const NavbarItemsComponent = ({ search, navigate, stateUrl }: Props) => {
   return (
     <>
       <NavbarItem
@@ -37,34 +31,25 @@ export const NavbarItemsComponent = ({
         onClick={() => navigate(Routes.following)}
       />
       <NavbarItem
-        path={Routes.popular}
-        title="Popular"
-        selected={isPathEqual(Routes.popular, stateUrl)}
-        onClick={() => navigate(Routes.popular)}
+        path={Routes.history}
+        title="History"
+        selected={isPathEqual(Routes.history, stateUrl)}
+        onClick={() => navigate(Routes.history)}
       />
       <NavbarItem
         path={Routes.search}
         title="Search"
         selected={isPathEqual(Routes.search, stateUrl)}
-        onClick={() => search!.toggleShow()}
+        onClick={() => search!.toggleSearchBar()}
       />
-      <Image
-        onClick={() => user!.signOut()}
-        src={'https://episodehunter.tv/img/logga.png'}
+      <NavbarItem
+        path={Routes.settings}
+        title="Settings"
+        selected={isPathEqual(Routes.settings, stateUrl)}
+        onClick={() => navigate(Routes.settings)}
       />
     </>
   )
 }
 
 export const NavbarItems = inject('search')(NavbarItemsComponent)
-
-const Image = styled.img.attrs({
-  src: (props: { src?: string }) => props.src
-})`
-  margin-top: 16px;
-  margin-right: 30px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  cursor: pointer;
-`

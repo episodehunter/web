@@ -2,9 +2,9 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { shark } from '../utils/colors'
-import { Spinner } from '../components/spinner'
 import { FollowingComponent } from '../components/following'
 import { Following } from '../store/following'
+import { SpinnerPage } from './spinner.page'
 
 type Props = {
   following: Following
@@ -12,15 +12,11 @@ type Props = {
 
 export class FollowingPageComponent extends React.Component<Props> {
   render() {
-    return (
+    return this.props.following.isLoading ? (
+      <SpinnerPage />
+    ) : (
       <Wrapper>
-        {this.props.following.isLoading ? (
-          <Loading>
-            <Spinner />
-          </Loading>
-        ) : (
-          <FollowingComponent following={this.props.following.shows} />
-        )}
+        <FollowingComponent following={this.props.following.shows} />
       </Wrapper>
     )
   }
@@ -30,13 +26,7 @@ export const FollowingPage = inject('following')(
   observer(FollowingPageComponent)
 )
 
-const Loading = styled.div`
-  text-align: center;
-  margin-top: 100px;
-`
-
 const Wrapper = styled.div`
-  height: 100%;
   background-color: ${shark};
   display: flex;
   justify-content: center;

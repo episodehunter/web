@@ -23,7 +23,7 @@ export class SearchComponent extends React.Component<Props> {
     this.subscription = fromEvent<KeyboardEvent>(document, 'keydown').subscribe(
       keyEvent => {
         if (keyIsEscape(keyEvent.key)) {
-          this.props.search!.toggleShow()
+          this.props.search!.toggleSearchBar()
         }
       }
     )
@@ -40,7 +40,7 @@ export class SearchComponent extends React.Component<Props> {
   render() {
     const { search } = this.props
     return search!.show ? (
-      <OverlayWrapper onClick={() => search!.toggleShow()}>
+      <OverlayWrapper onClick={() => search!.toggleSearchBar()}>
         <Wrapper>
           <SearchWrapper>
             <SearchBox

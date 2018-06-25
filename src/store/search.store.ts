@@ -51,7 +51,7 @@ export class SearchStore {
         debounceTime(50)
       )
       .subscribe(text => {
-        this.toggleShow()
+        this.toggleSearchBar()
         this.setSearchText(text)
       })
   }
@@ -72,14 +72,25 @@ export class SearchStore {
   }
 
   @action
-  toggleShow() {
-    this.show = !this.show
+  toggleSearchBar() {
     if (this.show) {
-      this.removeSubscription()
-      this.setSearchText('')
+      this.hideSearchBar()
     } else {
-      this.createSubscription()
+      this.showSearchBar()
     }
+  }
+
+  @action
+  hideSearchBar() {
+    this.show = false
+    this.removeSubscription()
+    this.setSearchText('')
+  }
+
+  @action
+  showSearchBar() {
+    this.show = true
+    this.createSubscription()
   }
 
   @action

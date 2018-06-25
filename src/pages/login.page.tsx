@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { LoginForm } from '../components/auth/login-form'
 import { FlotingLoginButtons } from '../components/main/floting-login-buttons'
 import { MainAbout } from '../components/main/main-about'
-import { MainFooter } from '../components/main/main-footer'
 import { AuthFormState } from '../enum'
 import { images } from '../images.config'
 import { Routes } from '../routes'
@@ -49,18 +48,19 @@ export class LoginPageComponent extends React.Component<Props> {
 
   render() {
     return (
-      <Wrapper>
-        <FlotingLoginButtons
-          changeFormState={state => this.changeFormState(state)}
-        />
-        <TopImage>
-          <MainAbout />
-        </TopImage>
+      <>
+        <Wrapper>
+          <FlotingLoginButtons
+            changeFormState={state => this.changeFormState(state)}
+          />
+          <TopImage>
+            <MainAbout />
+          </TopImage>
+        </Wrapper>
         <BottomSection>
           <FormWrapper>{this.renderAuthForm()}</FormWrapper>
-          <MainFooter />
         </BottomSection>
-      </Wrapper>
+      </>
     )
   }
 }

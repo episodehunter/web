@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { Fallback } from '../pages/fallback.page'
 import { FollowingPage } from '../pages/following.page'
 import { LoginPage } from '../pages/login.page'
-import { PopularPage } from '../pages/popular.page'
 import { ShowPage } from '../pages/show.page'
 import { UpcomingPage } from '../pages/upcoming.page'
 import { Routes } from '../routes'
@@ -11,6 +10,14 @@ import { shark } from '../utils/colors'
 import { requireLogin } from '../utils/require-login'
 import { Navbar } from './navbar/navbar'
 import { Search } from './search'
+import { SettingsPage } from '../pages/settings.page'
+import { HistoryPage } from '../pages/history.page'
+import { Footer } from './main/Footer'
+import { PlexPage } from '../pages/static/plex.page'
+import { KodiPage } from '../pages/static/kodi.page'
+import { TosPage } from '../pages/static/tos.page'
+import { PrivacyPage } from '../pages/static/privacy.page'
+import { AboutPage } from '../pages/static/about.page'
 
 type RouteComponent = any
 type RouteOptions = {
@@ -31,8 +38,12 @@ export const routes = {
       component: RouteLayout(FollowingPage)
     },
     {
-      path: Routes.popular,
-      component: RouteLayout(PopularPage)
+      path: Routes.history,
+      component: RouteLayout(HistoryPage)
+    },
+    {
+      path: Routes.settings,
+      component: RouteLayout(SettingsPage)
     },
     {
       path: Routes.show,
@@ -44,6 +55,26 @@ export const routes = {
         hideNavbar: true,
         unauthed: true
       })
+    },
+    {
+      path: Routes.about,
+      component: RouteLayout(AboutPage)
+    },
+    {
+      path: Routes.privacy,
+      component: RouteLayout(PrivacyPage)
+    },
+    {
+      path: Routes.tos,
+      component: RouteLayout(TosPage)
+    },
+    {
+      path: Routes.kodi,
+      component: RouteLayout(KodiPage)
+    },
+    {
+      path: Routes.plex,
+      component: RouteLayout(PlexPage)
     }
   ]
 }
@@ -58,6 +89,7 @@ function RouteLayout(
       <Search />
       {!hideNavbar && <Navbar />}
       {<RenderComponent {...props} />}
+      <Footer />
     </Wrapper>
   )
 }

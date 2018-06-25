@@ -1,12 +1,12 @@
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { Spinner } from '../components/spinner'
 import { Upcoming } from '../components/upcoming'
 import { Show } from '../store/show'
 import { UpcomingStore } from '../store/upcoming'
 import { media } from '../styles/media-queries'
 import { shark } from '../utils/colors'
+import { SpinnerPage } from './spinner.page'
 
 type Props = {
   upcoming: UpcomingStore
@@ -20,41 +20,37 @@ export class UpcomingPageComponent extends React.Component<Props> {
         upcoming: { justAired, tba, today, upcoming, weekAhead }
       }
     } = this.props
-    return (
+    return isLoading ? (
+      <SpinnerPage />
+    ) : (
       <Wrapper>
-        {isLoading ? (
-          <Loading>
-            <Spinner />
-          </Loading>
-        ) : (
-          <UpcomingWrapper>
-            <Upcoming
-              title={'Just aired'}
-              shows={justAired}
-              extractEpisodeAirDate={extractPrevEpisodeAirDate}
-            />
-            <Upcoming
-              title={'Today'}
-              shows={today}
-              extractEpisodeAirDate={extractNextEpisodeAirDate}
-            />
-            <Upcoming
-              title={'The week ahead'}
-              shows={weekAhead}
-              extractEpisodeAirDate={extractNextEpisodeAirDate}
-            />
-            <Upcoming
-              title={'Upcoming'}
-              shows={upcoming}
-              extractEpisodeAirDate={extractNextEpisodeAirDate}
-            />
-            <Upcoming
-              title={'TBA'}
-              shows={tba}
-              extractEpisodeAirDate={extractNextEpisodeAirDate}
-            />
-          </UpcomingWrapper>
-        )}
+        <UpcomingWrapper>
+          <Upcoming
+            title={'Just aired'}
+            shows={justAired}
+            extractEpisodeAirDate={extractPrevEpisodeAirDate}
+          />
+          <Upcoming
+            title={'Today'}
+            shows={today}
+            extractEpisodeAirDate={extractNextEpisodeAirDate}
+          />
+          <Upcoming
+            title={'The week ahead'}
+            shows={weekAhead}
+            extractEpisodeAirDate={extractNextEpisodeAirDate}
+          />
+          <Upcoming
+            title={'Upcoming'}
+            shows={upcoming}
+            extractEpisodeAirDate={extractNextEpisodeAirDate}
+          />
+          <Upcoming
+            title={'TBA'}
+            shows={tba}
+            extractEpisodeAirDate={extractNextEpisodeAirDate}
+          />
+        </UpcomingWrapper>
       </Wrapper>
     )
   }
@@ -74,13 +70,8 @@ const UpcomingWrapper = styled.div`
   width: 95%;
 `
 
-const Loading = styled.div`
-  text-align: center;
-`
-
 const Wrapper = styled.div`
   padding-top: 70px;
-  height: 100%;
   background-color: ${shark};
   display: flex;
   justify-content: center;
