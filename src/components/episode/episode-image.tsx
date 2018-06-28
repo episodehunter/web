@@ -1,6 +1,5 @@
 import { LazyLoadBackgroundImage } from '@tjoskar/react-lazyload-img'
-import * as React from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import { images } from '../../images.config'
 
 type Props = {
@@ -24,13 +23,7 @@ export const EpisodeImage = ({ tvdbId, children, style }: Props) => (
       defaultImage={`https://www.placecage.com/g/${250}/${140}`}
       image={images.episode.small(tvdbId)}
     >
-      {children && <BottomTextWrapper>{children}</BottomTextWrapper>}
+      {children}
     </LazyLoadBackgroundImage>
   </>
 )
-
-const BottomTextWrapper = styled.div`
-  padding: 10px;
-  flex-grow: 1;
-  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5) 30%);
-`

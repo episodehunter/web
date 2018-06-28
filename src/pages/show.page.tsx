@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, when } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -6,17 +6,14 @@ import { EllipsisText } from '../components/ellipsis-text'
 import { ShowFanart } from '../components/fanart/show-fanart'
 import { SmallShowPoster } from '../components/poster/small-show-poster'
 import { GapProgress } from '../components/progress/gap-progress'
-import { Episodes } from '../components/show/episodes'
+import { Episodes } from '../components/show/episode/episodes'
+import { Facts } from '../components/show/facts'
 import { NextEpisode } from '../components/show/next-episode'
 import { Spinner } from '../components/spinner'
 import { H1, H3, HighlightSpan, P2 } from '../components/text'
-import { Show } from '../store/show'
 import { ShowStore } from '../store/show.store'
-import { safeJoin } from '../utils/array.util'
 import { alabaster, capeCod, melrose } from '../utils/colors'
-import { format } from '../utils/date.utils'
 import { composeHOC } from '../utils/function.util'
-import { safeStringConvertion } from '../utils/string.util'
 
 type Props = {
   showStore?: ShowStore
@@ -24,7 +21,27 @@ type Props = {
 }
 
 class ShowPageComponent extends React.Component<Props> {
+  private selectedSeasonDisposer: () => void
   @observable selectedSeason = 1
+
+  constructor(props, context) {
+    super(props, context)
+    this.selectedSeasonDisposer = when(
+      () => Boolean(this.show.watchHistory.length),
+      () => this.calculateSelectedSeason()
+    )
+  }
+
+  componentWillUnmount() {
+    this.selectedSeasonDisposer()
+  }
+
+  calculateSelectedSeason() {
+    const nextEpisodeToWatch = this.show.nextEpisodeToWatch
+    if (nextEpisodeToWatch && nextEpisodeToWatch.season) {
+      this.setSeason(nextEpisodeToWatch.season)()
+    }
+  }
 
   @computed
   get show() {
@@ -136,6 +153,10 @@ class ShowPageComponent extends React.Component<Props> {
   }
 }
 
+export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
+  ShowPageComponent
+)
+
 const backgroundColor = ({ active }: { active?: boolean }) =>
   active ? melrose : capeCod
 
@@ -157,48 +178,6 @@ const Button = styled.button`
     background: ${melrose};
   }
 `
-
-const buildAirsString = (
-  airsDayOfWeek: string,
-  airsTime: string,
-  network: string
-) =>
-  Boolean(airsDayOfWeek && airsTime && network)
-    ? `${airsDayOfWeek} at ${airsTime} on ${network}`
-    : ''
-
-const Facts = ({ show }: { show: Show }) => (
-  <ul style={{ listStyle: 'none', padding: 0 }}>
-    <FactLine
-      headline="Airs"
-      info={buildAirsString(show.airsDayOfWeek, show.airsTime, show.network)}
-    />
-    <FactLine
-      headline="Premiered"
-      info={format(show.firstAired, 'Do MMM -YY')}
-    />
-    <FactLine headline="Language" info={safeStringConvertion(show.language)} />
-    <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
-    <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
-    <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
-    <FactLine
-      headline="Followers"
-      info={safeStringConvertion(show.numberOfFollowers)}
-    />
-  </ul>
-)
-
-const FactLine = ({ headline, info }: { headline: string; info: string }) => (
-  <li>
-    <P2 margin={0}>
-      <HighlightSpan>{headline}:</HighlightSpan> {info}
-    </P2>
-  </li>
-)
-
-export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
-  ShowPageComponent
-)
 
 const Loading = styled.div`
   text-align: center;

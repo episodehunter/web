@@ -63,7 +63,7 @@ export class Show {
     this.airsTime = showResponse.airsTime
     this.numberOfFollowers = showResponse.numberOfFollowers
     this.episodes = showResponse.episodes.map(episodeResponse =>
-      Episode.createFromResponse(episodeResponse)
+      Episode.createFromResponse(this.id, episodeResponse, this.history)
     )
   }
 
@@ -71,7 +71,7 @@ export class Show {
   get nextEpisodeToWatch(): EpisodeWithAirDate | undefined {
     const latesWatchedEpisode = findBest<WatchedEpisode>((prev, curr) =>
       isHigherEpisode(curr, prev)
-    )(this.history.getHistoryForShow(this.id))
+    )(this.watchHistory)
 
     if (!latesWatchedEpisode) {
       if (this.episodes.length === 0 || !this.episodes[0].hasValidAirDate) {
@@ -85,6 +85,10 @@ export class Show {
       filter<Episode>(e => isHigherEpisode(e, latesWatchedEpisode)),
       filter<Episode>(e => e.hasValidAirDate)
     )(this.episodes)
+  }
+
+  get watchHistory() {
+    return this.history.getHistoryForShow(this.id)
   }
 
   @computed

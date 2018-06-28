@@ -27,7 +27,7 @@ export class HistoryStore {
   }
 }
 
-type WatchedHistory = {
+export type WatchedHistory = {
   showId: ShowId
   season: SeasonNumber
   episode: number

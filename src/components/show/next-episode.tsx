@@ -1,8 +1,9 @@
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import { Show } from '../../store/show'
-import { Today, dateReleaseFormat } from '../../utils/date.utils'
+import { dateReleaseFormat, Today } from '../../utils/date.utils'
 import { composeHOC } from '../../utils/function.util'
+import { BottomTextWrapper } from '../episode/bottom-text-wrapper'
 import { EpisodeImage } from '../episode/episode-image'
 import { H3, P2 } from '../text'
 
@@ -19,17 +20,19 @@ const NextEpisodeComponent = ({ show, today }: Props) => {
     <>
       <H3>Next episode to watch</H3>
       <EpisodeImage tvdbId={show.nextEpisodeToWatch.tvdbId}>
-        <P2 margin={0}>
-          {show.nextEpisodeToWatch.seasonAndEpisodeNumber}{' '}
-          {show.nextEpisodeToWatch.name}
-        </P2>
-        <P2 margin={0}>
-          {dateReleaseFormat(
-            show.nextEpisodeToWatch.firstAired,
-            { future: date => `Airs ${date}`, past: date => `Aird ${date}` },
-            (today as Today)()
-          )}
-        </P2>
+        <BottomTextWrapper>
+          <P2 margin={0}>
+            {show.nextEpisodeToWatch.seasonAndEpisodeNumber}{' '}
+            {show.nextEpisodeToWatch.name}
+          </P2>
+          <P2 margin={0}>
+            {dateReleaseFormat(
+              show.nextEpisodeToWatch.firstAired,
+              { future: date => `Airs ${date}`, past: date => `Aird ${date}` },
+              (today as Today)()
+            )}
+          </P2>
+        </BottomTextWrapper>
       </EpisodeImage>
     </>
   )
