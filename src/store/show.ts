@@ -24,7 +24,7 @@ export class Show {
   @observable genre: string[]
   @observable language: string
   @observable network: string
-  @observable runtime: number
+  @observable runtime?: number
   @observable ended: boolean
   @observable imdbId: string
   @observable firstAired: Date

@@ -1,16 +1,16 @@
 import { action, computed, observable, when } from 'mobx'
 import { inject, observer } from 'mobx-react'
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ShowFanart } from '../components/fanart/show-fanart'
 import { SmallShowPoster } from '../components/poster/small-show-poster'
-import { GapProgress } from '../components/progress/gap-progress'
 import { Episodes } from '../components/show/episode/episodes'
 import { Facts } from '../components/show/facts'
 import { NextEpisode } from '../components/show/next-episode'
+import { Progress } from '../components/show/progress'
 import { Spinner } from '../components/spinner'
-import { H1, H3, HighlightSpan, P2 } from '../components/text'
+import { H1, H3 } from '../components/text'
 import { ShowStore } from '../store/show.store'
 import { alabaster, capeCod, melrose } from '../utils/colors'
 import { composeHOC } from '../utils/function.util'
@@ -48,37 +48,6 @@ class ShowPageComponent extends React.Component<Props> {
     return this.props.showStore!.getShow(Number(this.props.params.id))
   }
 
-  @computed
-  get numberOfHoursLeft() {
-    return Math.round(
-      ((this.show.episodes.length - this.show.numberOfWatchedEpisodes) *
-        (this.show.runtime || 60)) /
-        60
-    )
-  }
-
-  @computed
-  get numberOfepisodesToWatchPercent() {
-    if (this.show.episodes.length === 0) {
-      return 0
-    }
-    return Math.round(
-      (this.show.numberOfWatchedEpisodes * 100) / this.show.episodes.length
-    )
-  }
-
-  get hoursLeftText() {
-    if (!this.numberOfHoursLeft) {
-      return null
-    }
-    return (
-      <>
-        That means you have about{' '}
-        <HighlightSpan>{this.numberOfHoursLeft}</HighlightSpan> hours left
-      </>
-    )
-  }
-
   setSeason(season: number) {
     return action(() => (this.selectedSeason = season))
   }
@@ -108,24 +77,7 @@ class ShowPageComponent extends React.Component<Props> {
               <H3>Facts</H3>
               <Facts show={show} />
             </FactWarpper>
-            <ProgressWarpper>
-              <H3>Your progress</H3>
-              <GapProgress
-                percent={this.numberOfepisodesToWatchPercent}
-                height="100px"
-                width="100px"
-              />
-              <P2 center={true}>
-                You've seen{' '}
-                <HighlightSpan>
-                  {this.show.numberOfWatchedEpisodes}
-                </HighlightSpan>{' '}
-                out of{' '}
-                <HighlightSpan>{this.show.episodes.length}</HighlightSpan>{' '}
-                episodes. <br />
-                {this.hoursLeftText}
-              </P2>
-            </ProgressWarpper>
+            <Progress show={show} />
             <NextEpisodeWarpper>
               <NextEpisode show={show} />
             </NextEpisodeWarpper>
@@ -209,12 +161,6 @@ const Wrapper = styled.div`
 
 const FactWarpper = styled.div`
   flex: 1;
-`
-
-const ProgressWarpper = styled(FactWarpper)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `
 
 const NextEpisodeWarpper = styled(FactWarpper)`

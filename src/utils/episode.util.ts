@@ -63,3 +63,23 @@ export function isHigherEpisode(
     return a.episode > b.episode
   }
 }
+
+export function numberOfUnwatchedHoursLeft(
+  numberOfEpisodes: number,
+  numberOfWatchedEpisodes: number,
+  runtime = 60
+) {
+  return Math.round(
+    ((numberOfEpisodes - numberOfWatchedEpisodes) * runtime) / 60
+  )
+}
+
+export function numberOfEpisodesToWatchPercent(
+  totalNumberOfEpisodes: number,
+  numberOfWatchedEpisodes: number
+) {
+  if (totalNumberOfEpisodes === 0) {
+    return 0
+  }
+  return Math.round((numberOfWatchedEpisodes * 100) / totalNumberOfEpisodes)
+}
