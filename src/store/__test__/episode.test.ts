@@ -6,7 +6,9 @@ const today = () => startOfDay(new Date('2018-04-06'))
 test('Has aird should not include today', () => {
   // Arrange
   const episode = Episode.createFromResponse(
+    1,
     { name: 'E1', firstAired: '2018-04-06' } as any,
+    null as any,
     today
   )
 
@@ -20,7 +22,9 @@ test('Has aird should not include today', () => {
 test('Has aird should include yesterday', () => {
   // Arrange
   const episode = Episode.createFromResponse(
+    1,
     { name: 'E1', firstAired: '2018-04-05' } as any,
+    null as any,
     today
   )
 
@@ -34,7 +38,9 @@ test('Has aird should include yesterday', () => {
 test('Will air should not include yesterday', () => {
   // Arrange
   const episode = Episode.createFromResponse(
+    1,
     { name: 'E1', firstAired: '2018-04-05' } as any,
+    null as any,
     today
   )
 
@@ -48,7 +54,9 @@ test('Will air should not include yesterday', () => {
 test('Will air should include today', () => {
   // Arrange
   const episode = Episode.createFromResponse(
+    1,
     { name: 'E1', firstAired: '2018-04-06' } as any,
+    null as any,
     today
   )
 
@@ -62,7 +70,9 @@ test('Will air should include today', () => {
 test('Will air should include tomorrow', () => {
   // Arrange
   const episode = Episode.createFromResponse(
+    1,
     { name: 'E1', firstAired: '2018-04-07' } as any,
+    null as any,
     today
   )
 
