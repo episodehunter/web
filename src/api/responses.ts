@@ -38,5 +38,5 @@ export type WatchedEpisode = {
   season: number
   episode: number
   time: number
-  type: 'plexScrobble'
+  type: 'plexScrobble' | 'checkin'
 }

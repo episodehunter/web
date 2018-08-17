@@ -1,4 +1,4 @@
-import { Observable, Observer } from 'rxjs'
+import { from, Observable, Observer } from 'rxjs'
 import { ApiClient } from './api/api'
 import { ShowResponse, WatchedEpisode } from './api/responses'
 import { ShowRequestType } from './enum/request-type'
@@ -11,6 +11,16 @@ export interface Request {
   show: (id: number, type?: ShowRequestType) => Observable<ShowResponse>
   history: (showId: number) => Observable<WatchedEpisode[]>
   following: () => Observable<number[]>
+  checkInEpisode: (
+    showId: number,
+    season: number,
+    episode: number
+  ) => Observable<WatchedEpisode>
+  unwatchEpisode: (
+    showId: number,
+    season: number,
+    episode: number
+  ) => Observable<null>
 }
 
 export const createRequestClient = (
@@ -85,5 +95,13 @@ export const createRequestClient = (
         .then(() => observer.complete())
         .catch(error => observer.error(error))
     })
+  },
+
+  checkInEpisode: (showId, season, episode) => {
+    return from(apiClient.checkInEpisode(showId, season, episode))
+  },
+
+  unwatchEpisode: (showId, season, episode) => {
+    return from(apiClient.unwatchEpisode(showId, season, episode))
   }
 })

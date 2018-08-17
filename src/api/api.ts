@@ -1,6 +1,12 @@
 import { ShowRequestType } from '../enum/request-type'
 import { gqlRequest } from '../utils/http.utils'
-import { followingQuery, showQuery, watchedEpisodes } from './queries'
+import {
+  checkInEpisode,
+  followingQuery,
+  showQuery,
+  unwatchEpisode,
+  watchedEpisodes
+} from './queries'
 import {
   FollowingResponse,
   ShowHistoryResponse,
@@ -12,6 +18,16 @@ export interface ApiClient {
   fetchFollowing: () => Promise<number[]>
   fetchShow: (id: number, type: ShowRequestType) => Promise<ShowResponse>
   fetchShowHistory: (showId: number) => Promise<WatchedEpisode[]>
+  checkInEpisode: (
+    showId: number,
+    season: number,
+    episode: number
+  ) => Promise<WatchedEpisode>
+  unwatchEpisode: (
+    showId: number,
+    season: number,
+    episode: number
+  ) => Promise<null>
 }
 
 export const createApiClient = (
@@ -39,5 +55,32 @@ export const createApiClient = (
       Object.assign(response.show, {
         numberOfFollowers: response.numberOfShowFollowers
       })
-    )
+    ),
+
+  checkInEpisode: (showId, season, episode) =>
+    userToken().then(token => {
+      const time = Math.floor(new Date().getTime() / 1000)
+      return gqlRequest<{ checkInEpisode: boolean }>(
+        checkInEpisode(showId, season, episode, time),
+        { showId },
+        token
+      ).then(() => ({
+        showId,
+        season,
+        episode,
+        time,
+        type: 'checkin' as 'checkin'
+      }))
+    }),
+
+  unwatchEpisode: (showId, season, episode) =>
+    userToken()
+      .then(token => {
+        return gqlRequest(
+          unwatchEpisode(showId, season, episode),
+          { showId },
+          token
+        )
+      })
+      .then(() => null)
 })

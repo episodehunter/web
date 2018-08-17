@@ -25,6 +25,13 @@ export function reduce<T>(acc: (prev: T, curr: T, index: number) => T) {
   }
 }
 
+export function exist<T>(predicate: (el: T) => boolean) {
+  return function(arr: IterableIterator<T> | T[]): boolean {
+    const { done } = filter(predicate)(arr).next()
+    return !done
+  }
+}
+
 export function findBest<T>(
   predicate: (prev: T, curr: T, index: number) => boolean
 ) {

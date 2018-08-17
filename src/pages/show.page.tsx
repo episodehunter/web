@@ -2,6 +2,7 @@ import { action, computed, observable, when } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import styled from 'styled-components'
+import { Button } from '../components/button'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ShowFanart } from '../components/fanart/show-fanart'
 import { SmallShowPoster } from '../components/poster/small-show-poster'
@@ -12,7 +13,6 @@ import { Progress } from '../components/show/progress'
 import { Spinner } from '../components/spinner'
 import { H1, H3 } from '../components/text'
 import { ShowStore } from '../store/show.store'
-import { alabaster, capeCod, melrose } from '../utils/colors'
 import { composeHOC } from '../utils/function.util'
 
 type Props = {
@@ -108,29 +108,6 @@ class ShowPageComponent extends React.Component<Props> {
 export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
   ShowPageComponent
 )
-
-const backgroundColor = ({ active }: { active?: boolean }) =>
-  active ? melrose : capeCod
-
-const Button = styled.button`
-  -webkit-appearance: none;
-  border: 0;
-  display: inline-block;
-  background: ${backgroundColor};
-  font-family: 'Lato', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: ${alabaster};
-  cursor: pointer;
-  font-size: 14px;
-  padding: 10px;
-  transition: all 0.2s ease-out;
-  margin: 0 10px 10px 0;
-  outline: 0;
-  &:hover {
-    background: ${melrose};
-  }
-`
 
 const Loading = styled.div`
   text-align: center;

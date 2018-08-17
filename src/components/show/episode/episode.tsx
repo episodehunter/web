@@ -5,6 +5,7 @@ import { EllipsisText } from '../../ellipsis-text'
 import { EpisodeImage } from '../../episode/episode-image'
 import { H4, HighlightSpan } from '../../text'
 import { AirDate } from './air-date'
+import { WatchedButton } from './watched-button'
 import { WatchedEpisodeDate } from './watched-episode-date'
 
 type Props = {
@@ -18,10 +19,13 @@ export const Episode = ({ episode }: Props) => (
     </EpisodeImage>
 
     <DescriptionWrapper>
-      <H4 margin={0}>
-        <HighlightSpan>{episode.seasonAndEpisodeNumber}</HighlightSpan>{' '}
-        {episode.name}
-      </H4>
+      <HeadlineWrapper>
+        <H4 margin={0}>
+          <HighlightSpan>{episode.seasonAndEpisodeNumber}</HighlightSpan>{' '}
+          {episode.name}
+        </H4>
+        <WatchedButton episode={episode} />
+      </HeadlineWrapper>
       <AirDate firstAired={episode.firstAired} />
       <EllipsisText length={350} style={{ margin: '10px 0 0 0' }}>
         {episode.overview}
@@ -30,10 +34,15 @@ export const Episode = ({ episode }: Props) => (
   </EpisodeWrapper>
 )
 
+const HeadlineWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 const EpisodeWrapper = styled.div`
   display: flex;
   margin-bottom: 20px;
 `
 const DescriptionWrapper = styled.div`
+  flex-grow: 1;
   margin-left: 20px;
 `

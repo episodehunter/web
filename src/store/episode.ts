@@ -4,7 +4,7 @@ import { EpisodeResponse } from '../api/responses'
 import { isSameDayOrAfter, Today, today } from '../utils/date.utils'
 import { isSameEpisode } from '../utils/episode.util'
 import { compose } from '../utils/function.util'
-import { filter, findBest } from '../utils/iterable.util'
+import { exist, filter, findBest } from '../utils/iterable.util'
 import { HistoryStore, WatchedHistory } from './history.store'
 
 export class Episode {
@@ -70,6 +70,13 @@ export class Episode {
   }
 
   @computed
+  get hasWatchedEpisode(): boolean {
+    return exist((episode: WatchedHistory) => isSameEpisode(episode, this))(
+      this.history.getHistoryForShow(this.showId)
+    )
+  }
+
+  @computed
   get hasValidAirDate() {
     return Boolean(this.firstAired && isValid(this.firstAired))
   }
@@ -85,6 +92,14 @@ export class Episode {
   get willAirInTheFuture() {
     const { hasValidAirDate, firstAired, today } = this
     return hasValidAirDate && isSameDayOrAfter(firstAired as Date, today)
+  }
+
+  markAsWatched() {
+    return this.history.addEpisode(this.showId, this.season, this.episode)
+  }
+
+  markAsUnwatched() {
+    return this.history.removeEpisode(this.showId, this.season, this.episode)
   }
 }
 

@@ -18,6 +18,36 @@ export const watchedEpisodes = `
   }
 `
 
+export const checkInEpisode = (
+  showId: number,
+  season: number,
+  episode: number,
+  time: number
+) => `
+  mutation {
+    checkInEpisode(episode: {
+      showId: ${showId},
+      season: ${season},
+      episode: ${episode},
+      time: ${time}
+    })
+  }
+`
+
+export const unwatchEpisode = (
+  showId: number,
+  season: number,
+  episode: number
+) => `
+  mutation {
+    unwatchEpisode(episode: {
+      showId: ${showId},
+      season: ${season},
+      episode: ${episode}
+    })
+  }
+`
+
 export const showQuery = (() => {
   const fragmentShow = `
     id
