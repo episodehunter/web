@@ -3,7 +3,6 @@ import { actions } from './actions'
 import { handlers } from './handlers'
 
 const baseDispatch = (action, store: Store, dispatch: Dispatch) => {
-  console.log('Dispatch', action)
   handlers.navigateHandler(action, store, dispatch)
   handlers.fetchHandler(action, store, dispatch)
 }
