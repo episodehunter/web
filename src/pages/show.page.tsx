@@ -126,6 +126,7 @@ const Button = styled.button`
   padding: 10px;
   transition: all 0.2s ease-out;
   margin: 0 10px 10px 0;
+  outline: 0;
   &:hover {
     background: ${melrose};
   }
