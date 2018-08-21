@@ -1,9 +1,9 @@
+import Fuse from 'fuse.js'
 import { action, observable, reaction } from 'mobx'
 import { fromEvent } from 'rxjs'
 import { debounceTime, filter, scan } from 'rxjs/operators'
+import { Title, TitlesStore } from './titles.store'
 import { UserStore } from './user'
-import { TitlesStore, Title } from './titles.store'
-import Fuse from 'fuse.js'
 
 const debounce = (fn, time) => {
   let timeout
@@ -17,9 +17,12 @@ const debounce = (fn, time) => {
 export class SearchStore {
   updateSearchResultDebounce = debounce(this.updateSearchResult.bind(this), 200)
 
-  @observable show: boolean = false
-  @observable searchText: string = ''
-  @observable result: Title[] = []
+  @observable
+  show: boolean = false
+  @observable
+  searchText: string = ''
+  @observable
+  result: Title[] = []
   fuse: Fuse = new Fuse([], fuseOptions)
   subscription
 
@@ -83,14 +86,14 @@ export class SearchStore {
   @action
   hideSearchBar() {
     this.show = false
-    this.removeSubscription()
-    this.setSearchText('')
+    this.createSubscription()
   }
 
   @action
   showSearchBar() {
     this.show = true
-    this.createSubscription()
+    this.removeSubscription()
+    this.setSearchText('')
   }
 
   @action
