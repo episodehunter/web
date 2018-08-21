@@ -1,9 +1,8 @@
 import { action, observable } from 'mobx'
-import { api } from '../api/api'
 import { TitlesResponse } from '../api/responses'
 import { ModelStatus } from '../enum'
-import { TitlesStorageObject, storage } from '../storage'
-import { ModelLoader } from '../utils/model-loader.util'
+import { Request } from '../request'
+import { storage, TitlesStorageObject } from '../storage'
 
 export type Title = {
   id: string
@@ -12,16 +11,22 @@ export type Title = {
 }
 
 export class TitlesStore {
-  loader = new ModelLoader()
-  @observable status: ModelStatus = ModelStatus.notLoaded
-  @observable titles: Title[] = []
+  private request: Request
+  @observable
+  status: ModelStatus = ModelStatus.notLoaded
+  @observable
+  titles: Title[] = []
+
+  constructor(request: Request) {
+    this.request = request
+  }
 
   @action
   update(titles: TitlesResponse) {
     this.titles = titles
   }
 
-  async fetchTitles(_api = api) {
+  async fetchTitles() {
     this.status = ModelStatus.loading
 
     try {
@@ -30,7 +35,7 @@ export class TitlesStore {
         this.update(titlesFromStorage.data)
       }
       if (needToUpdate(titlesFromStorage)) {
-        const titlesFromApi = await _api.fetchTitles()
+        const titlesFromApi = await this.request.fetchTitles()
         const updatedTitles = await storage.titles.set(titlesFromApi)
         this.update(updatedTitles)
       }

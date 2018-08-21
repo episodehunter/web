@@ -27,10 +27,13 @@ export function composeNull<T>(...ops: Fun<T, T>[]) {
   }
 }
 
+export const compose = (...ops: Fun<any, any>[]): ((startArg: any) => any) =>
+  ops.reduceRight((a, b) => arg => b(a(arg)))
+
 export const composeHOC = <P>(
   ...hocs
 ): ((
-  comp: ((props: P) => JSX.Element) | ComponentClass<P>
+  comp: ((props: P) => JSX.Element | null) | ComponentClass<P>
 ) => ComponentClass<P>) => hocs.reduceRight((a, b) => arg => b(a(arg)))
 
 export const args2 = <A1, A2, R>(fn: (a: A1, b: A2) => R) => (a: A1, b: A2) =>

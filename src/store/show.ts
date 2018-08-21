@@ -1,11 +1,18 @@
 import { startOfDay } from 'date-fns'
 import { action, computed, observable } from 'mobx'
+import { uniqWith } from 'ramda'
 import { ShowResponse } from '../api/responses'
 import { ShowRequestType } from '../enum/request-type'
-import { request } from '../request'
-import { nextEpisode, previousEpisode } from '../utils/episode.util'
+import { Request } from '../request'
+import {
+  isSameEpisode,
+  nextEpisode,
+  nextEpisodeToWatch,
+  previousEpisode
+} from '../utils/episode.util'
 import { ModelLoader } from '../utils/model-loader.util'
 import { Episode, EpisodeWithAirDate } from './episode'
+import { HistoryStore } from './history.store'
 
 export class Show {
   @observable id: number
@@ -15,23 +22,25 @@ export class Show {
   @observable genre: string[]
   @observable language: string
   @observable network: string
-  @observable runtime: number
+  @observable runtime?: number
   @observable ended: boolean
   @observable imdbId: string
   @observable firstAired: Date
   @observable airsDayOfWeek: string
   @observable airsTime: string
+  @observable numberOfFollowers?: number
   @observable episodes: Episode[] = []
   loader = new ModelLoader<ShowRequestType>()
+  private history: HistoryStore
 
-  constructor(id: number) {
+  constructor(request: Request, history: HistoryStore, id: number) {
     this.id = id
+    this.history = history
     const requestShow = (type: ShowRequestType) => request.show(this.id, type)
     const updateShow = show => this.update(show)
     this.loader.register(requestShow)(updateShow)
   }
 
-  @action
   load(type: ShowRequestType): void {
     this.loader.load(type)
   }
@@ -50,9 +59,25 @@ export class Show {
     this.firstAired = startOfDay(new Date(showResponse.firstAired))
     this.airsDayOfWeek = showResponse.airsDayOfWeek
     this.airsTime = showResponse.airsTime
+    this.numberOfFollowers = showResponse.numberOfFollowers
     this.episodes = showResponse.episodes.map(episodeResponse =>
-      Episode.createFromResponse(episodeResponse)
+      Episode.createFromResponse(this.id, episodeResponse, this.history)
     )
+  }
+
+  @computed
+  get nextEpisodeToWatch() {
+    return nextEpisodeToWatch(this.watchHistory, this.episodes)
+  }
+
+  get watchHistory() {
+    return this.history.getHistoryForShow(this.id)
+  }
+
+  @computed
+  get numberOfWatchedEpisodes() {
+    return uniqWith(isSameEpisode, this.history.getHistoryForShow(this.id))
+      .length
   }
 
   @computed

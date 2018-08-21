@@ -1,20 +1,21 @@
-import { action, computed, flow, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { Dispatch } from '../actions/dispatcher'
-import { ModelStatus } from '../enum/model-status'
+import { Request } from '../request'
+import { ModelLoader } from '../utils/model-loader.util'
 import { ShowStore } from './show.store'
-import { UserStore } from './user'
 
 export class Following {
   private showStore: ShowStore
-  private userStore: UserStore
   private dispatch: Dispatch
+  loader = new ModelLoader()
   @observable followingShowsId: number[] = []
-  @observable status = ModelStatus.notLoaded
 
-  constructor(showStore: ShowStore, userStore: UserStore, dispatch: Dispatch) {
+  constructor(showStore: ShowStore, request: Request, dispatch: Dispatch) {
     this.showStore = showStore
-    this.userStore = userStore
     this.dispatch = dispatch
+    this.loader.register(() => request.following())(showIds =>
+      this.updateFollwing(showIds)
+    )
   }
 
   @computed
@@ -25,25 +26,22 @@ export class Following {
   @computed
   get isLoading() {
     return (
-      this.status === ModelStatus.loading ||
-      this.shows.some(show => show.loader.isLoading)
+      this.loader.isLoading || this.shows.some(show => show.loader.isLoading)
     )
   }
 
-  updateFollwing = flow(function*(this: Following) {
-    this.status = ModelStatus.loading
-    try {
-      this.followingShowsId = yield this.userStore.apiClient.fetchFollowing()
-      this.followingShowsId.forEach(id => {
-        this.showStore.addShow(id)
-        this.dispatch.fetchParialShow(id)
-      })
-      this.status = ModelStatus.loaded
-    } catch (error) {
-      console.error(error)
-      this.status = ModelStatus.error
-    }
-  })
+  loadFollowingShows() {
+    this.loader.load(1)
+  }
+
+  @action
+  updateFollwing(showIds: number[]) {
+    this.followingShowsId = showIds
+    showIds.forEach(id => {
+      this.showStore.addShow(id)
+      this.dispatch.fetchParialShow(id)
+    })
+  }
 
   @action
   follow = (id: number) => {

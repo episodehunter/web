@@ -1,6 +1,8 @@
 import { configure, reaction } from 'mobx'
 import { Dispatch } from '../actions/dispatcher'
+import { Request } from '../request'
 import { Following } from './following'
+import { HistoryStore } from './history.store'
 import { SearchStore } from './search.store'
 import { ShowStore } from './show.store'
 import { TitlesStore } from './titles.store'
@@ -16,14 +18,16 @@ export class Store {
   user: UserStore
   titles: TitlesStore
   search: SearchStore
+  history: HistoryStore
 
-  constructor(dispatch: Dispatch) {
-    this.showStore = new ShowStore()
+  constructor(dispatch: Dispatch, request: Request) {
+    this.history = new HistoryStore(request)
+    this.showStore = new ShowStore(request, this.history)
     this.user = new UserStore()
-    this.following = new Following(this.showStore, this.user, dispatch)
+    this.following = new Following(this.showStore, request, dispatch)
     this.upcoming = new UpcomingStore(this.following)
     this.user = new UserStore()
-    this.titles = new TitlesStore()
+    this.titles = new TitlesStore(request)
     this.search = new SearchStore(this.user, this.titles)
 
     // TODO: MOVE THIS
@@ -31,7 +35,7 @@ export class Store {
       () => this.user.isAuthenticated,
       isAuthenticated => {
         if (isAuthenticated) {
-          this.following.updateFollwing()
+          this.following.loadFollowingShows()
           this.titles.fetchTitles()
         }
       },

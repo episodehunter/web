@@ -20,4 +20,18 @@ export const fetchFullShow = (showId: number): FetchFullShowAction => ({
   payload: { showId }
 })
 
-export type FetchActions = FetchPartialShowAction | FetchFullShowAction
+type FetchShowHistory = {
+  type: 'FETCH_SHOW_HISTORY'
+  payload: {
+    showId: number
+  }
+}
+export const fetchShowHistory = (showId: number): FetchShowHistory => ({
+  type: 'FETCH_SHOW_HISTORY',
+  payload: { showId }
+})
+
+export type FetchActions =
+  | FetchPartialShowAction
+  | FetchFullShowAction
+  | FetchShowHistory

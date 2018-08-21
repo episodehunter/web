@@ -1,30 +1,94 @@
 import { ShowRequestType } from '../enum/request-type'
 import { gqlRequest } from '../utils/http.utils'
-import { followingQuery, showQuery, titlesQuery } from './queries'
-import { FollowingResponse, ShowResponse, TitlesResponse } from './responses'
+import {
+  checkInEpisode,
+  followingQuery,
+  showQuery,
+  titlesQuery,
+  unwatchEpisode,
+  watchedEpisodes
+} from './queries'
+import {
+  FollowingResponse,
+  ShowHistoryResponse,
+  ShowResponse,
+  TitlesResponse,
+  WatchedEpisode
+} from './responses'
 
-export interface UserApiClient {
+export interface ApiClient {
   fetchFollowing: () => Promise<number[]>
+  fetchShow: (id: number, type: ShowRequestType) => Promise<ShowResponse>
+  fetchShowHistory: (showId: number) => Promise<WatchedEpisode[]>
+  checkInEpisode: (
+    showId: number,
+    season: number,
+    episode: number
+  ) => Promise<WatchedEpisode>
+  unwatchEpisode: (
+    showId: number,
+    season: number,
+    episode: number
+  ) => Promise<null>
+  fetchTitles: () => Promise<TitlesResponse>
 }
 
-export const createUserApiClient = (
+export const createApiClient = (
   userToken: () => Promise<string>
-): UserApiClient => ({
+): ApiClient => ({
   fetchFollowing: () =>
     userToken().then(token =>
       gqlRequest<FollowingResponse>(followingQuery, undefined, token).then(
         result => result.following.map(f => f.id)
       )
-    )
-})
-
-export const api = {
-  fetchShow: (id: number, type: ShowRequestType) =>
-    gqlRequest<{ show: ShowResponse }>(showQuery(type), { id }).then(
-      response => response.show
     ),
+
+  fetchShowHistory: (showId: number) =>
+    userToken().then(token =>
+      gqlRequest<ShowHistoryResponse>(watchedEpisodes, { showId }, token).then(
+        result => result.watchedEpisodes
+      )
+    ),
+
+  fetchShow: (id: number, type: ShowRequestType) =>
+    gqlRequest<{ show: ShowResponse; numberOfShowFollowers?: number }>(
+      showQuery(type),
+      { id }
+    ).then(response =>
+      Object.assign(response.show, {
+        numberOfFollowers: response.numberOfShowFollowers
+      })
+    ),
+
   fetchTitles: () =>
     gqlRequest<{ hollowShows: TitlesResponse }>(titlesQuery).then(
       response => response.hollowShows
-    )
-}
+    ),
+
+  checkInEpisode: (showId, season, episode) =>
+    userToken().then(token => {
+      const time = Math.floor(new Date().getTime() / 1000)
+      return gqlRequest<{ checkInEpisode: boolean }>(
+        checkInEpisode(showId, season, episode, time),
+        { showId },
+        token
+      ).then(() => ({
+        showId,
+        season,
+        episode,
+        time,
+        type: 'checkin' as 'checkin'
+      }))
+    }),
+
+  unwatchEpisode: (showId, season, episode) =>
+    userToken()
+      .then(token => {
+        return gqlRequest(
+          unwatchEpisode(showId, season, episode),
+          { showId },
+          token
+        )
+      })
+      .then(() => null)
+})

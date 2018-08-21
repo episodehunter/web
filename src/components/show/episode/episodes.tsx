@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Episode as EpisodeModel } from '../../store/episode'
+import { Episode as EpisodeModel } from '../../../store/episode'
 import { Episode } from './episode'
 
 type Props = {

@@ -2,8 +2,13 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { gossamer } from '../utils/colors'
 
-export const Spinner = () => (
-  <StyledSpinner viewBox="0 0 50 50">
+type Props = {
+  size?: number
+  style?: any
+}
+
+export const Spinner = ({ size = 50, style }: Props) => (
+  <StyledSpinner size={size} viewBox={`0 0 50 50`} style={style}>
     <circle
       className="path"
       cx="25"
@@ -18,8 +23,8 @@ export const Spinner = () => (
 const StyledSpinner = styled.svg`
   animation: rotate 2s linear infinite;
   margin: -25px 0 0 -25px;
-  width: 50px;
-  height: 50px;
+  width: ${({ size }: Props) => size}px;
+  height: ${({ size }: Props) => size}px;
 
   & .path {
     stroke: ${gossamer};

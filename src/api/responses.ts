@@ -22,15 +22,23 @@ export type ShowResponse = {
   airsDayOfWeek: string
   airsTime: string
   episodes: EpisodeResponse[]
+  numberOfFollowers?: number
 }
 
 export type FollowingResponse = {
   following: { id: number }[]
 }
 
-export type UserInfoResponse = {
-  nickname: string
-  picture: string
+export type ShowHistoryResponse = {
+  watchedEpisodes: WatchedEpisode[]
+}
+
+export type WatchedEpisode = {
+  showId: number
+  season: number
+  episode: number
+  time: number
+  type: 'plexScrobble' | 'checkin'
 }
 
 export type TitlesResponse = {

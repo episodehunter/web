@@ -1,8 +1,17 @@
 import { action } from 'mobx'
+import { Request } from '../request'
+import { HistoryStore } from './history.store'
 import { Show } from './show'
 
 export class ShowStore {
   shows: Map<number, Show> = new Map()
+  private request: Request
+  private history: HistoryStore
+
+  constructor(request: Request, history: HistoryStore) {
+    this.request = request
+    this.history = history
+  }
 
   getShow(id: number): Show {
     const show = this.shows.get(id)
@@ -24,7 +33,7 @@ export class ShowStore {
 
   @action
   private createShow(id: number) {
-    const newShow = new Show(id)
+    const newShow = new Show(this.request, this.history, id)
     this.shows.set(id, newShow)
     return newShow
   }
