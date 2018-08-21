@@ -14,24 +14,18 @@ type Props = {
 const Following = observer(({ following }: Props) => (
   <FollowingWrapper>
     {following.map(following => (
-      <ShowWrapper key={following.id}>
-        <PosterCard
-          linkUrl={`/show/${following.id}`}
-          poster={<SmallShowPoster tvdbId={following.tvdbId} />}
-          topRight={following.name}
-          bottomRight={'5 left'}
-        />
-      </ShowWrapper>
+      <PosterCard
+        key={following.id}
+        linkUrl={`/show/${following.id}`}
+        poster={<SmallShowPoster tvdbId={following.tvdbId} />}
+        topRight={following.name}
+        bottomRight={'5 left'}
+      />
     ))}
   </FollowingWrapper>
 ))
 
 export const FollowingComponent = withNavigation(Following)
-
-const ShowWrapper = styled.div`
-  margin: 5px;
-  cursor: pointer;
-`
 
 const FollowingWrapper = styled.div`
   display: grid;
