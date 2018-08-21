@@ -1,5 +1,5 @@
 export const apiUrl = 'https://devapi.episodehunter.tv'
-export const authApiUrl = 'https://episodehunter.auth0.com'
+// export const apiUrl = 'http://localhost:5000'
 
 export const firebaseAuthConfig = {
   apiKey: 'AIzaSyB01Rediz1OxOlIRBr5t2WxQpDrxaxEcVU',
