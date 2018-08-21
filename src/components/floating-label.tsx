@@ -1,4 +1,5 @@
 import React, { ClassAttributes, InputHTMLAttributes } from 'react'
+import styled from 'styled-components'
 
 type Styles = {
   styles?: {
@@ -63,7 +64,7 @@ export class FloatingLabel extends React.Component<Props, State> {
     return (
       <label htmlFor={this.props.id} style={labelStyle}>
         <span style={spanStyle}>{this.props.placeholder}</span>
-        <input
+        <Input
           autoCapitalize={this.props.autoCapitalize}
           autoComplete={this.props.autoComplete}
           autoFocus={this.props.autoFocus}
@@ -81,7 +82,7 @@ export class FloatingLabel extends React.Component<Props, State> {
           pattern={this.props.pattern}
           readOnly={this.props.readOnly}
           required={this.props.required}
-          spellCheck={this.props.spellCheck}
+          spellCheck={false}
           step={this.props.step}
           style={inputStyle}
           type={this.props.type}
@@ -90,6 +91,16 @@ export class FloatingLabel extends React.Component<Props, State> {
     )
   }
 }
+
+const Input = styled.input`
+  :-webkit-autofill,
+  :-webkit-autofill:hover,
+  :-webkit-autofill:focus,
+  :-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: rgb(38, 166, 154) !important;
+  }
+`
 
 export const labelStyles = {
   boxSizing: 'border-box',

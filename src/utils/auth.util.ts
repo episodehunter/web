@@ -31,3 +31,20 @@ export const authStateChange$: Observable<firebase.User> = Observable.create(
       )
   }
 )
+
+export const reauthenticateUser = async (password: string) => {
+  const user = getUser()
+  return user!.reauthenticateAndRetrieveDataWithCredential(
+    firebase.auth.EmailAuthProvider.credential(user!.email!, password)
+  )
+}
+
+export const updatePassword = async (password: string) => {
+  const user = getUser()
+  return user!.updatePassword(password)
+}
+
+export const updateEmail = async (email: string) => {
+  const user = getUser()
+  return user!.updateEmail(email)
+}

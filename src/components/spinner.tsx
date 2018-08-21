@@ -22,7 +22,7 @@ export const Spinner = ({ size = 50, style }: Props) => (
 
 const StyledSpinner = styled.svg`
   animation: rotate 2s linear infinite;
-  margin: -25px 0 0 -25px;
+  margin: -25px 0 -25px 0;
   width: ${({ size }: Props) => size}px;
   height: ${({ size }: Props) => size}px;
 

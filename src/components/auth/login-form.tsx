@@ -2,19 +2,24 @@ import { action, observable } from 'mobx'
 import { observer } from 'mobx-react'
 import React from 'react'
 import styled from 'styled-components'
+import { FormButton } from '../../styles/form-button'
 import { mountainMeadow, silver } from '../../utils/colors'
+import { ErrorComponent } from '../error-message'
 import { FloatingLabel } from '../floating-label'
-import { P } from '../text'
 
 type Props = {
   login: (email: string, password: string) => Promise<any>
 }
 
 export class LoginFormComponent extends React.Component<Props> {
-  @observable signingIn = false
-  @observable errorMsg = ''
-  @observable email = ''
-  @observable password = ''
+  @observable
+  signingIn = false
+  @observable
+  errorMsg = ''
+  @observable
+  email = ''
+  @observable
+  password = ''
 
   @action
   setEmail(email: string) {
@@ -72,26 +77,15 @@ export class LoginFormComponent extends React.Component<Props> {
           required
         />
         <Space />
-        <LoginButton disabled={this.signingIn} onClick={() => this.login()}>
+        <FormButton disabled={this.signingIn} onClick={() => this.login()}>
           Let me in
-        </LoginButton>
+        </FormButton>
       </FormWrapper>
     )
   }
 }
 
 export const LoginForm = observer(LoginFormComponent)
-
-const ErrorComponent = ({ errorMsg }: { errorMsg?: string }) => {
-  if (!errorMsg) {
-    return null
-  }
-  return (
-    <ErrorWrapper>
-      <P>{errorMsg}</P>
-    </ErrorWrapper>
-  )
-}
 
 const FormWrapper = styled.div`
   display: flex;
@@ -101,41 +95,8 @@ const FormWrapper = styled.div`
   flex-direction: column;
 `
 
-const ErrorWrapper = styled.div`
-  width: 100%;
-  margin-bottom: 40px;
-  background-color: #e74c3c;
-  text-align: center;
-`
-
 const Space = styled.div`
   height: 40px;
-`
-
-const LoginButton = styled.button`
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  will-change: opacity, transform;
-  transition: all 0.3s ease-out;
-  text-decoration: none;
-  color: #fff;
-  background-color: #26a69a;
-  letter-spacing: 1px;
-  transition: 0.2s ease-out;
-  border: none;
-  border-radius: 2px;
-  padding: 0 2rem;
-  text-transform: uppercase;
-  line-height: 2.5rem;
-  font-size: 1rem;
-  box-shadow: 0 2px 5px 0 rgba(255, 255, 255, 0.16),
-    0 2px 10px 0 rgba(255, 255, 255, 0.12);
-
-  &:hover {
-    outline: none;
-    background-color: #2ab7a9;
-  }
 `
 
 const styles = {

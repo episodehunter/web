@@ -49,7 +49,17 @@ export class SearchStore {
     const keypress$ = fromEvent(document, 'keypress')
     this.subscription = keypress$
       .pipe(
-        scan((acc, curr: any) => acc + curr.key, ''),
+        filter(
+          (key: any) =>
+            key.target &&
+            key.target.nodeName &&
+            key.target.nodeName.toLowerCase() !== 'input'
+        ),
+        scan(
+          (acc, curr: any) =>
+            console.log(curr.target.nodeName) || acc + curr.key,
+          ''
+        ),
         filter(tot => tot.length > 2),
         debounceTime(50)
       )

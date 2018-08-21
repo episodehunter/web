@@ -1,7 +1,7 @@
 import { Navigate, withNavigation } from '@vieriksson/the-react-router'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import { Subscription, fromEvent } from 'rxjs'
+import { fromEvent, Subscription } from 'rxjs'
 import styled from 'styled-components'
 import { SearchStore } from '../store/search.store'
 import { TitlesStore } from '../store/titles.store'
@@ -68,7 +68,7 @@ export class SearchComponent extends React.Component<Props> {
   }
 }
 
-const keyIsEscape = key => key.toLowerCase() === 'escape'
+const keyIsEscape = key => key && key.toLowerCase() === 'escape'
 
 export const Search = composeHOC<Props>(
   withNavigation,

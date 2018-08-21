@@ -2,12 +2,16 @@ import { User } from 'firebase'
 import { action, computed, observable } from 'mobx'
 import {
   authStateChange$,
+  reauthenticateUser,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  updateEmail,
+  updatePassword
 } from '../utils/auth.util'
 
 export class UserStore {
-  @observable.ref user: User | null | undefined = undefined
+  @observable.ref
+  user: User | null | undefined = undefined
 
   constructor() {
     authStateChange$.subscribe(user => this.setUser(user))
@@ -29,5 +33,17 @@ export class UserStore {
 
   login(email: string, password: string) {
     return signInWithEmailAndPassword(email, password)
+  }
+
+  reauthenticate(password: string) {
+    return reauthenticateUser(password)
+  }
+
+  changePassword(password: string) {
+    return updatePassword(password)
+  }
+
+  changeEmail(email: string) {
+    return updateEmail(email)
   }
 }
