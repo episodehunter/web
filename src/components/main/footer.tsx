@@ -1,9 +1,9 @@
-import * as React from 'react'
 import { Navigate, withNavigation } from '@vieriksson/the-react-router'
+import * as React from 'react'
 import styled from 'styled-components'
+import { Routes } from '../../routes'
 import { media } from '../../styles/media-queries'
 import { manatee } from '../../utils/colors'
-import { Routes } from '../../routes'
 
 type Props = {
   navigate: Navigate
