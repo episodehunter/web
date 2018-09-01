@@ -3,8 +3,10 @@ import { gqlRequest } from '../utils/http.utils'
 import {
   checkInEpisode,
   followingQuery,
+  followShow,
   showQuery,
   titlesQuery,
+  unfollowShow,
   unwatchEpisode,
   watchedEpisodes
 } from './queries'
@@ -31,6 +33,8 @@ export interface ApiClient {
     episode: number
   ) => Promise<null>
   fetchTitles: () => Promise<TitlesResponse>
+  followShow: (showId: number) => Promise<boolean>
+  unfollowShow: (showId: number) => Promise<boolean>
 }
 
 export const createApiClient = (
@@ -90,5 +94,15 @@ export const createApiClient = (
           token
         )
       })
-      .then(() => null)
+      .then(() => null),
+
+  followShow: showId =>
+    userToken()
+      .then(token => gqlRequest(followShow(showId), undefined, token))
+      .then(result => result.followShow),
+
+  unfollowShow: showId =>
+    userToken()
+      .then(token => gqlRequest(unfollowShow(showId), undefined, token))
+      .then(result => result.unfollowShow)
 })

@@ -11,7 +11,7 @@ const createGqlClient = (token?: string) => {
   return client
 }
 
-export const gqlRequest = <T>(
+export const gqlRequest = <T = any>(
   query: string,
   variables?: { [key: string]: any },
   token?: string

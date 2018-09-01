@@ -21,6 +21,8 @@ export interface Request {
     season: number,
     episode: number
   ) => Observable<null>
+  followShow: (showId: number) => Observable<boolean>
+  unfollowShow: (showId: number) => Observable<boolean>
   fetchTitles: ApiClient['fetchTitles']
 }
 
@@ -104,6 +106,14 @@ export const createRequestClient = (
 
   unwatchEpisode: (showId, season, episode) => {
     return from(apiClient.unwatchEpisode(showId, season, episode))
+  },
+
+  followShow: showId => {
+    return from(apiClient.followShow(showId))
+  },
+
+  unfollowShow: showId => {
+    return from(apiClient.unfollowShow(showId))
   },
 
   fetchTitles: apiClient.fetchTitles

@@ -8,6 +8,7 @@ import { ShowFanart } from '../components/fanart/show-fanart'
 import { SmallShowPoster } from '../components/poster/small-show-poster'
 import { Episodes } from '../components/show/episode/episodes'
 import { Facts } from '../components/show/facts'
+import { FollowingButton } from '../components/show/following-button'
 import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
 import { Spinner } from '../components/spinner'
@@ -22,7 +23,9 @@ type Props = {
 
 class ShowPageComponent extends React.Component<Props> {
   private selectedSeasonDisposer: () => void
-  @observable selectedSeason = 1
+
+  @observable
+  selectedSeason = 1
 
   constructor(props, context) {
     super(props, context)
@@ -70,6 +73,7 @@ class ShowPageComponent extends React.Component<Props> {
             <ShowTitleAndOverview>
               <H1>{this.show.name}</H1>
               <EllipsisText length={500}>{this.show.overview}</EllipsisText>
+              <FollowingButton show={show} />
             </ShowTitleAndOverview>
           </PosterAndTitleWrapper>
           <Content>

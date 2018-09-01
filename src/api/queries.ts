@@ -48,6 +48,18 @@ export const unwatchEpisode = (
   }
 `
 
+export const followShow = (showId: number) => `
+  mutation {
+    followShow(showId: ${showId})
+  }
+`
+
+export const unfollowShow = (showId: number) => `
+  mutation {
+    unfollowShow(showId: ${showId})
+  }
+`
+
 export const showQuery = (() => {
   const fragmentShow = `
     id
