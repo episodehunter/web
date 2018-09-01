@@ -41,7 +41,7 @@ export const P2 = styled<{
   center?: boolean
   margin?: number | string
   style?: any
-}>(P)`
+}>(P as any)`
   font-size: 14px;
   ${addMargin};
   ${addCenter};

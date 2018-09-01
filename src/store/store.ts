@@ -9,7 +9,7 @@ import { TitlesStore } from './titles.store'
 import { UpcomingStore } from './upcoming'
 import { UserStore } from './user'
 
-configure({ enforceActions: true })
+configure({ enforceActions: 'observed' })
 
 export class Store {
   showStore: ShowStore
