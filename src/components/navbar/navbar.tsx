@@ -9,7 +9,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { UserStore } from '../../store/user'
 import { media } from '../../styles/media-queries'
-import { shark } from '../../utils/colors'
 import { Hamburger } from '../hamburger'
 import { NavbarItems } from './navbar-items'
 
@@ -20,7 +19,8 @@ type Props = {
 }
 
 class NavbarComponent extends React.Component<Props> {
-  @observable open: boolean = false
+  @observable
+  open: boolean = false
 
   @action
   toggle = () => {
@@ -62,7 +62,7 @@ const Wide = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 1;
+  z-index: 3;
 `
 
 const Narrow = styled.div`
@@ -72,8 +72,7 @@ const Narrow = styled.div`
   display: block;
 
   position: fixed;
-  z-index: 1;
-  background-color: ${shark};
+  z-index: 3;
   width: 100%;
 `
 

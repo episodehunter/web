@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { media } from '../styles/media-queries'
 import { alabaster, capeCod, melrose } from '../utils/colors'
 
 const backgroundColor = ({ active }: { active?: boolean }) =>
@@ -30,7 +31,11 @@ export const TextButton = styled.p`
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   font-size: 14px;
-  align-self: flex-end;
+  align-self: flex-start;
+  flex-shrink: 0;
   border-bottom: 1px solid;
   cursor: pointer;
+  ${media.tabletAndUp`
+    align-self: flex-end;
+  `};
 `

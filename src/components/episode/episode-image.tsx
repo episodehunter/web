@@ -5,16 +5,23 @@ import { images } from '../../images.config'
 type Props = {
   tvdbId: number
   children: JSX.Element | JSX.Element[]
+  width?: string | number
+  height?: string | number
   style?: any
 }
 
-export const EpisodeImage = ({ tvdbId, children, style }: Props) => (
+export const EpisodeImage = ({
+  tvdbId,
+  width = 250,
+  height = 140,
+  children,
+  style
+}: Props) => (
   <>
     <LazyLoadBackgroundImage
-      width={250}
-      height={140}
+      width={width}
+      height={height}
       style={{
-        borderRadius: 5,
         backgroundSize: 'cover',
         display: 'flex',
         alignItems: 'flex-end',

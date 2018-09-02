@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Episode as EpisodeType } from '../../../store/episode'
+import { isMobile, media } from '../../../styles/media-queries'
 import { EllipsisText } from '../../ellipsis-text'
 import { EpisodeImage } from '../../episode/episode-image'
 import { H4, HighlightSpan } from '../../text'
@@ -14,7 +15,7 @@ type Props = {
 
 export const Episode = ({ episode }: Props) => (
   <EpisodeWrapper>
-    <EpisodeImage tvdbId={episode.tvdbId} style={{ flexShrink: 0 }}>
+    <EpisodeImage {...episodeImageProps(episode.tvdbId)}>
       <WatchedEpisodeDate episode={episode} />
     </EpisodeImage>
 
@@ -34,15 +35,35 @@ export const Episode = ({ episode }: Props) => (
   </EpisodeWrapper>
 )
 
+const episodeImageProps = tvdbId =>
+  isMobile()
+    ? {
+        tvdbId,
+        width: '100%'
+      }
+    : {
+        tvdbId,
+        style: { flexShrink: 0, borderRadius: 5 }
+      }
+
 const HeadlineWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `
 const EpisodeWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   margin-bottom: 20px;
+  align-items: center;
+  ${media.tabletAndUp`
+    flex-direction: row;
+    align-items: normal;
+  `};
 `
 const DescriptionWrapper = styled.div`
   flex-grow: 1;
-  margin-left: 20px;
+  margin: 20px;
+  ${media.tabletAndUp`
+    margin: 0 0 0 20px;
+  `};
 `

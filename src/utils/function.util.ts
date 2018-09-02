@@ -38,3 +38,16 @@ export const composeHOC = <P>(
 
 export const args2 = <A1, A2, R>(fn: (a: A1, b: A2) => R) => (a: A1, b: A2) =>
   fn(a, b)
+
+export const memorize = fn => {
+  let beenCalled = false
+  let result
+  return (...args) => {
+    if (beenCalled) {
+      return result
+    }
+    result = fn(...args)
+    beenCalled = true
+    return result
+  }
+}

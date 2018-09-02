@@ -13,7 +13,9 @@ import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
 import { Spinner } from '../components/spinner'
 import { H1, H3 } from '../components/text'
+import { images } from '../images.config'
 import { ShowStore } from '../store/show.store'
+import { HideOnMobile, isMobile, media } from '../styles/media-queries'
 import { composeHOC } from '../utils/function.util'
 
 type Props = {
@@ -65,22 +67,35 @@ class ShowPageComponent extends React.Component<Props> {
     }
     const show = this.show
     return (
-      <>
-        <ShowFanart tvdbId={this.show.tvdbId} />
+      <PageWrapper tvdbId={this.show.tvdbId}>
+        <HideOnMobile>
+          <ShowFanart tvdbId={this.show.tvdbId} />
+        </HideOnMobile>
         <Wrapper>
           <PosterAndTitleWrapper>
-            <SmallShowPoster tvdbId={this.show.tvdbId} />
+            <HideOnMobile>
+              <SmallShowPoster tvdbId={this.show.tvdbId} />
+            </HideOnMobile>
             <ShowTitleAndOverview>
-              <H1>{this.show.name}</H1>
+              <H1
+                style={{
+                  maxWidth: 'calc(100vw - 40px)',
+                  wordWrap: 'break-word'
+                }}
+              >
+                {this.show.name}
+              </H1>
               <EllipsisText length={500}>{this.show.overview}</EllipsisText>
               <FollowingButton show={show} />
             </ShowTitleAndOverview>
           </PosterAndTitleWrapper>
           <Content>
-            <FactWarpper>
-              <H3>Facts</H3>
-              <Facts show={show} />
-            </FactWarpper>
+            <HideOnMobile>
+              <FactWarpper>
+                <H3>Facts</H3>
+                <Facts show={show} />
+              </FactWarpper>
+            </HideOnMobile>
             <Progress show={show} />
             <NextEpisodeWarpper>
               <NextEpisode show={show} />
@@ -100,11 +115,11 @@ class ShowPageComponent extends React.Component<Props> {
               </Button>
             ))}
           </SeasonButtonsWrapper>
-          <Content>
+          <EpisodesWrapper>
             <Episodes episodes={show.episodesPerSeason(this.selectedSeason)} />
-          </Content>
+          </EpisodesWrapper>
         </Wrapper>
-      </>
+      </PageWrapper>
     )
   }
 }
@@ -118,21 +133,64 @@ const Loading = styled.div`
   margin-top: 100px;
 `
 
+const PageWrapperTabletAndUp = styled.div<{ tvdbId: number }>``
+
+const PageWrapperMobile = styled.div<{ tvdbId: number }>`
+  position: relative;
+  z-index: 2;
+  &::before {
+    content: ' ';
+    position: fixed;
+    z-index: -1;
+    background-image: url(${props => images.poster.small(props.tvdbId)});
+    background-size: 100% 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    filter: opacity(0.3) blur(5px);
+  }
+`
+
+const PageWrapper = isMobile() ? PageWrapperMobile : PageWrapperTabletAndUp
+
 const Content = styled.div`
-  width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr;
+  ${media.tabletAndUp`
+    width: 1000px;
+    grid-template-columns: 1fr 1fr 1fr;
+  `};
+`
+
+const SeasonButtonsWrapper = styled.div`
   display: flex;
-`
-
-const SeasonButtonsWrapper = styled(Content)`
   flex-wrap: wrap;
+  margin: 20px;
+  ${media.tabletAndUp`
+    width: 1000px;
+  `};
 `
 
-const PosterAndTitleWrapper = styled(Content)`
-  margin-top: -66px;
+const EpisodesWrapper = styled.div`
+  ${media.tabletAndUp`
+    width: 1000px;
+  `};
+`
+
+const PosterAndTitleWrapper = styled.div`
+  ${media.tabletAndUp`
+    display: flex;
+    width: 1000px;
+    margin-top: -66px;
+  `};
 `
 
 const ShowTitleAndOverview = styled.div`
-  margin: 66px 0 0 20px;
+  margin: 66px 20px 0 20px;
+  ${media.tabletAndUp`
+    margin: 66px 0 0 20px;
+  `};
 `
 
 const Wrapper = styled.div`
@@ -141,9 +199,7 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const FactWarpper = styled.div`
-  flex: 1;
-`
+const FactWarpper = styled.div``
 
 const NextEpisodeWarpper = styled(FactWarpper)`
   display: flex;
