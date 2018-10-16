@@ -1,11 +1,17 @@
 import { action, computed, observable } from 'mobx'
-import { Observable, Subject, Subscription, never } from 'rxjs'
+import { never, Observable, Subject, Subscription } from 'rxjs'
 import { catchError, filter, switchMap, tap } from 'rxjs/operators'
 import { ErrorState, LoadingState } from '../enum'
 
+export const NO_TYPE = 0
+
 export class ModelLoader<R extends number> {
-  @observable private loadingState = LoadingState.notLoaded
-  @observable private errorState: ErrorState
+  @observable
+  private loadingState = LoadingState.notLoaded
+
+  @observable
+  private errorState: ErrorState
+
   private queue = new Subject<R>()
 
   register<T>(load: (type: R) => Observable<T>) {
@@ -19,7 +25,6 @@ export class ModelLoader<R extends number> {
             currentType = type
             return load(type)
           }),
-          tap(() => this.setLoadingState(LoadingState.loaded)),
           catchError(error => {
             console.error(error)
             this.rollBackLoadingState()
@@ -27,7 +32,10 @@ export class ModelLoader<R extends number> {
             return never()
           })
         )
-        .subscribe(next)
+        .subscribe(value => {
+          next && next(value)
+          this.setLoadingState(LoadingState.loaded)
+        })
     }
   }
 

@@ -45,7 +45,6 @@ export class LoginFormComponent extends React.Component<Props> {
     this.setSigningIn(true)
     this.props.login(this.email, this.password).catch(error => {
       this.setSigningIn(false)
-      console.log(error)
       if (
         error.code === 'auth/wrong-password' ||
         error.code === 'auth/user-not-found'

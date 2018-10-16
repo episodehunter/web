@@ -1,8 +1,11 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import { Observable, Observer } from 'rxjs'
+import { map } from 'rxjs/operators'
 import { firebaseAuthConfig } from '../config'
+import { AuthenticatedState } from '../enum'
 
+// Movie this
 firebase.initializeApp(firebaseAuthConfig)
 
 export const getUser = () => firebase.auth().currentUser
@@ -30,6 +33,17 @@ export const authStateChange$: Observable<firebase.User> = Observable.create(
         () => observer.complete()
       )
   }
+)
+
+export const authenticated$: Observable<
+  AuthenticatedState
+> = authStateChange$.pipe(
+  map(
+    user =>
+      user
+        ? AuthenticatedState.authenticated
+        : AuthenticatedState.notAuthenticated
+  )
 )
 
 export const reauthenticateUser = async (password: string) => {

@@ -1,22 +1,35 @@
 import { isBefore, isValid, startOfDay } from 'date-fns'
 import { computed, observable } from 'mobx'
 import { EpisodeResponse } from '../api/responses'
+import { WatchedHistory } from '../types'
 import { isSameDayOrAfter, Today, today } from '../utils/date.utils'
 import { isSameEpisode } from '../utils/episode.util'
 import { compose } from '../utils/function.util'
 import { exist, filter, findBest } from '../utils/iterable.util'
-import { HistoryStore, WatchedHistory } from './history.store'
+import { HistoryStore } from './history.store'
 
 export class Episode {
   private history: HistoryStore
   private today: Today
   private showId: number
-  @observable name: string = ''
-  @observable tvdbId: number
-  @observable firstAired: Date | null
-  @observable season: number
-  @observable episode: number
-  @observable overview: string
+
+  @observable
+  name: string = ''
+
+  @observable
+  tvdbId: number
+
+  @observable
+  firstAired: Date | null
+
+  @observable
+  season: number
+
+  @observable
+  episode: number
+
+  @observable
+  overview: string
 
   constructor(today, history: HistoryStore) {
     this.today = today
@@ -57,7 +70,7 @@ export class Episode {
     const watchHistory: WatchedHistory | undefined = compose(
       findBest<WatchedHistory>((prev, curr) => prev.time < curr.time),
       filter<WatchedHistory>(episode => isSameEpisode(episode, this))
-    )(this.history.getHistoryForShow(this.showId))
+    )(this.history.getHistoryForShow(this.showId).history)
 
     if (!watchHistory) {
       return null
@@ -72,7 +85,7 @@ export class Episode {
   @computed
   get hasWatchedEpisode(): boolean {
     return exist((episode: WatchedHistory) => isSameEpisode(episode, this))(
-      this.history.getHistoryForShow(this.showId)
+      this.history.getHistoryForShow(this.showId).history
     )
   }
 
@@ -95,11 +108,15 @@ export class Episode {
   }
 
   markAsWatched() {
-    return this.history.addEpisode(this.showId, this.season, this.episode)
+    return this.history
+      .getHistoryForShow(this.showId)
+      .addEpisode(this.season, this.episode)
   }
 
   markAsUnwatched() {
-    return this.history.removeEpisode(this.showId, this.season, this.episode)
+    return this.history
+      .getHistoryForShow(this.showId)
+      .removeEpisode(this.season, this.episode)
   }
 }
 

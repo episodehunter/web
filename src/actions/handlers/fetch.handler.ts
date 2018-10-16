@@ -18,7 +18,13 @@ export const fetchHandler = (
       store.showStore.getShow(action.payload.showId).load(ShowRequestType.full)
       break
     case 'FETCH_SHOW_HISTORY':
-      store.history.load(action.payload.showId)
+      store.history.getHistoryForShow(action.payload.showId).load()
+      break
+    case 'FETCH_FULL_SHOW_FOR_FOLLOWING':
+      store.following.followingShowsId.forEach(id => {
+        store.history.getHistoryForShow(id).load()
+        store.showStore.getShow(id).load(ShowRequestType.full)
+      })
       break
   }
 }

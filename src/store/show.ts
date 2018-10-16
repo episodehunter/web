@@ -15,21 +15,51 @@ import { Episode, EpisodeWithAirDate } from './episode'
 import { HistoryStore } from './history.store'
 
 export class Show {
-  @observable id: number
-  @observable tvdbId: number
-  @observable name: string
-  @observable overview: string
-  @observable genre: string[]
-  @observable language: string
-  @observable network: string
-  @observable runtime?: number
-  @observable ended: boolean
-  @observable imdbId: string
-  @observable firstAired: Date
-  @observable airsDayOfWeek: string
-  @observable airsTime: string
-  @observable numberOfFollowers?: number
-  @observable episodes: Episode[] = []
+  @observable
+  id: number
+
+  @observable
+  tvdbId: number
+
+  @observable
+  name: string
+
+  @observable
+  overview: string
+
+  @observable
+  genre: string[]
+
+  @observable
+  language: string
+
+  @observable
+  network: string
+
+  @observable
+  runtime?: number
+
+  @observable
+  ended: boolean
+
+  @observable
+  imdbId: string
+
+  @observable
+  firstAired: Date
+
+  @observable
+  airsDayOfWeek: string
+
+  @observable
+  airsTime: string
+
+  @observable
+  numberOfFollowers?: number
+
+  @observable
+  episodes: Episode[] = []
+
   loader = new ModelLoader<ShowRequestType>()
   private history: HistoryStore
 
@@ -71,13 +101,23 @@ export class Show {
   }
 
   get watchHistory() {
-    return this.history.getHistoryForShow(this.id)
+    return this.history.getHistoryForShow(this.id).history
   }
 
   @computed
   get numberOfWatchedEpisodes() {
-    return uniqWith(isSameEpisode, this.history.getHistoryForShow(this.id))
-      .length
+    return uniqWith(
+      isSameEpisode,
+      this.history.getHistoryForShow(this.id).history
+    ).length
+  }
+
+  @computed
+  get numberOfEpisodeToWatch() {
+    const history = this.history.getHistoryForShow(this.id)
+    return this.episodes.filter(
+      episode => episode.hasAird && !history.haveSeenEpisode(episode)
+    ).length
   }
 
   @computed

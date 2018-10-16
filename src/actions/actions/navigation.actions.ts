@@ -5,6 +5,8 @@ export function navigate(pathname: string): NavigateAction {
   const showMatch = pathname.match(/show\/(\d+)/)
   if (showMatch) {
     return navigateShow(Number(showMatch[1]))
+  } else if (pathname === '/following') {
+    return navigateFolowing()
   }
 
   return navigateUnknown()
@@ -24,6 +26,13 @@ export const navigateUpcoming = (): NavigateUpcomingAction => ({
   type: 'NAVIGATE_UPCOMING'
 })
 
+type NavigateFollowingAction = {
+  type: 'NAVIGATE_FOLOWING'
+}
+export const navigateFolowing = (): NavigateFollowingAction => ({
+  type: 'NAVIGATE_FOLOWING'
+})
+
 type NavigateShowAction = {
   type: 'NAVIGATE_SHOW'
   payload: {
@@ -39,3 +48,4 @@ export type NavigateAction =
   | NavigateShowAction
   | NavigateUpcomingAction
   | NavigateUnknownAction
+  | NavigateFollowingAction

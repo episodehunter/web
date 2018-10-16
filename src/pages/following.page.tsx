@@ -1,9 +1,9 @@
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { inject, observer } from 'mobx-react'
-import { shark } from '../utils/colors'
 import { FollowingComponent } from '../components/following'
 import { Following } from '../store/following'
+import { shark } from '../utils/colors'
 import { SpinnerPage } from './spinner.page'
 
 type Props = {

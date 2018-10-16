@@ -56,14 +56,11 @@ class SettingsPageComponent extends React.Component<Props, State> {
     }
 
     this.setState({ saving: true })
-    console.log('currentPassword', this.state.password)
     this.props.user!.reauthenticate(this.state.password).catch(() => {
       this.setErrorMessage('Enter the correct current password')
       this.setState({ saving: false })
       return
     })
-    console.log('newPassword', newPassword)
-    console.log('newPassword', newEmail)
     if (passwordEdited) {
       this.props.user!.changePassword(newPassword).catch(error => {
         console.log(error)

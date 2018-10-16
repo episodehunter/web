@@ -31,7 +31,15 @@ export const fetchShowHistory = (showId: number): FetchShowHistory => ({
   payload: { showId }
 })
 
+type FetchFullShowForFollowing = {
+  type: 'FETCH_FULL_SHOW_FOR_FOLLOWING'
+}
+export const fetchFullShowForFollowing = (): FetchFullShowForFollowing => ({
+  type: 'FETCH_FULL_SHOW_FOR_FOLLOWING'
+})
+
 export type FetchActions =
   | FetchPartialShowAction
   | FetchFullShowAction
   | FetchShowHistory
+  | FetchFullShowForFollowing

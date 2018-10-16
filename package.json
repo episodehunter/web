@@ -51,6 +51,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "@tjoskar/mobx-react-util": "^1.0.1",
     "@tjoskar/react-lazyload-img": "^1.1.0",
     "@vieriksson/the-react-router": "^1.1.2",
     "date-fns": "^1.29.0",
