@@ -21,12 +21,19 @@ const Following = observer(({ following }: Props) => (
             linkUrl={`/show/${show.id}`}
             poster={<SmallShowPoster tvdbId={show.tvdbId} />}
             topRight={show.name}
-            bottomRight={show.numberOfEpisodeToWatch}
+            bottomRight={episodeLeftText(show.numberOfEpisodeToWatch)}
           />
         )
     )}
   </FollowingWrapper>
 ))
+
+export const episodeLeftText = (n: number) => {
+  if (n === 0) {
+    return `You're all caught up!`
+  }
+  return `You have ${n} episodes left`
+}
 
 export const FollowingComponent = withNavigation(Following)
 
