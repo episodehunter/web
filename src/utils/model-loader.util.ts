@@ -97,11 +97,6 @@ export class ModelLoader<R extends number> {
   }
 
   @computed
-  get isLoadedOrFetching() {
-    return this.hasLoaded || this.isFetching
-  }
-
-  @computed
   get hasError() {
     return this.errorState === ErrorState.error
   }

@@ -9,7 +9,7 @@ export function filter<T>(predicate: (el: T) => boolean) {
 }
 
 export function reduce<T>(acc: (prev: T, curr: T, index: number) => T) {
-  return function(arr: IterableIterator<T> | T[]): T {
+  return function(arr: IterableIterator<T> | T[]): T | undefined {
     let prev: any = undefined
     let i = 0
     for (let el of arr) {
