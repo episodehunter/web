@@ -1,11 +1,10 @@
 import { withNavigation } from '@vieriksson/the-react-router'
 import { observer } from 'mobx-react'
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Show } from '../store/show'
 import { media } from '../styles/media-queries'
-import { PosterCard } from './poster-cards/poster-card'
-import { SmallShowPoster } from './poster/small-show-poster'
+import { ShowCard } from './show-card/show-card'
 
 type Props = {
   following: Show[]
@@ -16,10 +15,10 @@ const Following = observer(({ following }: Props) => (
     {following.map(
       show =>
         show && (
-          <PosterCard
+          <ShowCard
             key={show.id}
-            linkUrl={`/show/${show.id}`}
-            poster={<SmallShowPoster tvdbId={show.tvdbId} />}
+            showId={show.id}
+            tvdbId={show.tvdbId}
             topRight={show.name}
             bottomRight={episodeLeftText(show.numberOfEpisodeToWatch)}
           />
@@ -43,5 +42,8 @@ const FollowingWrapper = styled.div`
   ${media.giant`width: 80%;`};
   ${media.desktop`width: 80%;`};
   ${media.tablet`width: 90%;`};
+  ${media.mobile`
+    grid-template-columns: 1fr;
+  `};
   width: 95%;
 `
