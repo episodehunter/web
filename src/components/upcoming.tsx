@@ -44,7 +44,7 @@ const ShowsWrapper = styled.div`
   ${media.giant`grid-template-columns: repeat(6, 1fr);`};
   ${media.desktop`grid-template-columns: repeat(6, 1fr);`};
   ${media.tablet`grid-template-columns: repeat(4, 1fr);`};
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
 `
 const UpcomingWrapper = styled.div`
   margin-bottom: 40px;

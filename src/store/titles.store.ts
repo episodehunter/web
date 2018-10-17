@@ -5,7 +5,7 @@ import { Request } from '../request'
 import { storage, TitlesStorageObject } from '../storage'
 
 export type Title = {
-  id: string
+  id: number
   name: string
   tvdbId: number
 }

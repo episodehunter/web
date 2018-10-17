@@ -42,7 +42,7 @@ export type WatchedEpisode = {
 }
 
 export type TitlesResponse = {
-  id: string
+  id: number
   name: string
   tvdbId: number
 }[]

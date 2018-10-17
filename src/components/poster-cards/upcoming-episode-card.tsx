@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react'
-import * as React from 'react'
+import React from 'react'
 import { ddmmm } from '../../utils/date.utils'
-import { SmallShowPoster } from '../poster/small-show-poster'
-import { PosterCard } from './poster-card'
+import { ShowCard } from '../show-card/show-card'
 
 type Props = {
   showId: number
@@ -17,9 +16,9 @@ export const UpcomingEpisodeCardComponent = ({
   tvdbId,
   showName
 }: Props) => (
-  <PosterCard
-    linkUrl={`/show/${showId}`}
-    poster={<SmallShowPoster tvdbId={tvdbId} />}
+  <ShowCard
+    showId={showId}
+    tvdbId={tvdbId}
     topRight={showName}
     bottomRight={formatEpisodeAirDate(episodeAirDate)}
   />

@@ -5,10 +5,10 @@ import { fromEvent, Subscription } from 'rxjs'
 import styled from 'styled-components'
 import { SearchStore } from '../store/search.store'
 import { TitlesStore } from '../store/titles.store'
+import { media } from '../styles/media-queries'
 import { alabaster, shark } from '../utils/colors'
 import { composeHOC } from '../utils/function.util'
-import { PosterCard } from './poster-cards/poster-card'
-import { SmallShowPoster } from './poster/small-show-poster'
+import { ShowCard } from './show-card/show-card'
 
 type Props = {
   search?: SearchStore
@@ -52,9 +52,9 @@ export class SearchComponent extends React.Component<Props> {
           <ResultWrapper>
             {search!.result.map(title => (
               <ResultItem key={title.id} onClick={event => this.onPress(event)}>
-                <PosterCard
-                  linkUrl={`/show/${title.id}`}
-                  poster={<SmallShowPoster tvdbId={title.tvdbId} />}
+                <ShowCard
+                  showId={title.id}
+                  tvdbId={title.tvdbId}
                   bottomRight={title.name}
                 />
               </ResultItem>
@@ -78,19 +78,27 @@ export const Search = composeHOC<Props>(
 
 const ResultWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr;
+  ${media.tabletAndUp`
+    grid-template-columns: repeat(5, 1fr);
+  `};
   margin-top: 20px;
   margin-bottom: 40px;
 `
 
 const ResultItem = styled.div`
-  margin: 20px;
+  ${media.tabletAndUp`
+    margin: 20px;
+  `};
   display: flex;
   justify-content: center;
 `
 
 const Wrapper = styled.div`
-  width 80%;
+  width 90%;
+  ${media.tabletAndUp`
+    width 80%;
+  `};
   height: 100%;
 `
 
