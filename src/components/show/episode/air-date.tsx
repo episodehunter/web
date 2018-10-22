@@ -13,7 +13,10 @@ const AirDateComponent = ({ firstAired, today }: Props) => {
     <SmallText>
       {dateReleaseFormat(
         firstAired,
-        { future: date => `📅 Airs ${date}`, past: date => `📅 Aird ${date}` },
+        {
+          future: date => `📅 Aired ${date}`,
+          past: date => `📅 Aired ${date}`
+        },
         (today as Today)()
       )}
     </SmallText>

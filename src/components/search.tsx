@@ -135,4 +135,8 @@ const OverlayWrapper = styled.div`
   display: flex;
   justify-content: center;
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
 `

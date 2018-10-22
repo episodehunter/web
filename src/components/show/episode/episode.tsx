@@ -28,7 +28,7 @@ export const Episode = ({ episode }: Props) => (
         <WatchedButton episode={episode} />
       </HeadlineWrapper>
       <AirDate firstAired={episode.firstAired} />
-      <EllipsisText length={350} style={{ margin: '10px 0 0 0' }}>
+      <EllipsisText length={350} style={{ margin: '7.5px 0 0 0' }}>
         {episode.overview}
       </EllipsisText>
     </DescriptionWrapper>
@@ -49,6 +49,7 @@ const episodeImageProps = tvdbId =>
 const HeadlineWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
 `
 const EpisodeWrapper = styled.div`
   display: flex;

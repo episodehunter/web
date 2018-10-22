@@ -35,6 +35,7 @@ export const TextButton = styled.p`
   flex-shrink: 0;
   border-bottom: 1px solid;
   cursor: pointer;
+  padding-bottom: 3px;
   ${media.tabletAndUp`
     align-self: flex-end;
   `};

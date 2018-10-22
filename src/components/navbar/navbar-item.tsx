@@ -21,8 +21,10 @@ const Item = styled.a`
   font-family: 'Lato', sans-serif;
   text-transform: uppercase;
   text-decoration: none;
-  margin-right: 30px;
-  height: 25px;
+  height: 30px;
+  line-height: 30px;
+  margin-right: 40px;
+  margin-top: 10px;
   cursor: pointer;
   letter-spacing: 1.5px;
   box-sizing: border-box;
@@ -32,7 +34,6 @@ const Item = styled.a`
     border-bottom: ${(props: { selected: boolean }) =>
       !props.selected ? `2px solid ${melrose}` : `2px solid ${gossamer}`}};
   }
-  margin-top: 20px;
   ${media.giant`font-size: 14px;`};
   ${media.desktop`font-size: 13px;`};
   ${media.tablet`font-size: 12px;`};

@@ -6,7 +6,7 @@ import {
 import { action, observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { UserStore } from '../../store/user'
 import { media } from '../../styles/media-queries'
 import { Hamburger } from '../hamburger'
@@ -38,13 +38,11 @@ class NavbarComponent extends React.Component<Props> {
         <Wide>
           <NavbarItems navigate={navigate} stateUrl={url} user={user} />
         </Wide>
-        <Narrow>
-          <InnerNarrow>
-            <Hamburger open={this.open} onToggle={this.toggle} />
-            {this.open && (
-              <NavbarItems navigate={navigate} user={user} stateUrl={url} />
-            )}
-          </InnerNarrow>
+        <Narrow open={this.open}>
+          <Hamburger open={this.open} onToggle={this.toggle} />
+          {this.open && (
+            <NavbarItems navigate={navigate} user={user} stateUrl={url} />
+          )}
         </Narrow>
       </>
     )
@@ -74,8 +72,15 @@ const Narrow = styled.div`
   position: fixed;
   z-index: 3;
   width: 100%;
-`
-
-const InnerNarrow = styled.div`
   padding: 20px;
+
+  ${({ open }: { open: boolean }) =>
+    open &&
+    css`
+      background-color: #1a1c21;
+      -webkit-transition: background-color 150ms linear;
+      -ms-transition: background-color 150ms linear;
+      transition: background-color 150ms linear;
+      opacity: 0.95;
+    `};
 `

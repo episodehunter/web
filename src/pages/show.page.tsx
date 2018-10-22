@@ -167,7 +167,9 @@ const SeasonButtonsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 20px;
+  justify-content: space-around;
   ${media.tabletAndUp`
+    justify-content: flex-start;
     width: 1000px;
   `};
 `
