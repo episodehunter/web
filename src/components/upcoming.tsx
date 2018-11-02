@@ -1,21 +1,17 @@
-import { observer } from 'mobx-react'
-import * as React from 'react'
-import styled from 'styled-components'
-import { Show } from '../store/show'
-import { media } from '../styles/media-queries'
-import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
+import React from 'react';
+import styled from 'styled-components';
+import { media } from '../styles/media-queries';
+import { ddmmm } from '../utils/date.utils';
+import { Episode, ShowWithUpcomingEpisodes } from '../utils/firebase-db';
+import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card';
 
 type Props = {
   title: string
-  shows: Show[]
-  extractEpisodeAirDate: (show: Show) => Date | null
+  shows: ShowWithUpcomingEpisodes[]
+  extractEpisode: (show: ShowWithUpcomingEpisodes) => Episode | null
 }
 
-export const UpcomingComponent = ({
-  title,
-  shows,
-  extractEpisodeAirDate
-}: Props) => {
+export const Upcoming = ({ title, shows, extractEpisode }: Props) => {
   if (!shows.length) {
     return null
   }
@@ -26,9 +22,12 @@ export const UpcomingComponent = ({
         {shows.map(show => (
           <UpcomingEpisodeCard
             key={show.id}
-            episodeAirDate={extractEpisodeAirDate(show)}
+            episodeAirDate={formatEpisodeAirDate(
+              show.ended,
+              extractEpisode(show)
+            )}
             showId={show.id}
-            tvdbId={show.tvdbId}
+            tvdbId={show.ids.tvdb}
             showName={show.name}
           />
         ))}
@@ -37,7 +36,18 @@ export const UpcomingComponent = ({
   )
 }
 
-export const Upcoming = observer(UpcomingComponent)
+export const formatEpisodeAirDate = (
+  ended: boolean,
+  episode: Episode | null
+) => {
+  if (episode) {
+    return ddmmm(episode.aired)
+  } else if (ended) {
+    return 'Ended'
+  } else {
+    return 'TBA'
+  }
+}
 
 const ShowsWrapper = styled.div`
   display: grid;
@@ -46,6 +56,7 @@ const ShowsWrapper = styled.div`
   ${media.tablet`grid-template-columns: repeat(4, 1fr);`};
   grid-template-columns: 1fr;
 `
+
 const UpcomingWrapper = styled.div`
   margin-bottom: 40px;
 `

@@ -1,26 +1,64 @@
-import { inject, observer } from 'mobx-react'
-import * as React from 'react'
+import { isSameDay } from 'date-fns'
+import React from 'react'
+import { Subscription } from 'rxjs'
 import styled from 'styled-components'
 import { Upcoming } from '../components/upcoming'
-import { Show } from '../store/show'
-import { UpcomingStore } from '../store/upcoming'
 import { media } from '../styles/media-queries'
 import { shark } from '../utils/colors'
+import { isAfterDaysFrom, isBeforeDaysFrom, now } from '../utils/date.utils'
+import {
+  ShowWithUpcomingEpisodes,
+  upcomingEpisodes$
+} from '../utils/firebase-db'
 import { SpinnerPage } from './spinner.page'
 
-type Props = {
-  upcoming: UpcomingStore
+type Upcoming = {
+  justAired: ShowWithUpcomingEpisodes[]
+  today: ShowWithUpcomingEpisodes[]
+  weekAhead: ShowWithUpcomingEpisodes[]
+  upcoming: ShowWithUpcomingEpisodes[]
+  tba: ShowWithUpcomingEpisodes[]
+  ended: ShowWithUpcomingEpisodes[]
 }
 
-export class UpcomingPageComponent extends React.Component<Props> {
+type State = {
+  upcoming: Upcoming
+  loading: boolean
+}
+
+export class UpcomingPage extends React.Component<{}, State> {
+  private subscribtions: Subscription
+  state = {
+    upcoming: {
+      justAired: [],
+      today: [],
+      weekAhead: [],
+      upcoming: [],
+      tba: [],
+      ended: []
+    },
+    loading: true
+  }
+
+  componentDidMount() {
+    this.subscribtions = upcomingEpisodes$.subscribe(shows => {
+      this.setState({
+        loading: false,
+        upcoming: upcoming(shows)
+      })
+    })
+  }
+
+  componentWillUnmount() {
+    this.subscribtions.unsubscribe()
+  }
+
   render() {
     const {
-      upcoming: {
-        isLoading,
-        upcoming: { justAired, tba, today, upcoming, weekAhead }
-      }
-    } = this.props
-    return isLoading ? (
+      loading,
+      upcoming: { justAired, tba, today, upcoming, weekAhead, ended }
+    } = this.state
+    return loading ? (
       <SpinnerPage />
     ) : (
       <Wrapper>
@@ -28,40 +66,79 @@ export class UpcomingPageComponent extends React.Component<Props> {
           <Upcoming
             title={'Just aired'}
             shows={justAired}
-            extractEpisodeAirDate={extractPrevEpisodeAirDate}
+            extractEpisode={extractPrevEpisode}
           />
           <Upcoming
             title={'Today'}
             shows={today}
-            extractEpisodeAirDate={extractNextEpisodeAirDate}
+            extractEpisode={extractNextEpisode}
           />
           <Upcoming
             title={'The week ahead'}
             shows={weekAhead}
-            extractEpisodeAirDate={extractNextEpisodeAirDate}
+            extractEpisode={extractNextEpisode}
           />
           <Upcoming
             title={'Upcoming'}
             shows={upcoming}
-            extractEpisodeAirDate={extractNextEpisodeAirDate}
+            extractEpisode={extractNextEpisode}
           />
-          <Upcoming
-            title={'TBA'}
-            shows={tba}
-            extractEpisodeAirDate={extractNextEpisodeAirDate}
-          />
+          <Upcoming title={'TBA'} shows={tba} extractEpisode={nullFn} />
+          <Upcoming title={'Ended'} shows={ended} extractEpisode={nullFn} />
         </UpcomingWrapper>
       </Wrapper>
     )
   }
 }
 
-export const extractNextEpisodeAirDate = (show: Show) =>
-  show.nextEpisode && show.nextEpisode.firstAired
-export const extractPrevEpisodeAirDate = (show: Show) =>
-  show.previousEpisode && show.previousEpisode.firstAired
+function upcoming(shows: ShowWithUpcomingEpisodes[], today = now()) {
+  const upcoming: Upcoming = {
+    justAired: [],
+    today: [],
+    weekAhead: [],
+    upcoming: [],
+    tba: [],
+    ended: []
+  }
+  const isAfterFiveDaysAgo = isAfterDaysFrom(-5, today)
+  const isBeforeAWeekFromNow = isBeforeDaysFrom(7, today)
+  for (let show of shows) {
+    if (
+      hasPreviousEpisode(show) &&
+      isAfterFiveDaysAgo(show.prevEpisode!.aired)
+    ) {
+      upcoming.justAired.push(show)
+    }
 
-export const UpcomingPage = inject('upcoming')(observer(UpcomingPageComponent))
+    if (show.ended) {
+      upcoming.ended.push(show)
+    } else if (!hasNextEpisode(show)) {
+      upcoming.tba.push(show)
+    }
+
+    if (hasNextEpisode(show)) {
+      if (isSameDay(today, show.nextEpisode!.aired)) {
+        upcoming.today.push(show)
+      } else if (isBeforeAWeekFromNow(show.nextEpisode!.aired)) {
+        upcoming.weekAhead.push(show)
+      } else {
+        upcoming.upcoming.push(show)
+      }
+    }
+  }
+  return upcoming
+}
+
+const hasPreviousEpisode = (show: ShowWithUpcomingEpisodes) =>
+  Boolean(show.prevEpisode)
+const hasNextEpisode = (show: ShowWithUpcomingEpisodes) =>
+  Boolean(show.nextEpisode)
+
+export const extractNextEpisode = (show: ShowWithUpcomingEpisodes) =>
+  show.nextEpisode
+export const extractPrevEpisode = (show: ShowWithUpcomingEpisodes) =>
+  show.prevEpisode
+export const nullFn = (_: any) => null
 
 const UpcomingWrapper = styled.div`
   ${media.giant`width: 80%;`};
