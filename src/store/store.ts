@@ -1,4 +1,4 @@
-import { configure, reaction } from 'mobx'
+import { configure } from 'mobx'
 import { Dispatch } from '../actions/dispatcher'
 import { Request } from '../request'
 import { Following } from './following'
@@ -29,17 +29,5 @@ export class Store {
     this.user = new UserStore()
     this.titles = new TitlesStore(request)
     this.search = new SearchStore(this.user, this.titles)
-
-    // TODO: MOVE THIS
-    reaction(
-      () => this.user.isAuthenticated,
-      isAuthenticated => {
-        if (isAuthenticated) {
-          this.following.loadFollowingShows()
-          this.titles.fetchTitles()
-        }
-      },
-      { fireImmediately: true }
-    )
   }
 }

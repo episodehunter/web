@@ -1,60 +1,75 @@
-import { computed } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import * as React from 'react'
+import React from 'react'
+import { Subscription } from 'rxjs'
+import { map } from 'rxjs/operators'
 import styled from 'styled-components'
 import { FollowingComponent } from '../components/following'
-import { Following } from '../store/following'
-import { WatchedHistory } from '../types'
 import { shark } from '../utils/colors'
-import { findBest } from '../utils/iterable.util'
+import { episodesToWatch$, ShowWithEpisodesToWatch } from '../utils/firebase-db'
 import { SpinnerPage } from './spinner.page'
 
-type Props = {
-  following: Following
+type State = {
+  shows: ShowWithEpisodesToWatch[]
+  loading: boolean
 }
 
-export class FollowingPageComponent extends React.Component<Props> {
-  @computed
-  get isLoading() {
-    return (
-      this.props.following.isLoading ||
-      this.shows.some(show => show.loader.isFetching)
-    )
+export class FollowingPage extends React.Component<{}, State> {
+  private subscribtion: Subscription
+  state = {
+    shows: [],
+    loading: true
   }
 
-  @computed
-  get shows() {
-    return this.props.following.shows.sort((a, b) => {
-      const awh = findBest<WatchedHistory>((pe, ce) => ce.time > pe.time)(
-        a.watchHistory
+  componentDidMount() {
+    this.subscribtion = episodesToWatch$
+      .pipe(
+        map(shows => {
+          return shows.sort((a, b) => {
+            const aCaughtUp = a.episodesToWatch.length === 0
+            const bCaughtUp = b.episodesToWatch.length === 0
+            const aEndedAndCaughtUp = a.ended && aCaughtUp
+            const bEndedAndCaughtUp = b.ended && bCaughtUp
+            if (aEndedAndCaughtUp && bEndedAndCaughtUp) {
+              return 0
+            } else if (aEndedAndCaughtUp) {
+              return 1
+            } else if (bEndedAndCaughtUp) {
+              return -1
+            } else if (aCaughtUp && bCaughtUp) {
+              return 0
+            } else if (aCaughtUp) {
+              return 1
+            } else if (bCaughtUp) {
+              return -1
+            }
+            return (
+              b.episodesToWatch[b.episodesToWatch.length - 1].aired.getTime() -
+              a.episodesToWatch[a.episodesToWatch.length - 1].aired.getTime()
+            )
+          })
+        })
       )
-      if (awh === undefined) {
-        return 1
-      }
-      const bwh = findBest<WatchedHistory>((pe, ce) => ce.time > pe.time)(
-        b.watchHistory
-      )
-      if (bwh === undefined) {
-        return -1
-      }
-      return bwh.time > awh.time ? 1 : -1
-    })
+      .subscribe(shows => {
+        this.setState({
+          loading: false,
+          shows
+        })
+      })
+  }
+
+  componentWillUnmount() {
+    this.subscribtion.unsubscribe()
   }
 
   render() {
-    return this.isLoading ? (
+    return this.state.loading ? (
       <SpinnerPage />
     ) : (
       <Wrapper>
-        <FollowingComponent following={this.shows} />
+        <FollowingComponent following={this.state.shows} />
       </Wrapper>
     )
   }
 }
-
-export const FollowingPage = inject('following')(
-  observer(FollowingPageComponent)
-)
 
 const Wrapper = styled.div`
   background-color: ${shark};

@@ -12,8 +12,5 @@ export const navigateHandler = (
       dispatch.fetchFullShow(action.payload.showId)
       dispatch.fetchShowHistory(action.payload.showId)
       break
-    case 'NAVIGATE_FOLOWING':
-      dispatch.fetchFullShowForFollowing()
-      break
   }
 }

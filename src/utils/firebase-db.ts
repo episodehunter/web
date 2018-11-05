@@ -4,6 +4,7 @@ import 'firebase/firestore'
 import { ReplaySubject } from 'rxjs'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { getUser } from './auth.util'
+import { now } from './date.utils'
 
 type Db = firebase.firestore.Firestore
 
@@ -23,10 +24,12 @@ type Show = {
 
 export type Episode = {
   aired: Date
+  episodeNumber: number
 }
 
 type FbEpisode = {
   aired: string
+  episodeNumber: number
 }
 
 type UpcomingEpisodes = {
@@ -35,6 +38,8 @@ type UpcomingEpisodes = {
 }
 
 export type ShowWithUpcomingEpisodes = Show & UpcomingEpisodes
+
+export type ShowWithEpisodesToWatch = Show & { episodesToWatch: Episode[] }
 
 type FollowingId = number
 
@@ -75,6 +80,8 @@ const userDoc = (id: string) =>
   getDatabase()
     .collection('users')
     .doc(id)
+const showsWatchHistoryCollection = (userId: string) =>
+  userDoc(userId).collection('showsWatchHistory')
 const showDoc = (id: string) =>
   getDatabase()
     .collection('shows')
@@ -117,11 +124,49 @@ function getShow(id: string) {
     })
 }
 
+function getHighestWatchedEpisode(
+  userId: string,
+  showId: string
+): Promise<Episode | null> {
+  return showsWatchHistoryCollection(userId)
+    .where('showId', '==', Number(showId))
+    .orderBy('episodeNumber', 'desc')
+    .limit(1)
+    .get()
+    .then(querySnapshot => {
+      let episode: FbEpisode = null as any
+      querySnapshot.forEach(doc => {
+        episode = doc.data() as FbEpisode
+      })
+      if (episode) {
+        return Object.assign(episode, { aired: parse(episode.aired) })
+      }
+      return null
+    })
+}
+
+function getEpisodesAfter(showId: string, episodeNumber: number) {
+  return episodesCollection(showId)
+    .where('episodeNumber', '>', episodeNumber)
+    .get()
+    .then(querySnapshot => {
+      const episodes: Episode[] = []
+      querySnapshot.forEach(doc => {
+        const episode = doc.data() as FbEpisode
+        episodes.push(Object.assign(episode, { aired: parse(episode.aired) }))
+      })
+      return episodes.sort((a, b) => a.aired.getTime() - b.aired.getTime())
+    })
+}
+
 const upcomingEpisodesCache = new WeakMap<Show, CacheObj<UpcomingEpisodes>>()
 
 function getUpcommingEpisodes(show: Show, now = new Date()) {
   if (show.ended) {
-    return Promise.resolve([])
+    return Promise.resolve({
+      nextEpisode: null,
+      prevEpisode: null
+    })
   }
   const episodesCache = upcomingEpisodesCache.get(show)
   if (
@@ -181,6 +226,30 @@ export const upcomingEpisodes$ = followingShows$.pipe(
           upcomingEpisodes,
           show
         ) as ShowWithUpcomingEpisodes
+      })
+    )
+  })
+)
+
+export const episodesToWatch$ = followingShows$.pipe(
+  switchMap(shows => {
+    const toDay = now()
+    const userId = getUser()!.uid
+    return Promise.all(
+      shows.map(async show => {
+        const highestWatchedEpisode = await getHighestWatchedEpisode(
+          userId,
+          show.id
+        )
+        let episodeNumber = 0
+        if (highestWatchedEpisode) {
+          episodeNumber = highestWatchedEpisode.episodeNumber
+        }
+        const episodesToWatch = await getEpisodesAfter(show.id, episodeNumber)
+        return Object.assign(
+          { episodesToWatch: episodesToWatch.filter(e => e.aired <= toDay) },
+          show
+        ) as ShowWithEpisodesToWatch
       })
     )
   })
