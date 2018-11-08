@@ -4,7 +4,8 @@ import { map } from 'rxjs/operators'
 import styled from 'styled-components'
 import { FollowingComponent } from '../components/following'
 import { shark } from '../utils/colors'
-import { episodesToWatch$, ShowWithEpisodesToWatch } from '../utils/firebase-db'
+import { episodesToWatch$ } from '../utils/firebase/selectors'
+import { ShowWithEpisodesToWatch } from '../utils/firebase/types'
 import { SpinnerPage } from './spinner.page'
 
 type State = {

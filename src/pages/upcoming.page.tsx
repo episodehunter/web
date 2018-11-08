@@ -6,10 +6,8 @@ import { Upcoming } from '../components/upcoming'
 import { media } from '../styles/media-queries'
 import { shark } from '../utils/colors'
 import { isAfterDaysFrom, isBeforeDaysFrom, now } from '../utils/date.utils'
-import {
-  ShowWithUpcomingEpisodes,
-  upcomingEpisodes$
-} from '../utils/firebase-db'
+import { upcomingEpisodes$ } from '../utils/firebase/selectors'
+import { ShowWithUpcomingEpisodes } from '../utils/firebase/types'
 import { SpinnerPage } from './spinner.page'
 
 type Upcoming = {

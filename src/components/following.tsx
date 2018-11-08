@@ -2,7 +2,7 @@ import { withNavigation } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
 import { media } from '../styles/media-queries'
-import { ShowWithEpisodesToWatch } from '../utils/firebase-db'
+import { ShowWithEpisodesToWatch } from '../utils/firebase/types'
 import { ShowCard } from './show-card/show-card'
 
 type Props = {
