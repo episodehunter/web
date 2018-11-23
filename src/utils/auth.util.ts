@@ -10,6 +10,14 @@ firebase.initializeApp(firebaseAuthConfig)
 
 export const getUser = () => firebase.auth().currentUser
 
+export const getUserId = () => {
+  const user = getUser()
+  if (!user) {
+    throw new Error('User unknown')
+  }
+  return user.uid
+}
+
 export const getIdToken = () => {
   const user = getUser()
   if (user) {
@@ -38,11 +46,10 @@ export const authStateChange$: Observable<firebase.User> = Observable.create(
 export const authenticated$: Observable<
   AuthenticatedState
 > = authStateChange$.pipe(
-  map(
-    user =>
-      user
-        ? AuthenticatedState.authenticated
-        : AuthenticatedState.notAuthenticated
+  map(user =>
+    user
+      ? AuthenticatedState.authenticated
+      : AuthenticatedState.notAuthenticated
   )
 )
 

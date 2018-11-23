@@ -1,12 +1,10 @@
-import { action, computed, observable, when } from 'mobx'
-import { inject, observer } from 'mobx-react'
 import React from 'react'
+import { Subscription } from 'rxjs'
 import styled from 'styled-components'
 import { Button } from '../components/button'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ShowFanart } from '../components/fanart/show-fanart'
 import { SmallShowPoster } from '../components/poster/small-show-poster'
-import { Episodes } from '../components/show/episode/episodes'
 import { Facts } from '../components/show/facts'
 import { FollowingButton } from '../components/show/following-button'
 import { NextEpisode } from '../components/show/next-episode'
@@ -14,67 +12,69 @@ import { Progress } from '../components/show/progress'
 import { Spinner } from '../components/spinner'
 import { H1, H3 } from '../components/text'
 import { images } from '../images.config'
-import { ShowStore } from '../store/show.store'
 import { HideOnMobile, isMobile, media } from '../styles/media-queries'
-import { composeHOC } from '../utils/function.util'
+import { show$ } from '../utils/firebase/selectors'
+import { createUnknownState } from '../utils/firebase/state'
+import { Show, State } from '../utils/firebase/types'
 
 type Props = {
-  showStore?: ShowStore
-  params: any
+  params: {
+    id: string
+  }
 }
 
-class ShowPageComponent extends React.Component<Props> {
-  private selectedSeasonDisposer: () => void
+type CompState = {
+  show: State<Show>
+  followingIds: State<number[]>
+}
 
-  @observable
+export class ShowPage extends React.Component<Props, CompState> {
   selectedSeason = 1
+  subscriptions: Subscription[] = []
+  state = {
+    show: createUnknownState()
+  } as CompState
 
-  constructor(props, context) {
-    super(props, context)
-    this.selectedSeasonDisposer = when(
-      () => Boolean(this.show.watchHistory.length),
-      () => this.calculateSelectedSeason()
+  componentDidMount() {
+    this.subscriptions.push(
+      show$(this.props.params.id).subscribe(show => this.setState({ show }))
     )
   }
 
   componentWillUnmount() {
-    this.selectedSeasonDisposer()
-  }
-
-  calculateSelectedSeason() {
-    const nextEpisodeToWatch = this.show.nextEpisodeToWatch
-    if (nextEpisodeToWatch && nextEpisodeToWatch.season) {
-      this.setSeason(nextEpisodeToWatch.season)()
-    }
-  }
-
-  @computed
-  get show() {
-    return this.props.showStore!.getShow(Number(this.props.params.id))
+    this.subscriptions.forEach(sub => sub.unsubscribe())
   }
 
   setSeason(season: number) {
-    return action(() => (this.selectedSeason = season))
+    return () => null
+    // return action(() => (this.selectedSeason = season))
+  }
+
+  get isLoading() {
+    return !Boolean(this.state.show && this.state.show.status === 'loaded')
   }
 
   render() {
-    if (this.show.loader.isLoading) {
+    if (this.isLoading) {
       return (
         <Loading>
           <Spinner />
         </Loading>
       )
     }
-    const show = this.show
+    const show = this.state.show.data
+    if (!show) {
+      return <p>404</p>
+    }
     return (
-      <PageWrapper tvdbId={this.show.tvdbId}>
+      <PageWrapper tvdbId={show.ids.tvdb}>
         <HideOnMobile>
-          <ShowFanart tvdbId={this.show.tvdbId} />
+          <ShowFanart tvdbId={show.ids.tvdb} />
         </HideOnMobile>
         <Wrapper>
           <PosterAndTitleWrapper>
             <HideOnMobile>
-              <SmallShowPoster tvdbId={this.show.tvdbId} />
+              <SmallShowPoster tvdbId={show.ids.tvdb} />
             </HideOnMobile>
             <ShowTitleAndOverview>
               <H1
@@ -83,10 +83,10 @@ class ShowPageComponent extends React.Component<Props> {
                   wordWrap: 'break-word'
                 }}
               >
-                {this.show.name}
+                {show.name}
               </H1>
-              <EllipsisText length={500}>{this.show.overview}</EllipsisText>
-              <FollowingButton show={show} />
+              <EllipsisText length={500}>{show.overview}</EllipsisText>
+              <FollowingButton showId={show.id} />
             </ShowTitleAndOverview>
           </PosterAndTitleWrapper>
           <Content>
@@ -105,7 +105,7 @@ class ShowPageComponent extends React.Component<Props> {
 
         <Wrapper>
           <SeasonButtonsWrapper>
-            {show.seasons.map(season => (
+            {[1, 2, 3].map(season => (
               <Button
                 key={season}
                 onClick={this.setSeason(season)}
@@ -115,18 +115,14 @@ class ShowPageComponent extends React.Component<Props> {
               </Button>
             ))}
           </SeasonButtonsWrapper>
-          <EpisodesWrapper>
-            <Episodes episodes={show.episodesPerSeason(this.selectedSeason)} />
-          </EpisodesWrapper>
+          <EpisodesWrapper />
         </Wrapper>
       </PageWrapper>
     )
   }
 }
 
-export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
-  ShowPageComponent
-)
+// <Episodes episodes={show.episodesPerSeason(this.selectedSeason)} />
 
 const Loading = styled.div`
   text-align: center;

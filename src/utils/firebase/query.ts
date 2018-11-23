@@ -1,7 +1,7 @@
 import { format, parse, subDays } from 'date-fns'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import { getUser } from '../auth.util'
+import { getUser, getUserId } from '../auth.util'
 import { now } from '../date.utils'
 import { isInvalid, storage } from './storage'
 import {
@@ -95,29 +95,8 @@ export function getShowCacheFallbackOnNetwork(
         return Promise.resolve(null)
       })
     }
-    return showCache.data
+    return showCache!.data
   })
-}
-
-export function getHighestWatchedEpisode(
-  userId: string,
-  showId: string
-): Promise<Episode | null> {
-  return showsWatchHistoryCollection(userId)
-    .where('showId', '==', Number(showId))
-    .orderBy('episodeNumber', 'desc')
-    .limit(1)
-    .get()
-    .then(querySnapshot => {
-      let episode: FbEpisode = null as any
-      querySnapshot.forEach(doc => {
-        episode = doc.data() as FbEpisode
-      })
-      if (episode) {
-        return Object.assign(episode, { aired: parse(episode.aired) })
-      }
-      return null
-    })
 }
 
 export function getEpisodesAfter(showId: string, episodeNumber: number) {
@@ -186,14 +165,47 @@ export function getUpcommingEpisodes(show: Show, now = new Date()) {
     })
 }
 
-export function getHighestWatchedEpisodeUpdatets(
-  userId: string,
+export function getHighestWatchedEpisodeUpdate(
   showId: string,
-  cb: (qs: firebase.firestore.QuerySnapshot) => void
-) {
+  cb: (episode: Episode | null) => void,
+  userId = getUserId()
+): () => void {
   return showsWatchHistoryCollection(userId)
-    .where('showId', '==', showId)
+    .where('showId', '==', Number(showId))
     .orderBy('episodeNumber', 'desc')
     .limit(1)
-    .onSnapshot(cb)
+    .onSnapshot(querySnapshot => {
+      if (querySnapshot.size === 0) {
+        cb(null)
+      } else {
+        cb(episodeMapper(querySnapshot.docs[0].data() as FbEpisode))
+      }
+    })
+}
+
+export function getNextEpisode(
+  showId: string,
+  episodeNumber: number
+): Promise<Episode | null> {
+  return episodesCollection(showId)
+    .where('episodeNumber', '>', episodeNumber)
+    .orderBy('episodeNumber')
+    .limit(1)
+    .get()
+    .then(querySnapshot => {
+      if (querySnapshot.size === 0) {
+        return null
+      } else if (querySnapshot.size === 1) {
+        return episodeMapper(querySnapshot.docs[0].data() as any)
+      } else {
+        console.warn('Result should be 1 or 0')
+        return null
+      }
+    })
+}
+
+function episodeMapper(fbEpisode: FbEpisode): Episode {
+  return Object.assign(fbEpisode, {
+    aired: parse(fbEpisode.aired)
+  })
 }

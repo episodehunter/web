@@ -1,7 +1,8 @@
+import { parse } from 'date-fns'
 import React from 'react'
-import { Show } from '../../store/show'
 import { safeJoin } from '../../utils/array.util'
 import { format } from '../../utils/date.utils'
+import { Show } from '../../utils/firebase/types'
 import { safeStringConvertion } from '../../utils/string.util'
 import { HighlightSpan, P2 } from '../text'
 
@@ -9,11 +10,11 @@ export const Facts = ({ show }: { show: Show }) => (
   <ul style={{ listStyle: 'none', padding: 0 }}>
     <FactLine
       headline="Airs"
-      info={buildAirsString(show.airsDayOfWeek, show.airsTime, show.network)}
+      info={buildAirsString(show.airs.day, show.airs.time, show.network)}
     />
     <FactLine
       headline="Premiered"
-      info={format(show.firstAired, 'Do MMM -YY')}
+      info={format(parse(show.airs.fisrt), 'Do MMM -YY')}
     />
     <FactLine headline="Language" info={safeStringConvertion(show.language)} />
     <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
@@ -34,11 +35,23 @@ const FactLine = ({ headline, info }: { headline: string; info: string }) => (
   </li>
 )
 
+const dayOfWeekString = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday'
+]
+
 const buildAirsString = (
-  airsDayOfWeek: string,
+  dayOfWeek: number,
   airsTime: string,
   network: string
-) =>
-  Boolean(airsDayOfWeek && airsTime && network)
+) => {
+  const airsDayOfWeek = dayOfWeekString[dayOfWeek]
+  return Boolean(airsDayOfWeek && airsTime && network)
     ? `${airsDayOfWeek} at ${airsTime} on ${network}`
     : ''
+}

@@ -1,19 +1,23 @@
+import { subDays } from 'date-fns'
 import 'firebase/firestore'
-import { Observable, ReplaySubject } from 'rxjs'
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators'
-import { getUser } from '../auth.util'
+import { forkJoin, Observable, ReplaySubject } from 'rxjs'
+import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators'
 import { now } from '../date.utils'
 import {
   getEpisodesAfter,
-  getHighestWatchedEpisode,
-  getHighestWatchedEpisodeUpdatets,
+  getHighestWatchedEpisodeUpdate,
+  getNextEpisode,
+  getShow,
   getShowCacheFallbackOnNetwork,
   getUpcommingEpisodes
 } from './query'
+import { createLoadedState, createLoadingState } from './state'
+import { isInvalid, storage } from './storage'
 import {
+  Episode,
   Show,
-  ShowWithEpisodesToWatch,
   ShowWithUpcomingEpisodes,
+  State,
   UserMetaData
 } from './types'
 
@@ -22,6 +26,11 @@ export const userMetaData$ = new ReplaySubject<UserMetaData | null>(1)
 export const followingIds$ = userMetaData$.pipe(
   filter(Boolean),
   map((metadata: UserMetaData) => metadata.following)
+)
+
+export const followingIds2$ = followingIds$.pipe(
+  map(following => createLoadedState(following, 'network')),
+  startWith(createLoadingState())
 )
 
 const followingShows$ = followingIds$.pipe(
@@ -47,42 +56,121 @@ export const upcomingEpisodes$ = followingShows$.pipe(
 )
 
 export const episodesToWatch$ = followingShows$.pipe(
-  switchMap(shows => {
-    const toDay = now()
-    const userId = getUser()!.uid
-    return Promise.all(
-      shows.map(async show => {
-        const highestWatchedEpisode = await getHighestWatchedEpisode(
-          userId,
-          show.id
+  switchMap(shows =>
+    forkJoin(
+      shows.map(show =>
+        episodesToWatchForShow$(show.id).pipe(
+          map(episodes => ({
+            show,
+            episodes
+          }))
         )
-        let episodeNumber = 0
-        if (highestWatchedEpisode) {
-          episodeNumber = highestWatchedEpisode.episodeNumber
-        }
-        const episodesToWatch = await getEpisodesAfter(show.id, episodeNumber)
-        return Object.assign(
-          { episodesToWatch: episodesToWatch.filter(e => e.aired <= toDay) },
-          show
-        ) as ShowWithEpisodesToWatch
-      })
+      )
     )
-  })
+  )
 )
 
-function getHighestWatchedEpisode$(userId, showId) {
-  return Observable.create(observer => {
-    const unsubscribe = getHighestWatchedEpisodeUpdatets(
-      userId,
-      showId,
-      querySnapshot => {
-        querySnapshot.forEach(doc => {
-          observer.next(doc.data())
+const episodesToWatchForShowObs: {
+  [key: string]: Observable<State<Episode[]>>
+} = {}
+
+export function episodesToWatchForShow$(
+  showId: string
+): Observable<State<Episode[]>> {
+  const possibleToWatchFilter = (e: Episode[], h: number) =>
+    e.filter(e => e.episodeNumber > h)
+  console.log('episodesToWatchForShow$ start')
+  if (!episodesToWatchForShowObs[showId]) {
+    console.log('we dont have episodesToWatchForShow$ so lets create it')
+    episodesToWatchForShowObs[showId] = getHighestWatchedEpisode$(showId).pipe(
+      switchMap(episodeState => {
+        console.log('we have a hige episode: ', episodeState)
+        return Observable.create(async obs => {
+          if (episodeState.status !== 'loaded') {
+            obs.next(createLoadingState())
+            return null
+          }
+          let highestWatchedEpisode = 0
+          if (episodeState.data && episodeState.data.episodeNumber) {
+            highestWatchedEpisode = episodeState.data.episodeNumber
+          }
+          const etwc = await storage.episodesToWatch.get(showId)
+          if (etwc && etwc.data) {
+            obs.next(
+              createLoadedState(
+                possibleToWatchFilter(etwc.data, highestWatchedEpisode),
+                'cache'
+              )
+            )
+          }
+
+          if (isInvalid(etwc, subDays(now(), 3))) {
+            const etw = await getEpisodesAfter(showId, highestWatchedEpisode)
+            storage.episodesToWatch.set(showId, etw)
+            obs.next(
+              createLoadedState(
+                possibleToWatchFilter(etw, highestWatchedEpisode),
+                'network'
+              )
+            )
+          }
         })
+      }),
+      shareReplay(1)
+    ) as any
+  }
+  return episodesToWatchForShowObs[showId]
+}
+
+const getHighestWatchedEpisodeObs: {
+  [key: string]: Observable<State<Episode>>
+} = {}
+
+export function getHighestWatchedEpisode$(
+  showId: string
+): Observable<State<Episode>> {
+  if (!getHighestWatchedEpisodeObs[showId]) {
+    getHighestWatchedEpisodeObs[showId] = Observable.create(obs => {
+      obs.next(createLoadingState())
+      const unsubscribe = getHighestWatchedEpisodeUpdate(showId, episode =>
+        obs.next(createLoadedState(episode, 'network'))
+      )
+      return () => unsubscribe()
+    }).pipe(shareReplay(1))
+  }
+  return getHighestWatchedEpisodeObs[showId]
+}
+
+export function show$(showId: string): Observable<State<Show>> {
+  return Observable.create(async obs => {
+    obs.next(createLoadingState())
+    const showCache = await storage.show.get(showId)
+    if (showCache) {
+      obs.next(createLoadedState(showCache.data, 'cache'))
+    }
+    if (isInvalid(showCache, subDays(now(), 3))) {
+      const show = await getShow(showId)
+      obs.next(createLoadedState(show, 'network'))
+      if (show) {
+        storage.show.set(show).catch(error => console.error(error))
       }
-    )
-    return () => unsubscribe()
-  }).pipe(shareReplay(1))
+    }
+  })
+}
+
+export function nextEpisodeToWatch$(showId): Observable<State<Episode | null>> {
+  return getHighestWatchedEpisode$(showId).pipe(
+    switchMap(episode => {
+      const createLoadedNetworkState = (d: Episode | null) =>
+        createLoadedState(d, 'network')
+      if (episode.data) {
+        return getNextEpisode(showId, episode.data.episodeNumber).then(
+          createLoadedNetworkState
+        )
+      }
+      return getNextEpisode(showId, 0).then(createLoadedNetworkState)
+    })
+  )
 }
 
 // async function show(id) {

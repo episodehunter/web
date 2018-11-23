@@ -5,55 +5,27 @@ import styled from 'styled-components'
 import { FollowingComponent } from '../components/following'
 import { shark } from '../utils/colors'
 import { episodesToWatch$ } from '../utils/firebase/selectors'
-import { ShowWithEpisodesToWatch } from '../utils/firebase/types'
+import { Episode, Show, State } from '../utils/firebase/types'
+import { sortShowsAfterEpisodesAirDate } from '../utils/firebase/util'
 import { SpinnerPage } from './spinner.page'
 
-type State = {
-  shows: ShowWithEpisodesToWatch[]
+type ComState = {
+  shows: { show: Show; episodes: State<Episode[]> }[]
   loading: boolean
 }
 
-export class FollowingPage extends React.Component<{}, State> {
+export class FollowingPage extends React.Component<{}, ComState> {
   private subscribtion: Subscription
   state = {
     shows: [],
     loading: true
-  }
+  } as ComState
 
   componentDidMount() {
     this.subscribtion = episodesToWatch$
-      .pipe(
-        map(shows => {
-          return shows.sort((a, b) => {
-            const aCaughtUp = a.episodesToWatch.length === 0
-            const bCaughtUp = b.episodesToWatch.length === 0
-            const aEndedAndCaughtUp = a.ended && aCaughtUp
-            const bEndedAndCaughtUp = b.ended && bCaughtUp
-            if (aEndedAndCaughtUp && bEndedAndCaughtUp) {
-              return 0
-            } else if (aEndedAndCaughtUp) {
-              return 1
-            } else if (bEndedAndCaughtUp) {
-              return -1
-            } else if (aCaughtUp && bCaughtUp) {
-              return 0
-            } else if (aCaughtUp) {
-              return 1
-            } else if (bCaughtUp) {
-              return -1
-            }
-            return (
-              b.episodesToWatch[b.episodesToWatch.length - 1].aired.getTime() -
-              a.episodesToWatch[a.episodesToWatch.length - 1].aired.getTime()
-            )
-          })
-        })
-      )
+      .pipe(map(data => sortShowsAfterEpisodesAirDate(data)))
       .subscribe(shows => {
-        this.setState({
-          loading: false,
-          shows
-        })
+        this.setState({ shows, loading: false })
       })
   }
 

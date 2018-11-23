@@ -107,3 +107,12 @@ export function numberOfEpisodesToWatchPercent(
   }
   return Math.round((numberOfWatchedEpisodes * 100) / totalNumberOfEpisodes)
 }
+
+export function composeSeasonAndEpisodeNumber(season: number, episode: number) {
+  return (
+    'S' +
+    String(season).padStart(2, '0') +
+    'E' +
+    String(episode).padStart(2, '0')
+  )
+}
