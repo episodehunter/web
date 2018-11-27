@@ -1,21 +1,22 @@
-import React from 'react'
-import { Subscription } from 'rxjs'
-import styled from 'styled-components'
-import { Button } from '../components/button'
-import { EllipsisText } from '../components/ellipsis-text'
-import { ShowFanart } from '../components/fanart/show-fanart'
-import { SmallShowPoster } from '../components/poster/small-show-poster'
-import { Facts } from '../components/show/facts'
-import { FollowingButton } from '../components/show/following-button'
-import { NextEpisode } from '../components/show/next-episode'
-import { Progress } from '../components/show/progress'
-import { Spinner } from '../components/spinner'
-import { H1, H3 } from '../components/text'
-import { images } from '../images.config'
-import { HideOnMobile, isMobile, media } from '../styles/media-queries'
-import { show$ } from '../utils/firebase/selectors'
-import { createUnknownState } from '../utils/firebase/state'
-import { Show, State } from '../utils/firebase/types'
+import React from 'react';
+import { Subscription } from 'rxjs';
+import styled from 'styled-components';
+import { Button } from '../components/button';
+import { EllipsisText } from '../components/ellipsis-text';
+import { ShowFanart } from '../components/fanart/show-fanart';
+import { SmallShowPoster } from '../components/poster/small-show-poster';
+import { Episodes } from '../components/show/episode/episodes';
+import { Facts } from '../components/show/facts';
+import { FollowingButton } from '../components/show/following-button';
+import { NextEpisode } from '../components/show/next-episode';
+import { Progress } from '../components/show/progress';
+import { Spinner } from '../components/spinner';
+import { H1, H3 } from '../components/text';
+import { images } from '../images.config';
+import { HideOnMobile, isMobile, media } from '../styles/media-queries';
+import { seasonSubject$, show$ } from '../utils/firebase/selectors';
+import { createUnknownState } from '../utils/firebase/state';
+import { Episode, Show, State } from '../utils/firebase/types';
 
 type Props = {
   params: {
@@ -24,20 +25,26 @@ type Props = {
 }
 
 type CompState = {
-  show: State<Show>
-  followingIds: State<number[]>
+  show: State<Show>,
+  season: State<Episode[]>
+  selectedSeason: number
 }
 
 export class ShowPage extends React.Component<Props, CompState> {
-  selectedSeason = 1
   subscriptions: Subscription[] = []
   state = {
-    show: createUnknownState()
+    show: createUnknownState(),
+    season: createUnknownState(),
+    selectedSeason: 1
   } as CompState
+  setSeasonOnSubject: (season: number) => void
 
   componentDidMount() {
+    const { season$, setSeason } = seasonSubject$(this.props.params.id)
+    this.setSeasonOnSubject = setSeason
     this.subscriptions.push(
-      show$(this.props.params.id).subscribe(show => this.setState({ show }))
+      show$(this.props.params.id).subscribe(show => this.setState({ show })),
+      season$.subscribe(season => this.setState({ season }))
     )
   }
 
@@ -45,13 +52,16 @@ export class ShowPage extends React.Component<Props, CompState> {
     this.subscriptions.forEach(sub => sub.unsubscribe())
   }
 
-  setSeason(season: number) {
-    return () => null
-    // return action(() => (this.selectedSeason = season))
-  }
-
   get isLoading() {
     return !Boolean(this.state.show && this.state.show.status === 'loaded')
+  }
+
+  setSeason(season: number) {
+    if (!this.setSeasonOnSubject) {
+      return
+    }
+    this.setState({ selectedSeason: season })
+    this.setSeasonOnSubject(season)
   }
 
   render() {
@@ -105,24 +115,24 @@ export class ShowPage extends React.Component<Props, CompState> {
 
         <Wrapper>
           <SeasonButtonsWrapper>
-            {[1, 2, 3].map(season => (
+            {show.seasons.map(season => (
               <Button
                 key={season}
-                onClick={this.setSeason(season)}
-                active={season === this.selectedSeason}
+                onClick={() => this.setSeason(season)}
+                active={season === this.state.selectedSeason}
               >
                 Season {season}
               </Button>
             ))}
           </SeasonButtonsWrapper>
-          <EpisodesWrapper />
+          <EpisodesWrapper>
+            <Episodes episodes={this.state.season} />
+          </EpisodesWrapper>
         </Wrapper>
       </PageWrapper>
     )
   }
 }
-
-// <Episodes episodes={show.episodesPerSeason(this.selectedSeason)} />
 
 const Loading = styled.div`
   text-align: center;

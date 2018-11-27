@@ -1,46 +1,32 @@
-import { action, observable } from 'mobx'
-import React from 'react'
-import { observer } from '../../../../node_modules/mobx-react'
-import { Episode } from '../../../store/episode'
-import { TextButton } from '../../button'
-import { Spinner } from '../../spinner'
+import React from 'react';
+import { Episode } from '../../../utils/firebase/types';
+import { TextButton } from '../../button';
+import { Spinner } from '../../spinner';
 
 type Props = {
   episode: Episode
 }
 
-class WatchedButtonComponent extends React.Component<Props> {
-  @observable loading = false
+export class WatchedButton extends React.Component<Props> {
 
   markAsWatched = () => {
-    this.setLoading(true)
-    this.props.episode
-      .markAsWatched()
-      .subscribe(() => this.setLoading(false), () => this.setLoading(false))
+    console.log('markAsWatched')
   }
 
   markAsUnWatched = () => {
-    this.setLoading(true)
-    this.props.episode
-      .markAsUnwatched()
-      .subscribe(() => this.setLoading(false), () => this.setLoading(false))
-  }
-
-  @action
-  setLoading(loading: boolean) {
-    this.loading = loading
+    console.log('markAsUnWatched')
   }
 
   render() {
-    if (this.loading) {
+    if (false) {
       return <Spinner size={14} style={{ alignSelf: 'flex-end' }} />
-    } else if (this.props.episode.hasWatchedEpisode) {
+    } else if (false) {
       return (
         <TextButton onClick={this.markAsUnWatched}>
           Mark as unwatched
         </TextButton>
       )
-    } else if (this.props.episode.hasValidAirDate) {
+    } else if (true) {
       return (
         <TextButton onClick={this.markAsWatched}>Mark as watched 📺</TextButton>
       )
@@ -49,5 +35,3 @@ class WatchedButtonComponent extends React.Component<Props> {
     }
   }
 }
-
-export const WatchedButton = observer(WatchedButtonComponent)

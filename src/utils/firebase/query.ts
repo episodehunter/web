@@ -42,9 +42,7 @@ const showDoc = (id: string) =>
     .doc(id)
 
 const episodesCollection = (showId: string) =>
-  getDatabase()
-    .collection('shows')
-    .doc(showId)
+  showDoc(showId)
     .collection('episodes')
 
 export function getUserMetaData(user = getUser()): Promise<UserMetaData> {
@@ -74,6 +72,14 @@ export function getShow(id: string) {
       show!.numberOfEpisodes = 100
       return show as Show
     })
+}
+
+export function getSeason(showId: string, season: number): Promise<Episode[]> {
+  return episodesCollection(showId)
+    .where('season', '==', season)
+    .get()
+    .then(r => r.docs.map(d => d.data()) as FbEpisode[])
+    .then(episodes => episodes.map(episodeMapper))
 }
 
 export function getShowCacheFallbackOnNetwork(

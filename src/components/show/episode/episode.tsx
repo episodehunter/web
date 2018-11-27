@@ -1,16 +1,17 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Episode as EpisodeType } from '../../../store/episode'
-import { isMobile, media } from '../../../styles/media-queries'
-import { EllipsisText } from '../../ellipsis-text'
-import { EpisodeImage } from '../../episode/episode-image'
-import { H4, HighlightSpan } from '../../text'
-import { AirDate } from './air-date'
-import { WatchedButton } from './watched-button'
-import { WatchedEpisodeDate } from './watched-episode-date'
+import React from 'react';
+import styled from 'styled-components';
+import { isMobile, media } from '../../../styles/media-queries';
+import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util';
+import { Episode as EpisodeModel } from '../../../utils/firebase/types';
+import { EllipsisText } from '../../ellipsis-text';
+import { EpisodeImage } from '../../episode/episode-image';
+import { H4, HighlightSpan } from '../../text';
+import { AirDate } from './air-date';
+import { WatchedButton } from './watched-button';
+import { WatchedEpisodeDate } from './watched-episode-date';
 
 type Props = {
-  episode: EpisodeType
+  episode: EpisodeModel
 }
 
 export const Episode = ({ episode }: Props) => (
@@ -22,12 +23,12 @@ export const Episode = ({ episode }: Props) => (
     <DescriptionWrapper>
       <HeadlineWrapper>
         <H4 margin={0}>
-          <HighlightSpan>{episode.seasonAndEpisodeNumber}</HighlightSpan>{' '}
+          <HighlightSpan>{composeSeasonAndEpisodeNumber(episode.season, episode.episode)}</HighlightSpan>{' '}
           {episode.name}
         </H4>
         <WatchedButton episode={episode} />
       </HeadlineWrapper>
-      <AirDate firstAired={episode.firstAired} />
+      <AirDate firstAired={episode.aired} />
       <EllipsisText length={350} style={{ margin: '7.5px 0 0 0' }}>
         {episode.overview}
       </EllipsisText>

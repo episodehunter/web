@@ -50,6 +50,7 @@ export type Show = {
   runtime: number
   numberOfFollowers: 0
   numberOfEpisodes: 0
+  seasons: number[]
 }
 
 export type Episode = {
@@ -59,6 +60,7 @@ export type Episode = {
   season: number
   episode: number
   episodeNumber: number
+  overview: string
 }
 
 export type FbEpisode = Episode & {

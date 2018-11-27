@@ -29,10 +29,8 @@ export class Progress extends React.Component<Props, CompState> {
   } as CompState
 
   componentDidMount() {
-    console.log('Progress componentDidMount')
     this.subscription = episodesToWatchForShow$(this.props.show.id).subscribe(
       episodes => {
-        console.log('episodes: ', episodes, episodes.status)
         const status = episodes.status
         if (status === 'loaded') {
           const today = now()

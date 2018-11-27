@@ -1,9 +1,9 @@
 import { subDays } from 'date-fns';
 import 'firebase/firestore';
-import { forkJoin, Observable, ReplaySubject } from 'rxjs';
+import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { now } from '../date.utils';
-import { getEpisodesAfter, getHighestWatchedEpisodeUpdate, getNextEpisode, getShow, getShowCacheFallbackOnNetwork, getUpcommingEpisodes } from './query';
+import { getEpisodesAfter, getHighestWatchedEpisodeUpdate, getNextEpisode, getSeason, getShow, getShowCacheFallbackOnNetwork, getUpcommingEpisodes } from './query';
 import { createLoadedState, createLoadingState } from './state';
 import { isInvalid, storage } from './storage';
 import { Episode, Show, ShowWithUpcomingEpisodes, State, UserMetaData } from './types';
@@ -142,7 +142,7 @@ export function show$(showId: string): Observable<State<Show>> {
   })
 }
 
-export function nextEpisodeToWatch$(showId): Observable<State<Episode | null>> {
+export function nextEpisodeToWatch$(showId: string): Observable<State<Episode | null>> {
   return getHighestWatchedEpisode$(showId).pipe(
     switchMap(episode => {
       const createLoadedNetworkState = (d: Episode | null) =>
@@ -155,6 +155,42 @@ export function nextEpisodeToWatch$(showId): Observable<State<Episode | null>> {
       return getNextEpisode(showId, 0).then(createLoadedNetworkState)
     })
   )
+}
+
+export function seasonSubject$(showId: string) {
+  const seasonSubject = new Subject<number>()
+  const setSeason = (season: number) => seasonSubject.next(season)
+  let firstEmit = true
+  const currentSeason$: Observable<State<Episode[]>> = seasonSubject.pipe(
+    switchMap(season => {
+      return Observable.create(async obs => {
+        if (firstEmit) {
+          obs.next(createLoadingState())
+        }
+        const seasonCache = await storage.season.get(showId, season)
+        if (seasonCache) {
+          firstEmit = false
+          obs.next(createLoadedState(seasonCache.data, 'cache'))
+        }
+        if (isInvalid(seasonCache, subDays(now(), 3))) {
+          if (!firstEmit) {
+            obs.next(createLoadingState())
+          }
+          const networkSeason = await getSeason(showId, season)
+          firstEmit = false
+          obs.next(createLoadedState(networkSeason, 'network'))
+          if (networkSeason) {
+            storage.season.set(showId, season, networkSeason).catch(error => console.error(error))
+          }
+        }
+      })
+    })
+  )
+
+  return {
+    setSeason,
+    season$: currentSeason$
+  }
 }
 
 // async function show(id) {
