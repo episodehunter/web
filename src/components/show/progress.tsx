@@ -1,15 +1,12 @@
-import React from 'react'
-import { Subscription } from 'rxjs'
-import styled from 'styled-components'
-import { now } from '../../utils/date.utils'
-import {
-  numberOfEpisodesToWatchPercent,
-  numberOfUnwatchedHoursLeft
-} from '../../utils/episode.util'
-import { episodesToWatchForShow$ } from '../../utils/firebase/selectors'
-import { Episode, Show, StatusType } from '../../utils/firebase/types'
-import { GapProgress } from '../progress/gap-progress'
-import { H3, HighlightSpan, P2 } from '../text'
+import React from 'react';
+import { Subscription } from 'rxjs';
+import styled from 'styled-components';
+import { now } from '../../utils/date.utils';
+import { numberOfEpisodesToWatchPercent, numberOfUnwatchedHoursLeft } from '../../utils/episode.util';
+import { episodesToWatchForShow$ } from '../../utils/firebase/selectors';
+import { Episode, Show, StatusType } from '../../utils/firebase/types';
+import { GapProgress } from '../progress/gap-progress';
+import { H3, HighlightSpan, P2 } from '../text';
 
 type Props = {
   show: Show
@@ -18,7 +15,7 @@ type Props = {
 type CompState = {
   episodesToWatch: Episode[]
   status: StatusType
-  totalNumberOfWpisode: number
+  totalNumberOfEpisode: number
   numberOfWatchedEpisodes: number
 }
 
@@ -27,7 +24,7 @@ export class Progress extends React.Component<Props, CompState> {
   state = {
     episodesToWatch: [],
     status: 'unknown',
-    totalNumberOfWpisode: 0,
+    totalNumberOfEpisode: 0,
     numberOfWatchedEpisodes: 0
   } as CompState
 
@@ -40,14 +37,14 @@ export class Progress extends React.Component<Props, CompState> {
         if (status === 'loaded') {
           const today = now()
           const episodesToWatch = episodes.data!.filter(e => e.aired < today)
-          const totalNumberOfWpisode = this.props.show.numberOfEpisodes
-          const numberOfWatchedEpisodes =
-            this.props.show.numberOfEpisodes - episodes.data!.length
+          const totalNumberOfEpisode = this.props.show.numberOfEpisodes | 0
+          const numberOfWatchedEpisodes = Math.max((totalNumberOfEpisode - episodes.data!.length) | 0, 0)
+
           this.setState({
             status,
             episodesToWatch,
             numberOfWatchedEpisodes,
-            totalNumberOfWpisode
+            totalNumberOfEpisode
           })
         }
       }
@@ -64,17 +61,17 @@ export class Progress extends React.Component<Props, CompState> {
       episodesToWatch,
       numberOfWatchedEpisodes,
       status,
-      totalNumberOfWpisode
+      totalNumberOfEpisode
     } = this.state
     if (status !== 'loaded') {
-      return <p>Hej Hej!</p>
+      return null
     }
     return (
       <ProgressWarpper>
         <H3>Your progress</H3>
         <GapProgress
           percent={numberOfEpisodesToWatchPercent(
-            totalNumberOfWpisode,
+            totalNumberOfEpisode,
             numberOfWatchedEpisodes
           )}
           height="100px"
@@ -82,12 +79,11 @@ export class Progress extends React.Component<Props, CompState> {
         />
         <P2 center={true}>
           You've seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan>{' '}
-          out of <HighlightSpan>{totalNumberOfWpisode}</HighlightSpan> episodes.{' '}
+          out of <HighlightSpan>{totalNumberOfEpisode}</HighlightSpan> episodes.{' '}
           <br />
           <HoursLeftText
             numberOfHoursLeft={numberOfUnwatchedHoursLeft(
               episodesToWatch.length,
-              numberOfWatchedEpisodes,
               show.runtime
             )}
           />
@@ -98,8 +94,8 @@ export class Progress extends React.Component<Props, CompState> {
 }
 
 function HoursLeftText({ numberOfHoursLeft }: { numberOfHoursLeft: number }) {
-  if (!numberOfHoursLeft) {
-    return null
+  if (numberOfHoursLeft <= 0) {
+    return <>Nice done 👍</>
   }
   return (
     <>

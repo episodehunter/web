@@ -1,9 +1,9 @@
-import closestIndexTo from 'date-fns/closest_index_to'
-import { WatchedEpisode } from '../api/responses'
-import { Episode, EpisodeWithAirDate } from '../store/episode'
-import { today } from './date.utils'
-import { compose, composeNull } from './function.util'
-import { filter, findBest } from './iterable.util'
+import closestIndexTo from 'date-fns/closest_index_to';
+import { WatchedEpisode } from '../api/responses';
+import { Episode, EpisodeWithAirDate } from '../store/episode';
+import { today } from './date.utils';
+import { compose, composeNull } from './function.util';
+import { filter, findBest } from './iterable.util';
 
 function hasAird(episode: Episode): episode is EpisodeWithAirDate {
   return episode.hasAird
@@ -89,12 +89,11 @@ export function isHigherEpisode(
 }
 
 export function numberOfUnwatchedHoursLeft(
-  numberOfEpisodes: number,
-  numberOfWatchedEpisodes: number,
-  runtime = 60
+  episodesToWatch: number,
+  runtime: number
 ) {
   return Math.round(
-    ((numberOfEpisodes - numberOfWatchedEpisodes) * runtime) / 60
+    (episodesToWatch * runtime) / 60
   )
 }
 

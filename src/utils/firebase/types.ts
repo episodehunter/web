@@ -37,7 +37,7 @@ export type Show = {
   }
   airs: {
     day: number // 0-6
-    fisrt: string
+    first: string
     time: string
   }
   ended: boolean

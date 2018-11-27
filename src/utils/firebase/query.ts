@@ -1,18 +1,10 @@
-import { format, parse, subDays } from 'date-fns'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import { getUser, getUserId } from '../auth.util'
-import { now } from '../date.utils'
-import { isInvalid, storage } from './storage'
-import {
-  CacheObj,
-  Db,
-  Episode,
-  FbEpisode,
-  Show,
-  UpcomingEpisodes,
-  UserMetaData
-} from './types'
+import { format, parse, subDays } from 'date-fns';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import { getUser, getUserId } from '../auth.util';
+import { now } from '../date.utils';
+import { isInvalid, storage } from './storage';
+import { CacheObj, Db, Episode, FbEpisode, Show, UpcomingEpisodes, UserMetaData } from './types';
 
 function initializeDatabase(): Db {
   const db = firebase.firestore()
@@ -79,6 +71,7 @@ export function getShow(id: string) {
       }
       const show = r.data()
       show!.id = id
+      show!.numberOfEpisodes = 100
       return show as Show
     })
 }

@@ -1,25 +1,12 @@
-import { subDays } from 'date-fns'
-import 'firebase/firestore'
-import { forkJoin, Observable, ReplaySubject } from 'rxjs'
-import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators'
-import { now } from '../date.utils'
-import {
-  getEpisodesAfter,
-  getHighestWatchedEpisodeUpdate,
-  getNextEpisode,
-  getShow,
-  getShowCacheFallbackOnNetwork,
-  getUpcommingEpisodes
-} from './query'
-import { createLoadedState, createLoadingState } from './state'
-import { isInvalid, storage } from './storage'
-import {
-  Episode,
-  Show,
-  ShowWithUpcomingEpisodes,
-  State,
-  UserMetaData
-} from './types'
+import { subDays } from 'date-fns';
+import 'firebase/firestore';
+import { forkJoin, Observable, ReplaySubject } from 'rxjs';
+import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { now } from '../date.utils';
+import { getEpisodesAfter, getHighestWatchedEpisodeUpdate, getNextEpisode, getShow, getShowCacheFallbackOnNetwork, getUpcommingEpisodes } from './query';
+import { createLoadedState, createLoadingState } from './state';
+import { isInvalid, storage } from './storage';
+import { Episode, Show, ShowWithUpcomingEpisodes, State, UserMetaData } from './types';
 
 export const userMetaData$ = new ReplaySubject<UserMetaData | null>(1)
 
@@ -79,12 +66,9 @@ export function episodesToWatchForShow$(
 ): Observable<State<Episode[]>> {
   const possibleToWatchFilter = (e: Episode[], h: number) =>
     e.filter(e => e.episodeNumber > h)
-  console.log('episodesToWatchForShow$ start')
   if (!episodesToWatchForShowObs[showId]) {
-    console.log('we dont have episodesToWatchForShow$ so lets create it')
     episodesToWatchForShowObs[showId] = getHighestWatchedEpisode$(showId).pipe(
       switchMap(episodeState => {
-        console.log('we have a hige episode: ', episodeState)
         return Observable.create(async obs => {
           if (episodeState.status !== 'loaded') {
             obs.next(createLoadingState())

@@ -1,5 +1,5 @@
-import { get, set } from 'idb-keyval'
-import { Episode, Show } from './types'
+import { get, set } from 'idb-keyval';
+import { Episode, Show } from './types';
 
 const SHOW_PREFIX = 'show'
 const EPISODES_TO_WATCH_PREFIX = 'episodes_to_watch'
@@ -33,11 +33,15 @@ export const storage = {
 
 export function isInvalid<T>(
   storageObject: StorageObject<T> | undefined,
-  date: Date
+  expiryDate: Date
 ): boolean {
-  return (
-    Boolean(storageObject) && storageObject!.date.getTime() < date.getTime()
-  )
+  if (!storageObject) {
+    return true
+  }
+  if (storageObject!.date.getTime() < expiryDate.getTime()) {
+    return true
+  }
+  return false
 }
 
 export type Storage = typeof storage

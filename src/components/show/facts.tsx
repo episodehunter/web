@@ -1,10 +1,10 @@
-import { parse } from 'date-fns'
-import React from 'react'
-import { safeJoin } from '../../utils/array.util'
-import { format } from '../../utils/date.utils'
-import { Show } from '../../utils/firebase/types'
-import { safeStringConvertion } from '../../utils/string.util'
-import { HighlightSpan, P2 } from '../text'
+import { parse } from 'date-fns';
+import React from 'react';
+import { safeJoin } from '../../utils/array.util';
+import { format } from '../../utils/date.utils';
+import { Show } from '../../utils/firebase/types';
+import { safeStringConvertion } from '../../utils/string.util';
+import { HighlightSpan, P2 } from '../text';
 
 export const Facts = ({ show }: { show: Show }) => (
   <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -14,7 +14,7 @@ export const Facts = ({ show }: { show: Show }) => (
     />
     <FactLine
       headline="Premiered"
-      info={format(parse(show.airs.fisrt), 'Do MMM -YY')}
+      info={format(parse(show.airs.first), 'Do MMM -YY')}
     />
     <FactLine headline="Language" info={safeStringConvertion(show.language)} />
     <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
