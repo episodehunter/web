@@ -1,23 +1,24 @@
-import React from 'react'
-import { Subscription } from 'rxjs'
-import { followingIds2$ } from '../../utils/firebase/selectors'
-import { Button } from '../button'
-import { Spinner } from '../spinner'
+import React from 'react';
+import { Subscription } from 'rxjs';
+import { followingIds2$ } from '../../utils/firebase/selectors';
+import { followShow, unfollowShow } from '../../utils/firebase/util';
+import { Button } from '../button';
+import { Spinner } from '../spinner';
 
 type Props = {
   showId: string
-  // following?: Following
 }
 
 type CompState = {
   isFollowing: IsFollowing
+  updatingList: boolean
 }
 
 export class FollowingButton extends React.Component<Props> {
   subscription: Subscription
-
   state = {
-    isFollowing: IsFollowing.unknwon
+    isFollowing: IsFollowing.unknwon,
+    updatingList: false
   } as CompState
 
   componentDidMount() {
@@ -40,22 +41,31 @@ export class FollowingButton extends React.Component<Props> {
   }
 
   followShow() {
-    // this.setUpdating(true)
-    // this.props
-    //   .following!.follow(this.props.show.id)
-    //   .subscribe(() => this.setUpdating(false), () => this.setUpdating(false))
-    console.log('Follow show!')
+    this.setState({ updatingList: true })
+    followShow(this.props.showId).subscribe(
+      () => null,
+      error => console.error(error),
+      () => {
+        this.setState({ updatingList: false })
+      }
+    )
   }
 
   unfollowShow() {
-    // this.setUpdating(true)
-    // this.props
-    //   .following!.unfollow(this.props.show.id)
-    //   .subscribe(() => this.setUpdating(false), () => this.setUpdating(false))
-    console.log('Unfollow show!')
+    this.setState({ updatingList: true })
+    unfollowShow(this.props.showId).subscribe(
+      () => null,
+      error => console.error(error),
+      () => {
+        this.setState({ updatingList: false })
+      }
+    )
   }
 
   render() {
+    if (this.state.updatingList) {
+      return <Spinner />
+    }
     switch (this.state.isFollowing) {
       case IsFollowing.yes:
         return <Button onClick={() => this.unfollowShow()}>Unfollow</Button>
@@ -72,7 +82,3 @@ enum IsFollowing {
   yes,
   no
 }
-
-// export const FollowingButton = composeHOC<Props>(inject('following'), observer)(
-//   FollowingButtonComponent
-// )

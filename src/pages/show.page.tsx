@@ -1,5 +1,6 @@
 import React from 'react';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import styled from 'styled-components';
 import { Button } from '../components/button';
 import { EllipsisText } from '../components/ellipsis-text';
@@ -14,9 +15,9 @@ import { Spinner } from '../components/spinner';
 import { H1, H3 } from '../components/text';
 import { images } from '../images.config';
 import { HideOnMobile, isMobile, media } from '../styles/media-queries';
-import { seasonSubject$, show$ } from '../utils/firebase/selectors';
+import { nextEpisodeToWatch$, seasonSubject$, show$, watchedSeasonSubject$ } from '../utils/firebase/selectors';
 import { createUnknownState } from '../utils/firebase/state';
-import { Episode, Show, State } from '../utils/firebase/types';
+import { Episode, Show, State, WatchedEpisode } from '../utils/firebase/types';
 
 type Props = {
   params: {
@@ -25,8 +26,9 @@ type Props = {
 }
 
 type CompState = {
-  show: State<Show>,
+  show: State<Show>
   season: State<Episode[]>
+  watchedSeason: State<WatchedEpisode[]>
   selectedSeason: number
 }
 
@@ -35,16 +37,33 @@ export class ShowPage extends React.Component<Props, CompState> {
   state = {
     show: createUnknownState(),
     season: createUnknownState(),
-    selectedSeason: 1
+    watchedSeason: createUnknownState(),
+    selectedSeason: -1
   } as CompState
   setSeasonOnSubject: (season: number) => void
 
   componentDidMount() {
     const { season$, setSeason } = seasonSubject$(this.props.params.id)
-    this.setSeasonOnSubject = setSeason
+    const { watchSeason$, setWatchSeason } = watchedSeasonSubject$(this.props.params.id)
+    this.setSeasonOnSubject = (season: number) => {
+      setSeason(season)
+      setWatchSeason(season)
+    }
     this.subscriptions.push(
       show$(this.props.params.id).subscribe(show => this.setState({ show })),
-      season$.subscribe(season => this.setState({ season }))
+      combineLatest(season$, watchSeason$).subscribe(([ season, watchedSeason ]) => {
+        this.setState({ season })
+        this.setState({ watchedSeason })
+      }),
+      nextEpisodeToWatch$(this.props.params.id).pipe(take(1)).subscribe(episode => {
+        if (this.state.selectedSeason !== -1) {
+          return
+        }
+        if(!episode.data) {
+          this.setSeason(1)
+        }
+        this.setSeason(episode.data!.season)
+      })
     )
   }
 
@@ -126,7 +145,7 @@ export class ShowPage extends React.Component<Props, CompState> {
             ))}
           </SeasonButtonsWrapper>
           <EpisodesWrapper>
-            <Episodes episodes={this.state.season} />
+            <Episodes showId={this.props.params.id} episodes={this.state.season} watchedEpisode={this.state.watchedSeason} />
           </EpisodesWrapper>
         </Wrapper>
       </PageWrapper>

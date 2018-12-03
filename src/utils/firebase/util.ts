@@ -1,12 +1,48 @@
-import { getUserMetaData } from './query'
-import { userMetaData$ } from './selectors'
-import { Episode, Show, State } from './types'
+import { of } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
+import { getUserId } from '../auth.util';
+import { addShowIdFromFollowing, getUserMetaData, removeShowIdFromFollowing } from './query';
+import { followingIdsSubject, userMetaData$ } from './selectors';
+import { Episode, Show, State } from './types';
 
 export function updateLocalUserMetadata() {
   return getUserMetaData().then(metadata => {
     userMetaData$.next(metadata)
+    followingIdsSubject.next(metadata.following)
     return metadata
   })
+}
+
+export function unfollowShow(showId: string, userId = getUserId()) {
+  return followingIdsSubject.pipe(
+    take(1),
+    switchMap(ids => {
+      if (!ids) {
+        return of([])
+      }
+      if (ids!.includes(Number(showId))) {
+        return removeShowIdFromFollowing(userId, showId).then(() => ids.filter(id => id !== Number(showId)))
+      }
+      return of(ids)
+    }),
+    tap(ids => followingIdsSubject.next(ids))
+  )
+}
+
+export function followShow(showId: string, userId = getUserId()) {
+  return followingIdsSubject.pipe(
+    take(1),
+    switchMap(ids => {
+      if (!ids) {
+        return of([])
+      }
+      if (!ids!.includes(Number(showId))) {
+        return addShowIdFromFollowing(userId, showId).then(() => [...ids, Number(showId)])
+      }
+      return of(ids)
+    }),
+    tap(ids => followingIdsSubject.next(ids))
+  )
 }
 
 export function sortShowsAfterEpisodesAirDate(

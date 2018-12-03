@@ -63,6 +63,17 @@ export type Episode = {
   overview: string
 }
 
+export type WatchedEpisode = {
+  episode: number
+  episodeNumber: number
+  season: number
+  showId: number
+  time: Date
+  type: WatchEnum
+}
+
+export enum WatchEnum {}
+
 export type FbEpisode = Episode & {
   aired: string
 }

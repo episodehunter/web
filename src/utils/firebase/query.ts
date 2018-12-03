@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import { getUser, getUserId } from '../auth.util';
 import { now } from '../date.utils';
 import { isInvalid, storage } from './storage';
-import { CacheObj, Db, Episode, FbEpisode, Show, UpcomingEpisodes, UserMetaData } from './types';
+import { CacheObj, Db, Episode, FbEpisode, Show, UpcomingEpisodes, UserMetaData, WatchedEpisode } from './types';
 
 function initializeDatabase(): Db {
   const db = firebase.firestore()
@@ -79,7 +79,16 @@ export function getSeason(showId: string, season: number): Promise<Episode[]> {
     .where('season', '==', season)
     .get()
     .then(r => r.docs.map(d => d.data()) as FbEpisode[])
-    .then(episodes => episodes.map(episodeMapper))
+    .then(episodes => episodes.map(episodeMapper).sort((a, b) => a.episodeNumber - b.episodeNumber))
+}
+
+export function getWatchSeason(showId: string, season: number, cb: (episodes: WatchedEpisode[]) => void, userId = getUserId()): () => void {
+  return showsWatchHistoryCollection(userId)
+    .where('season', '==', season)
+    .where('showId', '==', Number(showId))
+    .onSnapshot(snapshot => {
+      cb(snapshot.docs.map(d => d.data()).map(d => Object.assign(d, { time: d.time.toDate() })) as WatchedEpisode[])
+    })
 }
 
 export function getShowCacheFallbackOnNetwork(
@@ -186,6 +195,7 @@ export function getNextEpisode(
   showId: string,
   episodeNumber: number
 ): Promise<Episode | null> {
+  console.log('episodeNumber: ', episodeNumber)
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .orderBy('episodeNumber')
@@ -206,5 +216,37 @@ export function getNextEpisode(
 function episodeMapper(fbEpisode: FbEpisode): Episode {
   return Object.assign(fbEpisode, {
     aired: parse(fbEpisode.aired)
+  })
+}
+
+export function removeShowIdFromFollowing(uid = getUserId(), showId: string) {
+  return userDoc(uid).update({ following: firebase.firestore.FieldValue.arrayRemove(Number(showId)) })
+}
+
+export function addShowIdFromFollowing(uid = getUserId(), showId: string) {
+  return userDoc(uid).update({ following: firebase.firestore.FieldValue.arrayUnion(Number(showId)) })
+}
+
+export function watchEpisode(showId: string, season: number, episode: number, uid = getUserId()) {
+  console.error('Do not update watch history from the client');
+  const wh = {
+    episode,
+    episodeNumber: season * 10000 + episode,
+    season,
+    showId: Number(showId),
+    time: new Date(),
+    type: 0
+  }
+  console.log(wh)
+  return showsWatchHistoryCollection(uid).add(wh)
+}
+
+export function unwatchEpisode(showId: string, season: number, episode: number, uid = getUserId()) {
+  console.error('Do not update watch history from the client');
+  const episodeNumber = season * 10000 + episode
+  console.log({episodeNumber, showId: Number(showId)})
+  return showsWatchHistoryCollection(uid).where('showId', '==', Number(showId)).where('episodeNumber', '==', episodeNumber).get().then(result => {
+    console.log('s', result.size)
+    return result.docs.filter(d => d.exists).map(d => d.ref.delete())
   })
 }

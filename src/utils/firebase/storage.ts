@@ -1,8 +1,9 @@
 import { get, set } from 'idb-keyval';
-import { Episode, Show } from './types';
+import { Episode, Show, WatchedEpisode } from './types';
 
 const SHOW_PREFIX = 'show'
 const SEASON_PREFIX = 'season'
+const WATCH_SEASON_PREFIX = 'watch_season'
 const EPISODES_TO_WATCH_PREFIX = 'episodes_to_watch'
 
 const memoryCache = {}
@@ -56,6 +57,18 @@ export const storage = {
     },
     get(showId: string, seasonNumber: number): Promise<StorageObject<Episode[]> | undefined> {
       return getCache(`${SEASON_PREFIX}_${showId}_${seasonNumber}`)
+    }
+  },
+  watchedSeason: {
+    set(showId: string, seasonNumber: number, season: WatchedEpisode[]): Promise<void> {
+      const seasonObject: StorageObject<WatchedEpisode[]> = {
+        date: new Date(),
+        data: season
+      }
+      return setCache(`${WATCH_SEASON_PREFIX}_${showId}_${seasonNumber}`, seasonObject)
+    },
+    get(showId: string, seasonNumber: number): Promise<StorageObject<WatchedEpisode[]> | undefined> {
+      return getCache(`${WATCH_SEASON_PREFIX}_${showId}_${seasonNumber}`)
     }
   }
 }

@@ -3,19 +3,20 @@ import 'firebase/firestore';
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { now } from '../date.utils';
-import { getEpisodesAfter, getHighestWatchedEpisodeUpdate, getNextEpisode, getSeason, getShow, getShowCacheFallbackOnNetwork, getUpcommingEpisodes } from './query';
+import { getEpisodesAfter, getHighestWatchedEpisodeUpdate, getNextEpisode, getSeason, getShow, getShowCacheFallbackOnNetwork, getUpcommingEpisodes, getWatchSeason } from './query';
 import { createLoadedState, createLoadingState } from './state';
 import { isInvalid, storage } from './storage';
-import { Episode, Show, ShowWithUpcomingEpisodes, State, UserMetaData } from './types';
+import { Episode, Show, ShowWithUpcomingEpisodes, State, UserMetaData, WatchedEpisode } from './types';
 
 export const userMetaData$ = new ReplaySubject<UserMetaData | null>(1)
+export const followingIdsSubject = new ReplaySubject<number[] | null>(1)
 
 export const followingIds$ = userMetaData$.pipe(
   filter(Boolean),
   map((metadata: UserMetaData) => metadata.following)
 )
 
-export const followingIds2$ = followingIds$.pipe(
+export const followingIds2$ = followingIdsSubject.pipe(
   map(following => createLoadedState(following, 'network')),
   startWith(createLoadingState())
 )
@@ -142,19 +143,27 @@ export function show$(showId: string): Observable<State<Show>> {
   })
 }
 
+const nextEpisodeToWatchObs: {
+  [key: string]: Observable<State<Episode | null>>
+} = {}
+
 export function nextEpisodeToWatch$(showId: string): Observable<State<Episode | null>> {
-  return getHighestWatchedEpisode$(showId).pipe(
-    switchMap(episode => {
-      const createLoadedNetworkState = (d: Episode | null) =>
-        createLoadedState(d, 'network')
-      if (episode.data) {
-        return getNextEpisode(showId, episode.data.episodeNumber).then(
-          createLoadedNetworkState
-        )
-      }
-      return getNextEpisode(showId, 0).then(createLoadedNetworkState)
-    })
-  )
+  if (!nextEpisodeToWatchObs[showId]) {
+    nextEpisodeToWatchObs[showId] = getHighestWatchedEpisode$(showId).pipe(
+      switchMap(episode => {
+        const createLoadedNetworkState = (d: Episode | null) =>
+          createLoadedState(d, 'network')
+        if (episode.data) {
+          return getNextEpisode(showId, episode.data.episodeNumber).then(
+            createLoadedNetworkState
+          )
+        }
+        return getNextEpisode(showId, 0).then(createLoadedNetworkState)
+      }),
+      shareReplay(1)
+    )
+  }
+  return nextEpisodeToWatchObs[showId]
 }
 
 export function seasonSubject$(showId: string) {
@@ -190,6 +199,32 @@ export function seasonSubject$(showId: string) {
   return {
     setSeason,
     season$: currentSeason$
+  }
+}
+
+export function watchedSeasonSubject$(showId: string) {
+  const seasonSubject = new Subject<number>()
+  const setWatchSeason = (season: number) => seasonSubject.next(season)
+  const currentSeason$: Observable<State<WatchedEpisode[]>> = seasonSubject.pipe(
+    switchMap(season => {
+      return Observable.create(async obs => {
+        const seasonCache = await storage.watchedSeason.get(showId, season)
+        if (seasonCache) {
+          obs.next(createLoadedState(seasonCache.data, 'cache'))
+        } else {
+          obs.next(createLoadingState())
+        }
+        const unsubscribe = getWatchSeason(showId, season, episodes => {
+          obs.next(createLoadedState(episodes, 'network'))
+        })
+        return unsubscribe
+      })
+    })
+  )
+
+  return {
+    setWatchSeason,
+    watchSeason$: currentSeason$
   }
 }
 

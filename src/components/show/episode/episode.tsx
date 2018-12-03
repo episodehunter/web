@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { isMobile, media } from '../../../styles/media-queries';
 import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util';
-import { Episode as EpisodeModel } from '../../../utils/firebase/types';
+import { Episode as EpisodeModel, WatchedEpisode } from '../../../utils/firebase/types';
 import { EllipsisText } from '../../ellipsis-text';
 import { EpisodeImage } from '../../episode/episode-image';
 import { H4, HighlightSpan } from '../../text';
@@ -12,12 +12,14 @@ import { WatchedEpisodeDate } from './watched-episode-date';
 
 type Props = {
   episode: EpisodeModel
+  watched: WatchedEpisode | undefined
+  showId: string
 }
 
-export const Episode = ({ episode }: Props) => (
+export const Episode = ({ episode, watched, showId }: Props) => (
   <EpisodeWrapper>
     <EpisodeImage {...episodeImageProps(episode.tvdbId)}>
-      <WatchedEpisodeDate episode={episode} />
+      <WatchedEpisodeDate watched={watched} />
     </EpisodeImage>
 
     <DescriptionWrapper>
@@ -26,7 +28,7 @@ export const Episode = ({ episode }: Props) => (
           <HighlightSpan>{composeSeasonAndEpisodeNumber(episode.season, episode.episode)}</HighlightSpan>{' '}
           {episode.name}
         </H4>
-        <WatchedButton episode={episode} />
+        <WatchedButton showId={showId} watched={watched} episode={episode} />
       </HeadlineWrapper>
       <AirDate firstAired={episode.aired} />
       <EllipsisText length={350} style={{ margin: '7.5px 0 0 0' }}>
