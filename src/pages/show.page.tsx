@@ -1,76 +1,105 @@
-import { action, computed, observable, when } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import React from 'react'
-import styled from 'styled-components'
-import { Button } from '../components/button'
-import { EllipsisText } from '../components/ellipsis-text'
-import { ShowFanart } from '../components/fanart/show-fanart'
-import { SmallShowPoster } from '../components/poster/small-show-poster'
-import { Episodes } from '../components/show/episode/episodes'
-import { Facts } from '../components/show/facts'
-import { FollowingButton } from '../components/show/following-button'
-import { NextEpisode } from '../components/show/next-episode'
-import { Progress } from '../components/show/progress'
-import { H1, H3 } from '../components/text'
-import { images } from '../images.config'
-import { ShowStore } from '../store/show.store'
-import { HideOnMobile, isMobile, media } from '../styles/media-queries'
-import { composeHOC } from '../utils/function.util'
-import { SpinnerPage } from './spinner.page'
+import React from 'react';
+import { combineLatest, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import styled from 'styled-components';
+import { Button } from '../components/button';
+import { EllipsisText } from '../components/ellipsis-text';
+import { ShowFanart } from '../components/fanart/show-fanart';
+import { SmallShowPoster } from '../components/poster/small-show-poster';
+import { Episodes } from '../components/show/episode/episodes';
+import { Facts } from '../components/show/facts';
+import { FollowingButton } from '../components/show/following-button';
+import { NextEpisode } from '../components/show/next-episode';
+import { Progress } from '../components/show/progress';
+import { H1, H3 } from '../components/text';
+import { images } from '../images.config';
+import { HideOnMobile, isMobile, media } from '../styles/media-queries';
+import { nextEpisodeToWatch$, seasonSubject$, show$, watchedSeasonSubject$ } from '../utils/firebase/selectors';
+import { createUnknownState } from '../utils/firebase/state';
+import { Episode, Show, State, WatchedEpisode } from '../utils/firebase/types';
+import { SpinnerPage } from './spinner.page';
 
 type Props = {
-  showStore?: ShowStore
-  params: any
+  params: {
+    id: string
+  }
 }
 
-class ShowPageComponent extends React.Component<Props> {
-  private selectedSeasonDisposer: () => void
+type CompState = {
+  show: State<Show>
+  season: State<Episode[]>
+  watchedSeason: State<WatchedEpisode[]>
+  selectedSeason: number
+}
 
-  @observable
-  selectedSeason = 1
+export class ShowPage extends React.Component<Props, CompState> {
+  subscriptions: Subscription[] = []
+  state = {
+    show: createUnknownState(),
+    season: createUnknownState(),
+    watchedSeason: createUnknownState(),
+    selectedSeason: -1
+  } as CompState
+  setSeasonOnSubject: (season: number) => void
 
-  constructor(props, context) {
-    super(props, context)
-    this.selectedSeasonDisposer = when(
-      () => Boolean(this.show.watchHistory.length),
-      () => this.calculateSelectedSeason()
+  componentDidMount() {
+    const { season$, setSeason } = seasonSubject$(this.props.params.id)
+    const { watchSeason$, setWatchSeason } = watchedSeasonSubject$(this.props.params.id)
+    this.setSeasonOnSubject = (season: number) => {
+      setSeason(season)
+      setWatchSeason(season)
+    }
+    this.subscriptions.push(
+      show$(this.props.params.id).subscribe(show => this.setState({ show })),
+      combineLatest(season$, watchSeason$).subscribe(([ season, watchedSeason ]) => {
+        this.setState({ season })
+        this.setState({ watchedSeason })
+      }),
+      nextEpisodeToWatch$(this.props.params.id).pipe(take(1)).subscribe(episode => {
+        if (this.state.selectedSeason !== -1) {
+          return
+        }
+        if(!episode.data) {
+          this.setSeason(1)
+        }
+        this.setSeason(episode.data!.season)
+      })
     )
   }
 
   componentWillUnmount() {
-    this.selectedSeasonDisposer()
+    this.subscriptions.forEach(sub => sub.unsubscribe())
   }
 
-  calculateSelectedSeason() {
-    const nextEpisodeToWatch = this.show.nextEpisodeToWatch
-    if (nextEpisodeToWatch && nextEpisodeToWatch.season) {
-      this.setSeason(nextEpisodeToWatch.season)()
-    }
-  }
-
-  @computed
-  get show() {
-    return this.props.showStore!.getShow(Number(this.props.params.id))
+  get isLoading() {
+    return !Boolean(this.state.show && this.state.show.status === 'loaded')
   }
 
   setSeason(season: number) {
-    return action(() => (this.selectedSeason = season))
+    if (!this.setSeasonOnSubject) {
+      return
+    }
+    this.setState({ selectedSeason: season })
+    this.setSeasonOnSubject(season)
   }
 
   render() {
-    if (this.show.loader.isLoading) {
+    if (this.isLoading) {
       return <SpinnerPage />
     }
-    const show = this.show
+    const show = this.state.show.data
+    if (!show) {
+      return <p>404</p>
+    }
     return (
-      <PageWrapper tvdbId={this.show.tvdbId}>
+      <PageWrapper tvdbId={show.ids.tvdb}>
         <HideOnMobile>
-          <ShowFanart tvdbId={this.show.tvdbId} />
+          <ShowFanart tvdbId={show.ids.tvdb} />
         </HideOnMobile>
         <Wrapper>
           <PosterAndTitleWrapper>
             <HideOnMobile>
-              <SmallShowPoster tvdbId={this.show.tvdbId} />
+              <SmallShowPoster tvdbId={show.ids.tvdb} />
             </HideOnMobile>
             <ShowTitleAndOverview>
               <H1
@@ -79,10 +108,10 @@ class ShowPageComponent extends React.Component<Props> {
                   wordWrap: 'break-word'
                 }}
               >
-                {this.show.name}
+                {show.name}
               </H1>
-              <EllipsisText length={500}>{this.show.overview}</EllipsisText>
-              <FollowingButton show={show} />
+              <EllipsisText length={500}>{show.overview}</EllipsisText>
+              <FollowingButton showId={show.id} />
             </ShowTitleAndOverview>
           </PosterAndTitleWrapper>
           <Content>
@@ -104,25 +133,21 @@ class ShowPageComponent extends React.Component<Props> {
             {show.seasons.map(season => (
               <Button
                 key={season}
-                onClick={this.setSeason(season)}
-                active={season === this.selectedSeason}
+                onClick={() => this.setSeason(season)}
+                active={season === this.state.selectedSeason}
               >
                 Season {season}
               </Button>
             ))}
           </SeasonButtonsWrapper>
           <EpisodesWrapper>
-            <Episodes episodes={show.episodesPerSeason(this.selectedSeason)} />
+            <Episodes showId={this.props.params.id} episodes={this.state.season} watchedEpisode={this.state.watchedSeason} />
           </EpisodesWrapper>
         </Wrapper>
       </PageWrapper>
     )
   }
 }
-
-export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
-  ShowPageComponent
-)
 
 const PageWrapperTabletAndUp = styled.div<{ tvdbId: number }>``
 

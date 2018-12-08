@@ -1,26 +1,34 @@
-import { inject } from 'mobx-react'
-import React from 'react'
-import { dateReleaseFormat, Today } from '../../../utils/date.utils'
-import { SmallText } from '../../text'
+import React from 'react';
+import { melrose } from '../../../utils/colors';
+import { dateReleaseFormat, Today, today } from '../../../utils/date.utils';
+import { SmallText } from '../../text';
 
 type Props = {
   firstAired: Date | null
-  today?: Today
+  _today?: Today
 }
 
-const AirDateComponent = ({ firstAired, today }: Props) => {
+export const AirDate = ({ firstAired, _today = today }: Props) => {
+  const releaseText = dateReleaseFormat(
+    firstAired,
+    {
+      future: date => `  Airs ${date}`,
+      past: date => `  Aired ${date}`
+    },
+    _today()
+  )
+  if (!releaseText) {
+    return null
+  }
   return (
     <SmallText>
-      {dateReleaseFormat(
-        firstAired,
-        {
-          future: date => `📅 Aired ${date}`,
-          past: date => `📅 Aired ${date}`
-        },
-        (today as Today)()
-      )}
+      <i className="material-icons" style={iconStyle}>calendar_today</i>
+      {releaseText}
     </SmallText>
   )
 }
 
-export const AirDate = inject('today')(AirDateComponent)
+const iconStyle = {
+  fontSize: 'inherit',
+  color: melrose
+}

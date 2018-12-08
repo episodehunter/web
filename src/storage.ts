@@ -19,7 +19,9 @@ export const storage = {
       }
       return set(`${SHOW_PREFIX}_${show.id}`, showObject).then(() => show)
     },
-    get(id: number): Promise<StorageObject<ShowResponse, ShowRequestType>> {
+    get(
+      id: number | string
+    ): Promise<StorageObject<ShowResponse, ShowRequestType>> {
       return get(`${SHOW_PREFIX}_${id}`)
     }
   },
@@ -71,6 +73,13 @@ export const storage = {
       return get(FOLLOWING_SHOWS)
     }
   }
+}
+
+export function isInvalid<T>(
+  storageObject: StorageObject<T, any>,
+  date: Date
+): boolean {
+  return Boolean(storageObject) && storageObject.date.getTime() < date.getTime()
 }
 
 export type Storage = typeof storage

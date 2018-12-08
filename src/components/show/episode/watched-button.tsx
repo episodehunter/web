@@ -1,53 +1,53 @@
-import { action, observable } from 'mobx'
-import React from 'react'
-import { observer } from '../../../../node_modules/mobx-react'
-import { Episode } from '../../../store/episode'
-import { TextButton } from '../../button'
-import { Spinner } from '../../spinner'
+import React from 'react';
+import { melrose } from '../../../utils/colors';
+import { unwatchEpisode, watchEpisode } from '../../../utils/firebase/query';
+import { Episode, WatchedEpisode } from '../../../utils/firebase/types';
+import { TextButton } from '../../button';
+import { Spinner } from '../../spinner';
 
 type Props = {
   episode: Episode
+  watched: WatchedEpisode | undefined
+  showId: string
 }
 
-class WatchedButtonComponent extends React.Component<Props> {
-  @observable loading = false
+type State = {
+  loading: boolean
+}
+
+export class WatchedButton extends React.Component<Props, State> {
+  state = {
+    loading: false
+  }
 
   markAsWatched = () => {
-    this.setLoading(true)
-    this.props.episode
-      .markAsWatched()
-      .subscribe(() => this.setLoading(false), () => this.setLoading(false))
+    console.log('markAsWatched')
+    watchEpisode(this.props.showId, this.props.episode.season, this.props.episode.episode)
   }
 
   markAsUnWatched = () => {
-    this.setLoading(true)
-    this.props.episode
-      .markAsUnwatched()
-      .subscribe(() => this.setLoading(false), () => this.setLoading(false))
-  }
-
-  @action
-  setLoading(loading: boolean) {
-    this.loading = loading
+    console.log('markAsUnWatched')
+    unwatchEpisode(this.props.showId, this.props.episode.season, this.props.episode.episode)
   }
 
   render() {
-    if (this.loading) {
+    if (this.state.loading) {
       return <Spinner size={14} style={{ alignSelf: 'flex-end' }} />
-    } else if (this.props.episode.hasWatchedEpisode) {
+    } else if (this.props.watched) {
       return (
         <TextButton onClick={this.markAsUnWatched}>
-          Mark as unwatched
+          Mark as unwatched <i className="material-icons" style={iconStyle}>remove_circle_outline</i>
         </TextButton>
       )
-    } else if (this.props.episode.hasValidAirDate) {
-      return (
-        <TextButton onClick={this.markAsWatched}>Mark as watched 📺</TextButton>
-      )
     } else {
-      return null
+      return (
+        <TextButton onClick={this.markAsWatched}>Mark as watched <i className="material-icons" style={iconStyle}>tv</i></TextButton>
+      )
     }
   }
 }
 
-export const WatchedButton = observer(WatchedButtonComponent)
+const iconStyle = {
+  fontSize: 'inherit',
+  color: melrose
+}

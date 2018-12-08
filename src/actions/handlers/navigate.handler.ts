@@ -9,11 +9,8 @@ export const navigateHandler = (
 ) => {
   switch (action.type) {
     case 'NAVIGATE_SHOW':
-      dispatch.fetchFullShow(action.payload.showId)
-      dispatch.fetchShowHistory(action.payload.showId)
-      break
-    case 'NAVIGATE_FOLOWING':
-      dispatch.fetchFullShowForFollowing()
+      // dispatch.fetchFullShow(action.payload.showId)
+      // dispatch.fetchShowHistory(action.payload.showId)
       break
   }
 }

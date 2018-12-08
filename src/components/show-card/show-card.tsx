@@ -5,7 +5,7 @@ import { PosterCard } from '../poster-cards/poster-card'
 import { SmallShowPoster } from '../poster/small-show-poster'
 
 type Props = {
-  showId: number
+  showId: string
   tvdbId: number
   topRight?: JSX.Element | string
   bottomRight?: JSX.Element | string
@@ -24,6 +24,5 @@ export const ShowCard = ({ showId, tvdbId, bottomRight, topRight }: Props) => {
 }
 
 function getImageContainer() {
-  console.log('isMobile()', isMobile())
   return isMobile() ? SmallShowFanart : SmallShowPoster
 }

@@ -1,16 +1,15 @@
-import { observer } from 'mobx-react'
-import React from 'react'
-import { Episode } from '../../../store/episode'
-import { dateReleaseFormat, format } from '../../../utils/date.utils'
-import { BottomTextWrapper } from '../../episode/bottom-text-wrapper'
-import { P } from '../../text'
+import React from 'react';
+import { dateReleaseFormat, format } from '../../../utils/date.utils';
+import { WatchedEpisode } from '../../../utils/firebase/types';
+import { BottomTextWrapper } from '../../episode/bottom-text-wrapper';
+import { P } from '../../text';
 
 type Props = {
-  episode: Episode
+  watched: WatchedEpisode | undefined
 }
 
-const WatchedEpisodeDateComponent = ({ episode }: Props) => {
-  const latestWatchedDate = episode.latestWatchedDate
+export const WatchedEpisodeDate = ({ watched }: Props) => {
+  const latestWatchedDate = watched && watched.time
   if (!latestWatchedDate) {
     return null
   }
@@ -23,10 +22,13 @@ const WatchedEpisodeDateComponent = ({ episode }: Props) => {
           'Do MMM YYYY'
         )}`}
       >
-        ✅ {dateReleaseFormat(latestWatchedDate)}
+        <i style={textStyle} className="material-icons">check_circle_outline</i> {dateReleaseFormat(latestWatchedDate)}
       </P>
     </BottomTextWrapper>
   )
 }
 
-export const WatchedEpisodeDate = observer(WatchedEpisodeDateComponent)
+const textStyle = {
+  color: '#35e035',
+  fontSize: 'inherit'
+}

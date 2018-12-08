@@ -40,7 +40,7 @@ export class Following {
   }
 
   loadFollowingShows() {
-    this.loader.load(1)
+    console.warn('Trying to load follwoing shows')
   }
 
   @action

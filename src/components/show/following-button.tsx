@@ -1,51 +1,84 @@
-import { action, observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import React from 'react'
-import { Following } from '../../store/following'
-import { Show } from '../../store/show'
-import { composeHOC } from '../../utils/function.util'
-import { Button } from '../button'
-import { Spinner } from '../spinner'
+import React from 'react';
+import { Subscription } from 'rxjs';
+import { followingIds2$ } from '../../utils/firebase/selectors';
+import { followShow, unfollowShow } from '../../utils/firebase/util';
+import { Button } from '../button';
+import { Spinner } from '../spinner';
 
 type Props = {
-  show: Show
-  following?: Following
+  showId: string
 }
 
-class FollowingButtonComponent extends React.Component<Props> {
-  @observable
-  updating = false
+type CompState = {
+  isFollowing: IsFollowing
+  updatingList: boolean
+}
 
-  @action
-  setUpdating(isUpdating: boolean) {
-    this.updating = isUpdating
+export class FollowingButton extends React.Component<Props> {
+  subscription: Subscription
+  state = {
+    isFollowing: IsFollowing.unknwon,
+    updatingList: false
+  } as CompState
+
+  componentDidMount() {
+    this.subscription = followingIds2$.subscribe(followingIds => {
+      if (!followingIds.data) {
+        this.setState({ isFollowing: IsFollowing.unknwon })
+      } else {
+        const isFollowing = followingIds.data.includes(
+          Number(this.props.showId)
+        )
+          ? IsFollowing.yes
+          : IsFollowing.no
+        this.setState({ isFollowing })
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    this.subscription.unsubscribe()
   }
 
   followShow() {
-    this.setUpdating(true)
-    this.props
-      .following!.follow(this.props.show.id)
-      .subscribe(() => this.setUpdating(false), () => this.setUpdating(false))
+    this.setState({ updatingList: true })
+    followShow(this.props.showId).subscribe(
+      () => null,
+      error => console.error(error),
+      () => {
+        this.setState({ updatingList: false })
+      }
+    )
   }
 
   unfollowShow() {
-    this.setUpdating(true)
-    this.props
-      .following!.unfollow(this.props.show.id)
-      .subscribe(() => this.setUpdating(false), () => this.setUpdating(false))
+    this.setState({ updatingList: true })
+    unfollowShow(this.props.showId).subscribe(
+      () => null,
+      error => console.error(error),
+      () => {
+        this.setState({ updatingList: false })
+      }
+    )
   }
 
   render() {
-    if (this.updating) {
+    if (this.state.updatingList) {
       return <Spinner />
-    } else if (this.props.following!.isFollowingShow(this.props.show.id)) {
-      return <Button onClick={() => this.unfollowShow()}>Unfollow</Button>
-    } else {
-      return <Button onClick={() => this.followShow()}>Follow</Button>
+    }
+    switch (this.state.isFollowing) {
+      case IsFollowing.yes:
+        return <Button onClick={() => this.unfollowShow()}>Unfollow</Button>
+      case IsFollowing.no:
+        return <Button onClick={() => this.followShow()}>Follow</Button>
+      default:
+        return <Spinner />
     }
   }
 }
 
-export const FollowingButton = composeHOC<Props>(inject('following'), observer)(
-  FollowingButtonComponent
-)
+enum IsFollowing {
+  unknwon,
+  yes,
+  no
+}

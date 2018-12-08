@@ -1,60 +1,48 @@
-import { computed } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import * as React from 'react'
+import React from 'react'
+import { Subscription } from 'rxjs'
+import { map } from 'rxjs/operators'
 import styled from 'styled-components'
 import { FollowingComponent } from '../components/following'
-import { Following } from '../store/following'
-import { WatchedHistory } from '../types'
 import { shark } from '../utils/colors'
-import { findBest } from '../utils/iterable.util'
+import { episodesToWatch$ } from '../utils/firebase/selectors'
+import { Episode, Show, State } from '../utils/firebase/types'
+import { sortShowsAfterEpisodesAirDate } from '../utils/firebase/util'
 import { SpinnerPage } from './spinner.page'
 
-type Props = {
-  following: Following
+type ComState = {
+  shows: { show: Show; episodes: State<Episode[]> }[]
+  loading: boolean
 }
 
-export class FollowingPageComponent extends React.Component<Props> {
-  @computed
-  get isLoading() {
-    return (
-      this.props.following.isLoading ||
-      this.shows.some(show => show.loader.isFetching)
-    )
+export class FollowingPage extends React.Component<{}, ComState> {
+  private subscribtion: Subscription
+  state = {
+    shows: [],
+    loading: true
+  } as ComState
+
+  componentDidMount() {
+    this.subscribtion = episodesToWatch$
+      .pipe(map(data => sortShowsAfterEpisodesAirDate(data)))
+      .subscribe(shows => {
+        this.setState({ shows, loading: false })
+      })
   }
 
-  @computed
-  get shows() {
-    return this.props.following.shows.sort((a, b) => {
-      const awh = findBest<WatchedHistory>((pe, ce) => ce.time > pe.time)(
-        a.watchHistory
-      )
-      if (awh === undefined) {
-        return 1
-      }
-      const bwh = findBest<WatchedHistory>((pe, ce) => ce.time > pe.time)(
-        b.watchHistory
-      )
-      if (bwh === undefined) {
-        return -1
-      }
-      return bwh.time > awh.time ? 1 : -1
-    })
+  componentWillUnmount() {
+    this.subscribtion.unsubscribe()
   }
 
   render() {
-    return this.isLoading ? (
+    return this.state.loading ? (
       <SpinnerPage />
     ) : (
       <Wrapper>
-        <FollowingComponent following={this.shows} />
+        <FollowingComponent following={this.state.shows} />
       </Wrapper>
     )
   }
 }
-
-export const FollowingPage = inject('following')(
-  observer(FollowingPageComponent)
-)
 
 const Wrapper = styled.div`
   background-color: ${shark};

@@ -1,31 +1,27 @@
 import { withNavigation } from '@vieriksson/the-react-router'
-import { observer } from 'mobx-react'
 import React from 'react'
 import styled from 'styled-components'
-import { Show } from '../store/show'
 import { media } from '../styles/media-queries'
+import { ShowWithEpisodesToWatch } from '../utils/firebase/types'
 import { ShowCard } from './show-card/show-card'
 
 type Props = {
-  following: Show[]
+  following: ShowWithEpisodesToWatch[]
 }
 
-const Following = observer(({ following }: Props) => (
+const Following = ({ following }: Props) => (
   <FollowingWrapper>
-    {following.map(
-      show =>
-        show && (
-          <ShowCard
-            key={show.id}
-            showId={show.id}
-            tvdbId={show.tvdbId}
-            topRight={show.name}
-            bottomRight={episodeLeftText(show.numberOfEpisodeToWatch)}
-          />
-        )
-    )}
+    {following.map(show => (
+      <ShowCard
+        key={show.id}
+        showId={show.id}
+        tvdbId={show.ids.tvdb}
+        topRight={show.name}
+        bottomRight={episodeLeftText(show.episodesToWatch.length)}
+      />
+    ))}
   </FollowingWrapper>
-))
+)
 
 export const episodeLeftText = (n: number) => {
   if (n === 0) {
