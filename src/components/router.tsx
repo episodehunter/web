@@ -42,7 +42,7 @@ export const routes = {
       component: RouteLayout(HistoryPage)
     },
     {
-      path: Routes.settings,
+      path: Routes.changePassword,
       component: RouteLayout(SettingsPage)
     },
     {

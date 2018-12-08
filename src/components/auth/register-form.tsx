@@ -2,17 +2,17 @@ import { action, observable } from 'mobx'
 import { observer } from 'mobx-react'
 import React from 'react'
 import { FormButton } from '../../styles/form-button'
-import { mountainMeadow } from '../../utils/colors'
+import { melrose } from '../../utils/colors'
 import { ErrorComponent } from '../error-message'
 import { FloatingLabel } from '../floating-label'
 import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
 
 type Props = {
-  login: (email: string, password: string) => Promise<any>
+  register: (email: string, password: string) => Promise<any>
 }
 
-export class LoginFormComponent extends React.Component<Props> {
+export class RegisterFormComponent extends React.Component<Props> {
   @observable
   signingIn = false
   @observable
@@ -42,12 +42,15 @@ export class LoginFormComponent extends React.Component<Props> {
     this.signingIn = signingIn
   }
 
-  login() {
+  register() {
     this.setSigningIn(true)
-    this.props.login(this.email, this.password).catch(error => {
-      this.setSigningIn(false)
-      this.setErrorMessage(translateFirebaseError(error))
-    })
+    this.props
+      .register(this.email, this.password)
+      .then(resp => console.log(resp))
+      .catch(error => {
+        this.setSigningIn(false)
+        this.setErrorMessage(translateFirebaseError(error))
+      })
   }
 
   render() {
@@ -55,6 +58,7 @@ export class LoginFormComponent extends React.Component<Props> {
       <AuthFormWrapper>
         <ErrorComponent errorMsg={this.errorMsg} />
         <FloatingLabel
+          autoComplete="new-password"
           styles={floatingLabelStyles}
           placeholder="email"
           type="email"
@@ -63,6 +67,7 @@ export class LoginFormComponent extends React.Component<Props> {
         />
         <Space />
         <FloatingLabel
+          autoComplete="new-password"
           styles={floatingLabelStyles}
           placeholder="password"
           type="password"
@@ -71,15 +76,15 @@ export class LoginFormComponent extends React.Component<Props> {
         />
         <Space />
         <FormButton
-          color={mountainMeadow}
+          color={melrose}
           disabled={this.signingIn}
-          onClick={() => this.login()}
+          onClick={() => this.register()}
         >
-          Let me in
+          Register
         </FormButton>
       </AuthFormWrapper>
     )
   }
 }
 
-export const LoginForm = observer(LoginFormComponent)
+export const RegisterForm = observer(RegisterFormComponent)

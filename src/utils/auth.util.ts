@@ -21,6 +21,12 @@ export const getIdToken = () => {
 export const signInWithEmailAndPassword = (email: string, password: string) =>
   firebase.auth().signInWithEmailAndPassword(email, password)
 
+export const registerWithEmailAndPassword = async (
+  email: string,
+  password: string
+) =>
+  firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
+
 export const signOut = () => firebase.auth().signOut()
 
 export const authStateChange$: Observable<firebase.User> = Observable.create(
@@ -38,11 +44,10 @@ export const authStateChange$: Observable<firebase.User> = Observable.create(
 export const authenticated$: Observable<
   AuthenticatedState
 > = authStateChange$.pipe(
-  map(
-    user =>
-      user
-        ? AuthenticatedState.authenticated
-        : AuthenticatedState.notAuthenticated
+  map(user =>
+    user
+      ? AuthenticatedState.authenticated
+      : AuthenticatedState.notAuthenticated
   )
 )
 

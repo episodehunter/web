@@ -8,7 +8,8 @@ import { TitlesStore } from '../store/titles.store'
 import { media } from '../styles/media-queries'
 import { alabaster, shark } from '../utils/colors'
 import { composeHOC } from '../utils/function.util'
-import { ShowCard } from './show-card/show-card'
+import { SmallShowFanart } from './fanart/small-show-fanart'
+import { PosterCard } from './poster-cards/poster-card'
 
 type Props = {
   search?: SearchStore
@@ -37,12 +38,17 @@ export class SearchComponent extends React.Component<Props> {
     event.preventDefault()
   }
 
+  onSearchBoxPress(event: React.MouseEvent<HTMLElement>) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   render() {
     const { search } = this.props
     return search!.show ? (
       <OverlayWrapper onClick={() => search!.toggleSearchBar()}>
         <Wrapper>
-          <SearchWrapper>
+          <SearchWrapper onClick={event => this.onSearchBoxPress(event)}>
             <SearchBox
               autoFocus
               value={search!.searchText}
@@ -52,9 +58,9 @@ export class SearchComponent extends React.Component<Props> {
           <ResultWrapper>
             {search!.result.map(title => (
               <ResultItem key={title.id} onClick={event => this.onPress(event)}>
-                <ShowCard
-                  showId={title.id}
-                  tvdbId={title.tvdbId}
+                <PosterCard
+                  linkUrl={`/show/${title.id}`}
+                  poster={<SmallShowFanart tvdbId={title.tvdbId} />}
                   bottomRight={title.name}
                 />
               </ResultItem>
@@ -96,9 +102,6 @@ const ResultItem = styled.div`
 
 const Wrapper = styled.div`
   width 90%;
-  ${media.tabletAndUp`
-    width 80%;
-  `};
   height: 100%;
 `
 

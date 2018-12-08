@@ -3,6 +3,7 @@ import { action, computed, observable } from 'mobx'
 import {
   authStateChange$,
   reauthenticateUser,
+  registerWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   updateEmail,
@@ -27,12 +28,17 @@ export class UserStore {
     return Boolean(this.user)
   }
 
-  signOut() {
-    return signOut()
+  async signOut() {
+    await signOut()
+    window.location.reload()
   }
 
   login(email: string, password: string) {
     return signInWithEmailAndPassword(email, password)
+  }
+
+  register(email: string, password: string) {
+    return registerWithEmailAndPassword(email, password)
   }
 
   reauthenticate(password: string) {

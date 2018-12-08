@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { LoginForm } from '../components/auth/login-form'
+import { RegisterForm } from '../components/auth/register-form'
 import { FlotingLoginButtons } from '../components/main/floting-login-buttons'
 import { MainAbout } from '../components/main/main-about'
 import { AuthFormState } from '../enum'
@@ -40,10 +41,18 @@ export class LoginPageComponent extends React.Component<Props> {
   }
 
   renderAuthForm() {
-    if (this.authFormState === AuthFormState.login) {
-      return <LoginForm login={(e, p) => this.props.user.login(e, p)} />
+    switch (this.authFormState) {
+      case AuthFormState.login:
+        return <LoginForm login={(e, p) => this.props.user.login(e, p)} />
+      case AuthFormState.register:
+        return (
+          <RegisterForm register={(e, p) => this.props.user.register(e, p)} />
+        )
+      case AuthFormState.forgotPassword:
+        return null
+      default:
+        return null
     }
-    return null
   }
 
   render() {

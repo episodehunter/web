@@ -5,6 +5,8 @@ import { Routes } from '../../routes'
 import { SearchStore } from '../../store/search.store'
 import { UserStore } from '../../store/user'
 import { NavbarItem } from './navbar-item'
+import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
+import { NavbarSubItem } from './navbar-subitem'
 
 type Props = {
   user?: UserStore
@@ -15,41 +17,53 @@ type Props = {
 
 const isPathEqual = (urlPath, statePath) => urlPath === statePath
 
-export const NavbarItemsComponent = ({ search, navigate, stateUrl }: Props) => {
+export const NavbarItemsComponent = ({
+  search,
+  navigate,
+  stateUrl,
+  user
+}: Props) => {
   return (
     <>
       <NavbarItem
-        path={Routes.upcoming}
         title="Upcoming"
         selected={isPathEqual(Routes.upcoming, stateUrl)}
         onClick={() => navigate(Routes.upcoming)}
       />
       <NavbarItem
-        path={Routes.following}
         title="Following"
         selected={isPathEqual(Routes.following, stateUrl)}
         onClick={() => navigate(Routes.following)}
       />
       <NavbarItem
-        path={Routes.history}
         title="History"
         selected={isPathEqual(Routes.history, stateUrl)}
         onClick={() => navigate(Routes.history)}
       />
       <NavbarItem
-        path={Routes.search}
         title="Search"
         selected={isPathEqual(Routes.search, stateUrl)}
         onClick={() => search!.toggleSearchBar()}
       />
-      <NavbarItem
-        path={Routes.settings}
-        title="Settings"
-        selected={isPathEqual(Routes.settings, stateUrl)}
-        onClick={() => navigate(Routes.settings)}
+      <NavbarItemWithSubItems
+        header={'Settings'}
+        subItems={[
+          <NavbarSubItem
+            key={'change-password'}
+            title="Change password"
+            selected={isPathEqual(Routes.changePassword, stateUrl)}
+            onClick={() => navigate(Routes.changePassword)}
+          />,
+          <NavbarSubItem
+            key={'logout'}
+            title="Logout"
+            selected={false}
+            onClick={() => user!.signOut()}
+          />
+        ]}
       />
     </>
   )
 }
 
-export const NavbarItems = inject('search')(NavbarItemsComponent)
+export const NavbarItems = inject('search', 'user')(NavbarItemsComponent)

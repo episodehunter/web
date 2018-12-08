@@ -159,7 +159,11 @@ class SettingsPageComponent extends React.Component<Props, State> {
             </LabelWrapper>
           </InputWrapper>
           <Space />
-          <FormButton disabled={this.state.saving} onClick={() => this.save()}>
+          <FormButton
+            color={mountainMeadow}
+            disabled={this.state.saving}
+            onClick={() => this.save()}
+          >
             Save
           </FormButton>
         </FormWrapper>
@@ -208,7 +212,7 @@ const FormWrapper = styled.div`
 `
 
 const Wrapper = styled.div`
-  height: 85%;
+  min-height: 1000px;
   color: ${alabaster};
   background-color: ${shark};
   display: flex;

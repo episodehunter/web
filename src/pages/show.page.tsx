@@ -11,12 +11,12 @@ import { Facts } from '../components/show/facts'
 import { FollowingButton } from '../components/show/following-button'
 import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
-import { Spinner } from '../components/spinner'
 import { H1, H3 } from '../components/text'
 import { images } from '../images.config'
 import { ShowStore } from '../store/show.store'
 import { HideOnMobile, isMobile, media } from '../styles/media-queries'
 import { composeHOC } from '../utils/function.util'
+import { SpinnerPage } from './spinner.page'
 
 type Props = {
   showStore?: ShowStore
@@ -59,11 +59,7 @@ class ShowPageComponent extends React.Component<Props> {
 
   render() {
     if (this.show.loader.isLoading) {
-      return (
-        <Loading>
-          <Spinner />
-        </Loading>
-      )
+      return <SpinnerPage />
     }
     const show = this.show
     return (
@@ -127,11 +123,6 @@ class ShowPageComponent extends React.Component<Props> {
 export const ShowPage = composeHOC<Props>(inject('showStore'), observer)(
   ShowPageComponent
 )
-
-const Loading = styled.div`
-  text-align: center;
-  margin-top: 100px;
-`
 
 const PageWrapperTabletAndUp = styled.div<{ tvdbId: number }>``
 
