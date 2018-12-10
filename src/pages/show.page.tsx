@@ -61,8 +61,9 @@ export class ShowPage extends React.Component<Props, CompState> {
         }
         if(!episode.data) {
           this.setSeason(1)
+        } else {
+          this.setSeason(episode.data.season)
         }
-        this.setSeason(episode.data!.season)
       })
     )
   }
