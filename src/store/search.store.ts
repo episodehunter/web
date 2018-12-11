@@ -1,4 +1,4 @@
-import Fuse from 'fuse.js'
+import Fuse, { FuseOptions } from 'fuse.js'
 import { action, observable, reaction } from 'mobx'
 import { fromEvent } from 'rxjs'
 import { debounceTime, filter, scan } from 'rxjs/operators'
@@ -23,7 +23,7 @@ export class SearchStore {
   searchText: string = ''
   @observable
   result: Title[] = []
-  fuse: Fuse = new Fuse([], fuseOptions)
+  fuse: Fuse<Title> = new Fuse<Title>([], fuseOptions)
   subscription
 
   constructor(user: UserStore, titles: TitlesStore) {
@@ -55,11 +55,7 @@ export class SearchStore {
             key.target.nodeName &&
             key.target.nodeName.toLowerCase() !== 'input'
         ),
-        scan(
-          (acc, curr: any) =>
-            console.log(curr.target.nodeName) || acc + curr.key,
-          ''
-        ),
+        scan((acc, curr: any) => acc + curr.key, ''),
         filter(tot => tot.length > 2),
         debounceTime(50)
       )
@@ -76,11 +72,11 @@ export class SearchStore {
   }
 
   @action
-  updateSearchResult(searchText: string, fuse: Fuse) {
+  updateSearchResult(searchText: string, fuse: Fuse<Title>) {
     if (searchTextToShort(searchText)) {
       this.result = []
     } else {
-      this.result = fuse.search<Title>(searchText).slice(0, 15)
+      this.result = fuse.search(searchText).slice(0, 15)
     }
   }
 
@@ -114,7 +110,7 @@ export class SearchStore {
 
 const searchTextToShort = searchText => searchText.length < 3
 
-const fuseOptions = {
+const fuseOptions: FuseOptions<Title> = {
   shouldSort: true,
   keys: ['name'],
   maxPatternLength: 32,
