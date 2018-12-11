@@ -1,52 +1,49 @@
 import { inject } from 'mobx-react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { ErrorComponent } from '../components/error-message'
 import { FloatingLabel } from '../components/floating-label'
+import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
 import { UserStore } from '../store/user'
 import { FormButton } from '../styles/form-button'
 import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 
+enum Status {
+  none,
+  saving,
+  error,
+  success
+}
+
 type Props = {
   user: UserStore
 }
+
 type State = {
   newPassword: string
   confirmPassword: string
-  newEmail: string
-  confirmEmail: string
-  error: string
-  saving: boolean
+  password: string
+  errorMessage: string
+  status: Status
 }
 
 class SettingsPageComponent extends React.Component<Props, State> {
   state = {
     newPassword: '',
     confirmPassword: '',
-    newEmail: '',
-    confirmEmail: '',
-    error: '',
-    password: '',
-    saving: false
+    status: Status.none,
+    errorMessage: '',
+    password: ''
   }
 
   async save() {
-    const { newPassword, confirmPassword, newEmail, confirmEmail } = this.state
+    const { newPassword, confirmPassword } = this.state
     const passwordEdited = isEdited(newPassword, confirmPassword)
-    const emailEdited = isEdited(newEmail, confirmEmail)
 
-    if (!passwordEdited && !emailEdited) {
-      return
-    }
+    if (!passwordEdited) return
 
     if (passwordEdited && hasMismatch(newPassword, confirmPassword)) {
       this.setErrorMessage('The passwords do not match')
-      return
-    }
-
-    if (emailEdited && hasMismatch(newEmail, confirmEmail)) {
-      this.setErrorMessage('The emails do not match')
       return
     }
 
@@ -55,52 +52,55 @@ class SettingsPageComponent extends React.Component<Props, State> {
       return
     }
 
-    this.setState({ saving: true })
-    this.props.user!.reauthenticate(this.state.password).catch(() => {
-      this.setErrorMessage('Enter the correct current password')
-      this.setState({ saving: false })
+    if (this.state.newPassword.length < 6) {
+      this.setErrorMessage('Enter at least 6 characters')
       return
-    })
-    if (passwordEdited) {
-      this.props.user!.changePassword(newPassword).catch(error => {
-        console.log(error)
-        this.setErrorMessage('Could not update settings')
-        this.setState({ saving: false })
-        return
-      })
-    }
-    if (emailEdited) {
-      this.props.user!.changeEmail(newEmail).catch(error => {
-        console.log(error)
-        this.setErrorMessage('Could not update email')
-        this.setState({ saving: false })
-        return
-      })
     }
 
-    this.setState({ saving: false })
+    this.setState({ status: Status.saving })
+    this.props
+      .user!.reauthenticate(this.state.password)
+      .then(() => {
+        this.props
+          .user!.changePassword(newPassword)
+          .then(() => {
+            this.setState({
+              status: Status.success,
+              newPassword: '',
+              confirmPassword: '',
+              password: ''
+            })
+          })
+          .catch(() => {
+            this.setErrorMessage('Could not update settings')
+            this.setState({ status: Status.error })
+          })
+      })
+      .catch(() => {
+        this.setErrorMessage('Enter the correct current password')
+        this.setState({ status: Status.error })
+      })
   }
 
   setInput(stateUpdate) {
-    if (this.state.error) {
-      this.setErrorMessage('')
+    if (this.state.errorMessage) {
+      this.setState({ status: Status.none, errorMessage: '' })
     }
     this.setState(stateUpdate)
   }
 
-  setErrorMessage(error: string) {
-    this.setState({ error })
+  setErrorMessage(errorMessage: string) {
+    this.setState({ status: Status.error, errorMessage })
   }
 
   render() {
+    const status = getStatusComponent(this.state)
+    console.log(this.state)
     return (
       <Wrapper>
         <FormWrapper>
           <Header>Settings</Header>
-          <ErrorWrapper>
-            <ErrorComponent errorMsg={this.state.error} />
-            {this.state.saving && <Spinner />}
-          </ErrorWrapper>
+          <StatusWrapper>{status}</StatusWrapper>
           <InputWrapper>
             <LabelWrapper>
               <FloatingLabel
@@ -108,6 +108,7 @@ class SettingsPageComponent extends React.Component<Props, State> {
                 autoComplete="current-password"
                 placeholder="New password"
                 type="password"
+                value={this.state.newPassword}
                 onChange={e => this.setInput({ newPassword: e.target.value })}
                 required
               />
@@ -118,6 +119,7 @@ class SettingsPageComponent extends React.Component<Props, State> {
                 autoComplete="current-password"
                 placeholder="Confirm password"
                 type="password"
+                value={this.state.confirmPassword}
                 onChange={e =>
                   this.setInput({ confirmPassword: e.target.value })
                 }
@@ -130,29 +132,9 @@ class SettingsPageComponent extends React.Component<Props, State> {
             <LabelWrapper>
               <FloatingLabel
                 styles={styles}
-                placeholder="New email"
-                type="email"
-                onChange={e => this.setInput({ newEmail: e.target.value })}
-                required
-              />
-            </LabelWrapper>
-            <LabelWrapper>
-              <FloatingLabel
-                styles={styles}
-                placeholder="Confirm email"
-                type="email"
-                onChange={e => this.setInput({ confirmEmail: e.target.value })}
-                required
-              />
-            </LabelWrapper>
-          </InputWrapper>
-          <Space />
-          <InputWrapper>
-            <LabelWrapper>
-              <FloatingLabel
-                styles={styles}
                 placeholder="Current password"
                 type="password"
+                value={this.state.password}
                 onChange={e => this.setInput({ password: e.target.value })}
                 required
               />
@@ -161,7 +143,7 @@ class SettingsPageComponent extends React.Component<Props, State> {
           <Space />
           <FormButton
             color={mountainMeadow}
-            disabled={this.state.saving}
+            disabled={this.state.status == Status.saving}
             onClick={() => this.save()}
           >
             Save
@@ -174,6 +156,21 @@ class SettingsPageComponent extends React.Component<Props, State> {
 
 export const SettingsPage = inject('user')(SettingsPageComponent)
 
+function getStatusComponent(state: State) {
+  switch (state.status) {
+    case Status.error:
+      return <FormStatusMessage message={state.errorMessage} />
+    case Status.success:
+      return (
+        <FormStatusMessage message="Password updated successfully" success />
+      )
+    case Status.saving:
+      return <Spinner />
+    default:
+      return null
+  }
+}
+
 function isEdited(inputOne, inputTwo) {
   return inputOne || inputTwo
 }
@@ -182,7 +179,7 @@ function hasMismatch(inputOne, inputTwo) {
   return inputOne !== inputTwo
 }
 
-const ErrorWrapper = styled.div`
+const StatusWrapper = styled.div`
   display: flex;
   width: 20%;
   height: 70px;
@@ -206,7 +203,7 @@ const Space = styled.div`
 const FormWrapper = styled.div`
   display: flex;
   flex: 1;
-  justify-content: center;
+  margin-top: 150px;
   align-items: center;
   flex-direction: column;
 `

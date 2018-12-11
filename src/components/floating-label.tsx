@@ -22,8 +22,7 @@ type State = {
 export class FloatingLabel extends React.Component<Props, State> {
   state = {
     floating: false,
-    focused: false,
-    value: this.props.value
+    focused: false
   }
 
   handleChange = evt => {
@@ -51,7 +50,8 @@ export class FloatingLabel extends React.Component<Props, State> {
   }
 
   render() {
-    const { value, focused } = this.state
+    const { value } = this.props
+    const { focused } = this.state
     const styles = this.props.styles || {}
     const isFloating = this.isFloating(value, focused)
     const floatingStyle =
@@ -65,10 +65,10 @@ export class FloatingLabel extends React.Component<Props, State> {
       <label htmlFor={this.props.id} style={labelStyle}>
         <span style={spanStyle}>{this.props.placeholder}</span>
         <Input
+          value={value}
           autoCapitalize={this.props.autoCapitalize}
           autoComplete={this.props.autoComplete}
           autoFocus={this.props.autoFocus}
-          defaultValue={this.props.value}
           id={this.props.id}
           inputMode={this.props.inputMode}
           max={this.props.max}

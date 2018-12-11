@@ -3,8 +3,8 @@ import { observer } from 'mobx-react'
 import React from 'react'
 import { FormButton } from '../../styles/form-button'
 import { melrose } from '../../utils/colors'
-import { ErrorComponent } from '../error-message'
 import { FloatingLabel } from '../floating-label'
+import { FormStatusMessage } from '../form-status-message'
 import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
 
@@ -56,7 +56,7 @@ export class RegisterFormComponent extends React.Component<Props> {
   render() {
     return (
       <AuthFormWrapper>
-        <ErrorComponent errorMsg={this.errorMsg} />
+        <FormStatusMessage message={this.errorMsg} />
         <FloatingLabel
           autoComplete="new-password"
           styles={floatingLabelStyles}
