@@ -1,12 +1,10 @@
-import { format, subDays } from 'date-fns';
+import { format, parse, subDays } from 'date-fns';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { createEpisode, createShow, createWatchedEpisode, Episode, Show, UpcomingEpisodes, WatchedEpisode } from '../../model';
-import { getUserId } from '../auth.util';
-import * as FirebaseModel from './types';
-import { sortEpisodeAfterEpisodenumber } from './util';
-
-type Db = firebase.firestore.Firestore
+import { getUser, getUserId } from '../auth.util';
+import { now } from '../date.utils';
+import { isInvalid, storage } from './storage';
+import { CacheObj, Db, Episode, FbEpisode, Show, UpcomingEpisodes, UserMetaData, WatchedEpisode } from './types';
 
 function initializeDatabase(): Db {
   const db = firebase.firestore()
@@ -47,18 +45,21 @@ const episodesCollection = (showId: string) =>
   showDoc(showId)
     .collection('episodes')
 
-export function getUserMetaData(userId = getUserId()): Promise<FirebaseModel.UserMetaData> {
-  return userDoc(userId)
+export function getUserMetaData(user = getUser()): Promise<UserMetaData> {
+  if (!user) {
+    throw new Error('You must sign in') // Todo. Create an error class
+  }
+  return userDoc(user.uid)
     .get()
     .then(r => {
       if (!r.exists) {
-        throw new Error('Meta data does not exist for user with id: ' + userId)
+        throw new Error('Meta data does not exist') // TODO: Create an error class
       }
-      return r.data() as FirebaseModel.UserMetaData
+      return r.data() as UserMetaData
     })
 }
 
-export function getShow(id: string): Promise<Show | null> {
+export function getShow(id: string) {
   return showDoc(id)
     .get()
     .then(r => {
@@ -66,7 +67,10 @@ export function getShow(id: string): Promise<Show | null> {
         console.warn('Show do not exist for for id: ', id)
         return null
       }
-      return createShow(r.data() as FirebaseModel.Show)
+      const show = r.data()
+      show!.id = id
+      show!.numberOfEpisodes = 100
+      return show as Show
     })
 }
 
@@ -74,8 +78,8 @@ export function getSeason(showId: string, season: number): Promise<Episode[]> {
   return episodesCollection(showId)
     .where('season', '==', season)
     .get()
-    .then(r => r.docs.map(d => d.data()) as FirebaseModel.Episode[])
-    .then(episodes => episodes.map(createEpisode).sort(sortEpisodeAfterEpisodenumber))
+    .then(r => r.docs.map(d => d.data()) as FbEpisode[])
+    .then(episodes => episodes.map(episodeMapper).sort((a, b) => a.episodeNumber - b.episodeNumber))
 }
 
 export function getWatchSeason(showId: string, season: number, cb: (episodes: WatchedEpisode[]) => void, userId = getUserId()): () => void {
@@ -83,66 +87,89 @@ export function getWatchSeason(showId: string, season: number, cb: (episodes: Wa
     .where('season', '==', season)
     .where('showId', '==', Number(showId))
     .onSnapshot(snapshot => {
-      const we = snapshot.docs
-        .map(d => d.data() as FirebaseModel.WatchedEpisode)
-        .map(createWatchedEpisode)
-      cb(we)
+      cb(snapshot.docs.map(d => d.data()).map(d => Object.assign(d, { time: d.time.toDate() })) as WatchedEpisode[])
     })
 }
 
-// export function getShowCacheFallbackOnNetwork(
-//   id: string
-// ): Promise<Show | null> {
-//   return storage.show.get(id).then(showCache => {
-//     if (isInvalid(showCache, subDays(now(), 3))) {
-//       return getShow(id).then(show => {
-//         if (show) {
-//           return storage.show.set(show).then(() => show)
-//         }
-//         return Promise.resolve(null)
-//       })
-//     }
-//     return showCache!.data
-//   })
-// }
+export function getShowCacheFallbackOnNetwork(
+  id: string
+): Promise<Show | null> {
+  return storage.show.get(id).then(showCache => {
+    if (isInvalid(showCache, subDays(now(), 3))) {
+      return getShow(id).then(show => {
+        if (show) {
+          return storage.show.set(show).then(() => show)
+        }
+        return Promise.resolve(null)
+      })
+    }
+    return showCache!.data
+  })
+}
 
-export function getEpisodesAfter(showId: string, episodeNumber: number): Promise<Episode[]> {
+export function getEpisodesAfter(showId: string, episodeNumber: number) {
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .get()
     .then(querySnapshot => {
-      return querySnapshot.docs
-        .map(d => d.data() as FirebaseModel.Episode)
-        .map(createEpisode)
-        .sort(sortEpisodeAfterEpisodenumber)
+      const episodes: Episode[] = []
+      querySnapshot.forEach(doc => {
+        const episode = doc.data() as FbEpisode
+        episodes.push(Object.assign(episode, { aired: parse(episode.aired) }))
+      })
+      return episodes.sort((a, b) => a.aired.getTime() - b.aired.getTime())
     })
 }
 
-export function getUpcommingEpisodes(showId: string, now = new Date()): Promise<UpcomingEpisodes> {
+const upcomingEpisodesCache = new WeakMap<Show, CacheObj<UpcomingEpisodes>>()
+
+export function getUpcommingEpisodes(show: Show, now = new Date()) {
+  if (show.ended) {
+    return Promise.resolve({
+      nextEpisode: null,
+      prevEpisode: null
+    })
+  }
+  const episodesCache = upcomingEpisodesCache.get(show)
+  if (
+    episodesCache &&
+    episodesCache.time + 24 * 60 * 60 * 1000 > now.getTime()
+  ) {
+    return Promise.resolve(episodesCache.data)
+  }
+
   const threeDaysAgo = subDays(now, 3)
-  return episodesCollection(showId)
+  return episodesCollection(show.id)
     .where('aired', '>=', format(threeDaysAgo, 'YYYY-MM-DD'))
     .orderBy('aired')
     .limit(2)
     .get()
     .then(querySnapshot => {
-      const upcoming = {
+      const episodes = {
         nextEpisode: null,
         prevEpisode: null
       } as UpcomingEpisodes
 
       querySnapshot.forEach(doc => {
-        if (upcoming.nextEpisode) {
+        if (episodes.nextEpisode) {
           return
         }
-        const episode = doc.data() as FirebaseModel.Episode
+        const episode = doc.data() as FbEpisode
         if (episode.aired > format(now, 'YYYY-MM-DD')) {
-          upcoming.nextEpisode = createEpisode(episode)
+          episodes.nextEpisode = Object.assign(episode, {
+            aired: parse(episode.aired)
+          })
         } else {
-          upcoming.nextEpisode = createEpisode(episode)
+          episodes.nextEpisode = Object.assign(episode, {
+            aired: parse(episode.aired)
+          })
         }
       })
-      return upcoming
+      upcomingEpisodesCache.set(show, {
+        time: now.getTime(),
+        data: episodes
+      })
+      return episodes
     })
 }
 
@@ -159,7 +186,7 @@ export function getHighestWatchedEpisodeUpdate(
       if (querySnapshot.size === 0) {
         cb(null)
       } else {
-        cb(createEpisode(querySnapshot.docs[0].data() as FirebaseModel.Episode))
+        cb(episodeMapper(querySnapshot.docs[0].data() as FbEpisode))
       }
     })
 }
@@ -168,6 +195,7 @@ export function getNextEpisode(
   showId: string,
   episodeNumber: number
 ): Promise<Episode | null> {
+  console.log('episodeNumber: ', episodeNumber)
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .orderBy('episodeNumber')
@@ -177,7 +205,7 @@ export function getNextEpisode(
       if (querySnapshot.size === 0) {
         return null
       } else if (querySnapshot.size === 1) {
-        return createEpisode(querySnapshot.docs[0].data() as any)
+        return episodeMapper(querySnapshot.docs[0].data() as any)
       } else {
         console.warn('Result should be 1 or 0')
         return null
@@ -185,13 +213,17 @@ export function getNextEpisode(
     })
 }
 
+function episodeMapper(fbEpisode: FbEpisode): Episode {
+  return Object.assign(fbEpisode, {
+    aired: parse(fbEpisode.aired)
+  })
+}
+
 export function removeShowIdFromFollowing(uid = getUserId(), showId: string) {
-  console.error('Do not write data to firebase');
   return userDoc(uid).update({ following: firebase.firestore.FieldValue.arrayRemove(Number(showId)) })
 }
 
 export function addShowIdFromFollowing(uid = getUserId(), showId: string) {
-  console.error('Do not write data to firebase');
   return userDoc(uid).update({ following: firebase.firestore.FieldValue.arrayUnion(Number(showId)) })
 }
 
