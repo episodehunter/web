@@ -19,13 +19,17 @@ export const Item = styled.a`
     border-bottom: ${(props: { selected: boolean }) =>
       !props.selected ? `2px solid ${melrose}` : `2px solid ${gossamer}`}};
   }
-  width: 150px;
+
+  ${media.giant`width: 150px; margin: 10px 10px;`};
+  ${media.desktop`width: 150px; margin: 10px 10px;`};
+  ${media.tablet`width: 150px;; margin: 10px 10px;`};
+  width: 100%;
   justify-content: center;
-  margin: 10px 10px;
+  margin: 10px 0;
 `
 
 export const NavItem = styled(Item)`
-  ${media.giant`font-size: 14px;`};
+  ${media.giant`font-size: 14px; `};
   ${media.desktop`font-size: 13px;`};
   ${media.tablet`font-size: 12px;`};
   font-size: 11px;

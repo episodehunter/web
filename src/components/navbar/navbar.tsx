@@ -39,10 +39,12 @@ class NavbarComponent extends React.Component<Props> {
           <NavbarItems navigate={navigate} stateUrl={url} user={user} />
         </Wide>
         <Narrow open={this.open}>
-          <Hamburger open={this.open} onToggle={this.toggle} />
-          {this.open && (
-            <NavbarItems navigate={navigate} user={user} stateUrl={url} />
-          )}
+          <NarrowWrapper>
+            <Hamburger open={this.open} onToggle={this.toggle} />
+            {this.open && (
+              <NavbarItems navigate={navigate} user={user} stateUrl={url} />
+            )}
+          </NarrowWrapper>
         </Narrow>
       </>
     )
@@ -63,6 +65,10 @@ const Wide = styled.div`
   z-index: 3;
 `
 
+const NarrowWrapper = styled.div`
+  margin: 10px;
+`
+
 const Narrow = styled.div`
   ${media.giant`display: none;`};
   ${media.desktop`display: none;`};
@@ -72,7 +78,6 @@ const Narrow = styled.div`
   position: fixed;
   z-index: 3;
   width: 100%;
-  padding: 20px;
 
   ${({ open }: { open: boolean }) =>
     open &&
