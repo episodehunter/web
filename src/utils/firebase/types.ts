@@ -1,37 +1,17 @@
-export type Db = firebase.firestore.Firestore
-
-export type UserMetaData = {
-  following: FollowingId[]
+export interface Episode {
+  name: string
+  tvdbId: number
+  aired: string
+  season: number
+  episode: number
+  episodeNumber: number
+  overview: string
 }
 
-export type StatusType = 'loading' | 'updating' | 'loaded' | 'unknown'
-export type SourceType = 'cache' | 'network' | 'none'
-
-export type State<T> = LoadingState | LoadedState<T> | UnknownState
-
-export interface BaseState<T> {
-  data: T | null
-  status: StatusType
-  source: SourceType
-}
-
-export interface UnknownState extends BaseState<undefined> {
-  status: 'unknown'
-  source: 'none'
-}
-
-export interface LoadingState extends BaseState<undefined> {
-  status: 'loading'
-  source: 'none'
-}
-
-export interface LoadedState<T> extends BaseState<T> {
-  status: 'loaded'
-}
-
-export type Show = {
-  id: string
+export interface Show {
+  oldId: string
   ids: {
+    id: string
     tvdb: number
     imdb?: string
   }
@@ -48,48 +28,40 @@ export type Show = {
   network: string
   overview: string
   runtime: number
-  numberOfFollowers: 0
-  numberOfEpisodes: 0
+  numberOfFollowers: number
+  totalNumberOfEpisodes: number
   seasons: number[]
 }
 
-export type Episode = {
-  name: string
-  tvdbId: number
-  aired: Date
-  season: number
-  episode: number
-  episodeNumber: number
-  overview: string
-}
-
-export type WatchedEpisode = {
+export interface WatchedEpisode {
   episode: number
   episodeNumber: number
   season: number
   showId: number
-  time: Date
+  time: {
+    toDate: () => Date
+  }
   type: WatchEnum
 }
 
 export enum WatchEnum {}
 
-export type FbEpisode = Episode & {
-  aired: string
+export interface UserMetaData {
+  following: number[]
 }
 
-export type UpcomingEpisodes = {
-  nextEpisode: Episode | null
-  prevEpisode: Episode | null
-}
+// export enum WatchEnum {}
 
-export type ShowWithUpcomingEpisodes = Show & UpcomingEpisodes
+// export type FbEpisode = Episode & {
+//   aired: string
+// }
 
-export type ShowWithEpisodesToWatch = Show & { episodesToWatch: Episode[] }
+// export type UpcomingEpisodes = {
+//   nextEpisode: Episode | null
+//   prevEpisode: Episode | null
+// }
 
-export type FollowingId = number
-
-export type CacheObj<T> = {
-  time: number
-  data: T
-}
+// export type CacheObj<T> = {
+//   time: number
+//   data: T
+// }

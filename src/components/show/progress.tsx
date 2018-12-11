@@ -1,10 +1,11 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
 import styled from 'styled-components';
+import { Show } from '../../model/show';
 import { now } from '../../utils/date.utils';
 import { numberOfEpisodesToWatchPercent, numberOfUnwatchedHoursLeft } from '../../utils/episode.util';
 import { episodesToWatchForShow$ } from '../../utils/firebase/selectors';
-import { Episode, Show, StatusType } from '../../utils/firebase/types';
+import { Episode, StatusType } from '../../utils/firebase/types';
 import { GapProgress } from '../progress/gap-progress';
 import { H3, HighlightSpan, P2 } from '../text';
 
@@ -29,13 +30,13 @@ export class Progress extends React.Component<Props, CompState> {
   } as CompState
 
   componentDidMount() {
-    this.subscription = episodesToWatchForShow$(this.props.show.id).subscribe(
+    this.subscription = episodesToWatchForShow$(this.props.show.ids.id).subscribe(
       episodes => {
         const status = episodes.status
         if (status === 'loaded') {
           const today = now()
           const episodesToWatch = episodes.data!.filter(e => e.aired < today)
-          const totalNumberOfEpisode = this.props.show.numberOfEpisodes | 0
+          const totalNumberOfEpisode = this.props.show.totalNumberOfEpisodes | 0
           const numberOfWatchedEpisodes = Math.max((totalNumberOfEpisode - episodes.data!.length) | 0, 0)
 
           this.setState({

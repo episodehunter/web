@@ -1,9 +1,10 @@
 import { of } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
+import { Episode } from '../../model';
 import { getUserId } from '../auth.util';
 import { addShowIdFromFollowing, getUserMetaData, removeShowIdFromFollowing } from './query';
 import { followingIdsSubject, userMetaData$ } from './selectors';
-import { Episode, Show, State } from './types';
+import { Show, State } from './types';
 
 export function updateLocalUserMetadata() {
   return getUserMetaData().then(metadata => {
@@ -81,4 +82,8 @@ export function sortShowsAfterEpisodesAirDate(
       a.episodes.data![a.episodes.data!.length - 1].aired.getTime()
     )
   })
+}
+
+export function sortEpisodeAfterEpisodenumber(a: Episode, b: Episode) {
+  return b.episodeNumber - a.episodeNumber
 }

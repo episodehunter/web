@@ -1,32 +1,11 @@
-export function createLoadingState(): LoadingState {
-  return {
-    data: undefined,
-    status: 'loading',
-    source: 'none'
-  }
-}
+export type Db = firebase.firestore.Firestore
 
-export function createLoadedState<T>(
-  data: T,
-  source: SourceType
-): LoadedState<T> {
-  return {
-    data,
-    status: 'loaded',
-    source
-  }
-}
-
-export function createUnknownState(): UnknownState {
-  return {
-    data: undefined,
-    status: 'unknown',
-    source: 'none'
-  }
+export type UserMetaData = {
+  following: FollowingId[]
 }
 
 export type StatusType = 'loading' | 'updating' | 'loaded' | 'unknown'
-export type SourceType = 'cache' | 'network' | 'none' | 'mixed'
+export type SourceType = 'cache' | 'network' | 'none'
 
 export type State<T> = LoadingState | LoadedState<T> | UnknownState
 
@@ -48,4 +27,22 @@ export interface LoadingState extends BaseState<undefined> {
 
 export interface LoadedState<T> extends BaseState<T> {
   status: 'loaded'
+}
+
+export enum WatchEnum {}
+
+export type FbEpisode = Episode & {
+  aired: string
+}
+
+export type UpcomingEpisodes = {
+  nextEpisode: Episode | null
+  prevEpisode: Episode | null
+}
+
+export type FollowingId = number
+
+export type CacheObj<T> = {
+  time: number
+  data: T
 }
