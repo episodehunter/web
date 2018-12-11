@@ -23,7 +23,7 @@ export class SearchStore {
   searchText: string = ''
   @observable
   result: Title[] = []
-  fuse: Fuse<Title> = new Fuse<Title>([], fuseOptions)
+  fuse: Fuse = new Fuse([], fuseOptions)
   subscription
 
   constructor(user: UserStore, titles: TitlesStore) {
@@ -72,11 +72,11 @@ export class SearchStore {
   }
 
   @action
-  updateSearchResult(searchText: string, fuse: Fuse<Title>) {
+  updateSearchResult(searchText: string, fuse: Fuse) {
     if (searchTextToShort(searchText)) {
       this.result = []
     } else {
-      this.result = fuse.search(searchText).slice(0, 15)
+      this.result = fuse.search<Title>(searchText).slice(0, 15)
     }
   }
 
@@ -110,7 +110,7 @@ export class SearchStore {
 
 const searchTextToShort = searchText => searchText.length < 3
 
-const fuseOptions: FuseOptions<Title> = {
+const fuseOptions: FuseOptions = {
   shouldSort: true,
   keys: ['name'],
   maxPatternLength: 32,

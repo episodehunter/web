@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import { media } from '../styles/media-queries';
-import { ddmmm } from '../utils/date.utils';
-import { Episode, ShowWithUpcomingEpisodes } from '../utils/firebase-db';
-import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card';
+import React from 'react'
+import styled from 'styled-components'
+import { media } from '../styles/media-queries'
+import { ddmmm } from '../utils/date.utils'
+import { Episode, ShowWithUpcomingEpisodes } from '../utils/firebase/types'
+import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
 
 type Props = {
   title: string

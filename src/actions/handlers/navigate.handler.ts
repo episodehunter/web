@@ -5,7 +5,7 @@ import { Dispatch } from '../dispatcher'
 export const navigateHandler = (
   action: NavigateAction,
   _: Store,
-  dispatch: Dispatch
+  __: Dispatch
 ) => {
   switch (action.type) {
     case 'NAVIGATE_SHOW':
