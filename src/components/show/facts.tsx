@@ -1,8 +1,8 @@
 import { parse } from 'date-fns';
 import React from 'react';
+import { Show } from '../../model';
 import { safeJoin } from '../../utils/array.util';
 import { format } from '../../utils/date.utils';
-import { Show } from '../../utils/firebase/types';
 import { safeStringConvertion } from '../../utils/string.util';
 import { HighlightSpan, P2 } from '../text';
 

@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { createEpisode, createShow, createWatchedEpisode, Episode, Show, UpcomingEpisodes, WatchedEpisode } from '../../model';
 import { getUserId } from '../auth.util';
+import { isValidAfter, storage } from './storage';
 import * as FirebaseModel from './types';
 import { sortEpisodeAfterEpisodenumber } from './util';
 
@@ -33,7 +34,7 @@ const getDatabase = getGetDatabase()
 const userDoc = (id: string) =>
   getDatabase()
     .collection('users')
-    .doc(id)
+    .doc(String(id))
 
 const showsWatchHistoryCollection = (userId: string) =>
   userDoc(userId).collection('showsWatchHistory')
@@ -41,25 +42,44 @@ const showsWatchHistoryCollection = (userId: string) =>
 const showDoc = (id: string) =>
   getDatabase()
     .collection('shows')
-    .doc(id)
+    .doc(String(id))
 
 const episodesCollection = (showId: string) =>
-  showDoc(showId)
+  showDoc(String(showId))
     .collection('episodes')
 
-export function getUserMetaData(userId = getUserId()): Promise<FirebaseModel.UserMetaData> {
-  return userDoc(userId)
-    .get()
-    .then(r => {
-      if (!r.exists) {
-        throw new Error('Meta data does not exist for user with id: ' + userId)
-      }
-      return r.data() as FirebaseModel.UserMetaData
-    })
+
+function emitAfter<T>(data: T, time = 2000): Promise<T> {
+  return new Promise(r => setTimeout(r, time, data))
 }
 
-export function getShow(id: string): Promise<Show | null> {
-  return showDoc(id)
+function handleOffline<T>(backupdata: T): (error: Error) => T {
+  return error => {
+    console.error(error)
+    return backupdata
+  }
+}
+
+export async function getUserMetaData(userId = getUserId()): Promise<FirebaseModel.UserMetaData> {
+  console.log('getUserMetaData')
+  const gettingMetaDataFromNetwork = userDoc(userId)
+    .get()
+    .then(r => r.data() as FirebaseModel.UserMetaData)
+    .then(data => storage.userMetaData.set(userId, data).then(() => data))
+
+  const metaDataFromStoreage = await storage.userMetaData.get(userId)
+  if (metaDataFromStoreage) {
+    return Promise.race([
+      gettingMetaDataFromNetwork.catch(handleOffline(metaDataFromStoreage.data)),
+      emitAfter(metaDataFromStoreage.data)
+    ])
+  }
+  return gettingMetaDataFromNetwork
+}
+
+export async function getShow(id: string): Promise<Show | null> {
+  console.log('getShow', id)
+  const gettingShowFromNetwork = showDoc(id)
     .get()
     .then(r => {
       if (!r.exists) {
@@ -68,17 +88,44 @@ export function getShow(id: string): Promise<Show | null> {
       }
       return createShow(r.data() as FirebaseModel.Show)
     })
+    .then(show => {
+      if (show) {
+        storage.show.set(show)
+      }
+      return show
+    })
+
+  const gettingShowFromStoreage = await storage.show.get(id)
+  if (isValidAfter(gettingShowFromStoreage, 3)) {
+    return Promise.resolve(gettingShowFromStoreage!.data)
+  } else if (gettingShowFromStoreage) {
+    return Promise.race([ gettingShowFromNetwork.catch(handleOffline(gettingShowFromStoreage.data)), emitAfter(gettingShowFromStoreage.data) ])
+  } else {
+    return gettingShowFromNetwork
+  }
 }
 
-export function getSeason(showId: string, season: number): Promise<Episode[]> {
-  return episodesCollection(showId)
+export async function getSeason(showId: string, season: number): Promise<Episode[]> {
+  console.log('getSeason', {showId, season})
+  const gettingFromNetwork = episodesCollection(showId)
     .where('season', '==', season)
     .get()
     .then(r => r.docs.map(d => d.data()) as FirebaseModel.Episode[])
     .then(episodes => episodes.map(createEpisode).sort(sortEpisodeAfterEpisodenumber))
+    .then(episodes => storage.season.set(showId, season, episodes))
+
+  const gettingFromStoreage = await storage.season.get(showId, season)
+  if (isValidAfter(gettingFromStoreage, 3)) {
+    return Promise.resolve(gettingFromStoreage!.data)
+  } else if (gettingFromStoreage) {
+    return Promise.race([ gettingFromNetwork.catch(handleOffline(gettingFromStoreage.data)), emitAfter(gettingFromStoreage.data) ])
+  } else {
+    return gettingFromNetwork
+  }
 }
 
 export function getWatchSeason(showId: string, season: number, cb: (episodes: WatchedEpisode[]) => void, userId = getUserId()): () => void {
+  console.log('getWatchSeason', {showId, season})
   return showsWatchHistoryCollection(userId)
     .where('season', '==', season)
     .where('showId', '==', Number(showId))
@@ -90,23 +137,8 @@ export function getWatchSeason(showId: string, season: number, cb: (episodes: Wa
     })
 }
 
-// export function getShowCacheFallbackOnNetwork(
-//   id: string
-// ): Promise<Show | null> {
-//   return storage.show.get(id).then(showCache => {
-//     if (isInvalid(showCache, subDays(now(), 3))) {
-//       return getShow(id).then(show => {
-//         if (show) {
-//           return storage.show.set(show).then(() => show)
-//         }
-//         return Promise.resolve(null)
-//       })
-//     }
-//     return showCache!.data
-//   })
-// }
-
 export function getEpisodesAfter(showId: string, episodeNumber: number): Promise<Episode[]> {
+  console.log('getEpisodesAfter', {showId, episodeNumber})
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .get()
@@ -119,6 +151,7 @@ export function getEpisodesAfter(showId: string, episodeNumber: number): Promise
 }
 
 export function getUpcommingEpisodes(showId: string, now = new Date()): Promise<UpcomingEpisodes> {
+  console.log('getUpcommingEpisodes', {showId})
   const threeDaysAgo = subDays(now, 3)
   return episodesCollection(showId)
     .where('aired', '>=', format(threeDaysAgo, 'YYYY-MM-DD'))
@@ -148,9 +181,10 @@ export function getUpcommingEpisodes(showId: string, now = new Date()): Promise<
 
 export function getHighestWatchedEpisodeUpdate(
   showId: string,
-  cb: (episode: Episode | null) => void,
+  cb: (episode: WatchedEpisode | null) => void,
   userId = getUserId()
 ): () => void {
+  console.log('getHighestWatchedEpisodeUpdate', {showId})
   return showsWatchHistoryCollection(userId)
     .where('showId', '==', Number(showId))
     .orderBy('episodeNumber', 'desc')
@@ -159,7 +193,7 @@ export function getHighestWatchedEpisodeUpdate(
       if (querySnapshot.size === 0) {
         cb(null)
       } else {
-        cb(createEpisode(querySnapshot.docs[0].data() as FirebaseModel.Episode))
+        cb(createWatchedEpisode(querySnapshot.docs[0].data() as FirebaseModel.WatchedEpisode))
       }
     })
 }
@@ -168,6 +202,7 @@ export function getNextEpisode(
   showId: string,
   episodeNumber: number
 ): Promise<Episode | null> {
+  console.log('getNextEpisode', {showId, episodeNumber})
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .orderBy('episodeNumber')

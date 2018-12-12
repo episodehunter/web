@@ -1,14 +1,14 @@
-import React from 'react'
-import styled from 'styled-components'
-import { media } from '../styles/media-queries'
-import { ddmmm } from '../utils/date.utils'
-import { Episode, ShowWithUpcomingEpisodes } from '../utils/firebase/types'
-import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
+import React from 'react';
+import styled from 'styled-components';
+import { Episode, ShowAndUpcomingEpisodes } from '../model';
+import { media } from '../styles/media-queries';
+import { ddmmm } from '../utils/date.utils';
+import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card';
 
 type Props = {
   title: string
-  shows: ShowWithUpcomingEpisodes[]
-  extractEpisode: (show: ShowWithUpcomingEpisodes) => Episode | null
+  shows: ShowAndUpcomingEpisodes[]
+  extractEpisode: (show: ShowAndUpcomingEpisodes) => Episode | null
 }
 
 export const Upcoming = ({ title, shows, extractEpisode }: Props) => {
@@ -21,14 +21,14 @@ export const Upcoming = ({ title, shows, extractEpisode }: Props) => {
       <ShowsWrapper>
         {shows.map(show => (
           <UpcomingEpisodeCard
-            key={show.id}
+            key={show.show.ids.id}
             episodeAirDate={formatEpisodeAirDate(
-              show.ended,
+              show.show.ended,
               extractEpisode(show)
             )}
-            showId={show.id}
-            tvdbId={show.ids.tvdb}
-            showName={show.name}
+            showId={show.show.ids.id}
+            tvdbId={show.show.ids.tvdb}
+            showName={show.show.name}
           />
         ))}
       </ShowsWrapper>

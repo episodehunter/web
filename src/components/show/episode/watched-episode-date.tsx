@@ -1,6 +1,6 @@
 import React from 'react';
+import { WatchedEpisode } from '../../../model';
 import { dateReleaseFormat, format } from '../../../utils/date.utils';
-import { WatchedEpisode } from '../../../utils/firebase/types';
 import { BottomTextWrapper } from '../../episode/bottom-text-wrapper';
 import { P } from '../../text';
 

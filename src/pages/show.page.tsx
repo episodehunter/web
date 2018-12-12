@@ -13,10 +13,9 @@ import { NextEpisode } from '../components/show/next-episode';
 import { Progress } from '../components/show/progress';
 import { H1, H3 } from '../components/text';
 import { images } from '../images.config';
+import { Episode, Show, WatchedEpisode } from '../model';
 import { HideOnMobile, isMobile, media } from '../styles/media-queries';
 import { nextEpisodeToWatch$, seasonSubject$, show$, watchedSeasonSubject$ } from '../utils/firebase/selectors';
-import { createUnknownState } from '../utils/firebase/state';
-import { Episode, Show, State, WatchedEpisode } from '../utils/firebase/types';
 import { SpinnerPage } from './spinner.page';
 
 type Props = {
@@ -26,18 +25,18 @@ type Props = {
 }
 
 type CompState = {
-  show: State<Show>
-  season: State<Episode[]>
-  watchedSeason: State<WatchedEpisode[]>
+  show: Show | null
+  season: Episode[] | null
+  watchedSeason: WatchedEpisode[] | null
   selectedSeason: number
 }
 
 export class ShowPage extends React.Component<Props, CompState> {
   subscriptions: Subscription[] = []
   state = {
-    show: createUnknownState(),
-    season: createUnknownState(),
-    watchedSeason: createUnknownState(),
+    show: null,
+    season: null,
+    watchedSeason: null,
     selectedSeason: -1
   } as CompState
   setSeasonOnSubject: (season: number) => void
@@ -59,10 +58,10 @@ export class ShowPage extends React.Component<Props, CompState> {
         if (this.state.selectedSeason !== -1) {
           return
         }
-        if(!episode.data) {
+        if(!episode) {
           this.setSeason(1)
         } else {
-          this.setSeason(episode.data.season)
+          this.setSeason(episode.season)
         }
       })
     )
@@ -73,7 +72,7 @@ export class ShowPage extends React.Component<Props, CompState> {
   }
 
   get isLoading() {
-    return !Boolean(this.state.show && this.state.show.status === 'loaded')
+    return !Boolean(this.state.show)
   }
 
   setSeason(season: number) {
@@ -88,7 +87,7 @@ export class ShowPage extends React.Component<Props, CompState> {
     if (this.isLoading) {
       return <SpinnerPage />
     }
-    const show = this.state.show.data
+    const show = this.state.show
     if (!show) {
       return <p>404</p>
     }
@@ -112,7 +111,7 @@ export class ShowPage extends React.Component<Props, CompState> {
                 {show.name}
               </H1>
               <EllipsisText length={500}>{show.overview}</EllipsisText>
-              <FollowingButton showId={show.id} />
+              <FollowingButton showId={show.ids.id} />
             </ShowTitleAndOverview>
           </PosterAndTitleWrapper>
           <Content>

@@ -1,22 +1,22 @@
-import { isSameDay } from 'date-fns'
-import React from 'react'
-import { Subscription } from 'rxjs'
-import styled from 'styled-components'
-import { Upcoming } from '../components/upcoming'
-import { media } from '../styles/media-queries'
-import { shark } from '../utils/colors'
-import { isAfterDaysFrom, isBeforeDaysFrom, now } from '../utils/date.utils'
-import { upcomingEpisodes$ } from '../utils/firebase/selectors'
-import { ShowWithUpcomingEpisodes } from '../utils/firebase/types'
-import { SpinnerPage } from './spinner.page'
+import { isSameDay } from 'date-fns';
+import React from 'react';
+import { Subscription } from 'rxjs';
+import styled from 'styled-components';
+import { Upcoming } from '../components/upcoming';
+import { ShowAndUpcomingEpisodes } from '../model';
+import { media } from '../styles/media-queries';
+import { shark } from '../utils/colors';
+import { isAfterDaysFrom, isBeforeDaysFrom, now } from '../utils/date.utils';
+import { upcomingEpisodes$ } from '../utils/firebase/selectors';
+import { SpinnerPage } from './spinner.page';
 
 type Upcoming = {
-  justAired: ShowWithUpcomingEpisodes[]
-  today: ShowWithUpcomingEpisodes[]
-  weekAhead: ShowWithUpcomingEpisodes[]
-  upcoming: ShowWithUpcomingEpisodes[]
-  tba: ShowWithUpcomingEpisodes[]
-  ended: ShowWithUpcomingEpisodes[]
+  justAired: ShowAndUpcomingEpisodes[]
+  today: ShowAndUpcomingEpisodes[]
+  weekAhead: ShowAndUpcomingEpisodes[]
+  upcoming: ShowAndUpcomingEpisodes[]
+  tba: ShowAndUpcomingEpisodes[]
+  ended: ShowAndUpcomingEpisodes[]
 }
 
 type State = {
@@ -89,7 +89,7 @@ export class UpcomingPage extends React.Component<{}, State> {
   }
 }
 
-function upcoming(shows: ShowWithUpcomingEpisodes[], today = now()) {
+function upcoming(shows: ShowAndUpcomingEpisodes[], today = now()) {
   const upcoming: Upcoming = {
     justAired: [],
     today: [],
@@ -103,21 +103,21 @@ function upcoming(shows: ShowWithUpcomingEpisodes[], today = now()) {
   for (let show of shows) {
     if (
       hasPreviousEpisode(show) &&
-      isAfterFiveDaysAgo(show.prevEpisode!.aired)
+      isAfterFiveDaysAgo(show.upcomingEpisodes.prevEpisode!.aired)
     ) {
       upcoming.justAired.push(show)
     }
 
-    if (show.ended) {
+    if (show.show.ended) {
       upcoming.ended.push(show)
     } else if (!hasNextEpisode(show)) {
       upcoming.tba.push(show)
     }
 
     if (hasNextEpisode(show)) {
-      if (isSameDay(today, show.nextEpisode!.aired)) {
+      if (isSameDay(today, show.upcomingEpisodes.nextEpisode!.aired)) {
         upcoming.today.push(show)
-      } else if (isBeforeAWeekFromNow(show.nextEpisode!.aired)) {
+      } else if (isBeforeAWeekFromNow(show.upcomingEpisodes.nextEpisode!.aired)) {
         upcoming.weekAhead.push(show)
       } else {
         upcoming.upcoming.push(show)
@@ -127,15 +127,15 @@ function upcoming(shows: ShowWithUpcomingEpisodes[], today = now()) {
   return upcoming
 }
 
-const hasPreviousEpisode = (show: ShowWithUpcomingEpisodes) =>
-  Boolean(show.prevEpisode)
-const hasNextEpisode = (show: ShowWithUpcomingEpisodes) =>
-  Boolean(show.nextEpisode)
+const hasPreviousEpisode = (show: ShowAndUpcomingEpisodes) =>
+  Boolean(show.upcomingEpisodes.prevEpisode)
+const hasNextEpisode = (show: ShowAndUpcomingEpisodes) =>
+  Boolean(show.upcomingEpisodes.nextEpisode)
 
-export const extractNextEpisode = (show: ShowWithUpcomingEpisodes) =>
-  show.nextEpisode
-export const extractPrevEpisode = (show: ShowWithUpcomingEpisodes) =>
-  show.prevEpisode
+export const extractNextEpisode = (show: ShowAndUpcomingEpisodes) =>
+  show.upcomingEpisodes.nextEpisode
+export const extractPrevEpisode = (show: ShowAndUpcomingEpisodes) =>
+  show.upcomingEpisodes.prevEpisode
 export const nullFn = (_: any) => null
 
 const UpcomingWrapper = styled.div`

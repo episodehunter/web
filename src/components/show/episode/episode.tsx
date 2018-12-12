@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Episode as EpisodeModel, WatchedEpisode } from '../../../model';
 import { isMobile, media } from '../../../styles/media-queries';
 import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util';
-import { Episode as EpisodeModel, WatchedEpisode } from '../../../utils/firebase/types';
 import { EllipsisText } from '../../ellipsis-text';
 import { EpisodeImage } from '../../episode/episode-image';
 import { H4, HighlightSpan } from '../../text';

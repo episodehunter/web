@@ -1,23 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Episode as EpisodeModel, State, WatchedEpisode } from '../../../utils/firebase/types';
+import { Episode as EpisodeModel, WatchedEpisode } from '../../../model';
 import { Spinner } from '../../spinner';
 import { Episode } from './episode';
 
 type Props = {
-  episodes: State<EpisodeModel[]>
-  watchedEpisode: State<WatchedEpisode[]>
+  episodes: EpisodeModel[] | null
+  watchedEpisode: WatchedEpisode[] | null
   showId: string
 }
 
 export const Episodes = ({ episodes, watchedEpisode, showId }: Props) => {
-  if (episodes.status !== 'loaded' || watchedEpisode.status !== 'loaded') {
+  if (!episodes || !watchedEpisode) {
     return <Spinner />
   }
   return (
   <Wrapper>
-    {episodes.data!.map(episode => {
-      const w = watchedEpisode.data!.find(e => e.episodeNumber === episode.episodeNumber)
+    {episodes.map(episode => {
+      const w = watchedEpisode.find(e => e.episodeNumber === episode.episodeNumber)
       return <Episode key={episode.tvdbId} episode={episode} watched={w} showId={showId} />
     })}
   </Wrapper>

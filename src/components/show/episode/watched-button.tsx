@@ -1,7 +1,7 @@
 import React from 'react';
+import { Episode, WatchedEpisode } from '../../../model';
 import { melrose } from '../../../utils/colors';
 import { unwatchEpisode, watchEpisode } from '../../../utils/firebase/query';
-import { Episode, WatchedEpisode } from '../../../utils/firebase/types';
 import { TextButton } from '../../button';
 import { Spinner } from '../../spinner';
 

@@ -1,11 +1,14 @@
+import { subDays } from 'date-fns';
 import { get, set } from 'idb-keyval';
-import { Episode, Show, UpcomingEpisodes, WatchedEpisode } from '../../model';
+import { Episode, Show, UpcomingEpisodes, UserMetaData, WatchedEpisode } from '../../model';
+import { now } from '../date.utils';
 
 const SHOW_PREFIX = 'show'
 const SEASON_PREFIX = 'season'
 const WATCH_SEASON_PREFIX = 'watch_season'
 const EPISODES_TO_WATCH_PREFIX = 'episodes_to_watch'
 const UPCOMING_EPISODES = 'upcoming_episodes'
+const USER_META_DATA = 'user_meta_data'
 
 const memoryCache = {}
 
@@ -49,12 +52,12 @@ export const storage = {
     }
   },
   season: {
-    set(showId: string, seasonNumber: number, season: Episode[]): Promise<void> {
+    set(showId: string, seasonNumber: number, season: Episode[]): Promise<Episode[]> {
       const seasonObject: StorageObject<Episode[]> = {
         date: new Date(),
         data: season
       }
-      return setCache(`${SEASON_PREFIX}_${showId}_${seasonNumber}`, seasonObject)
+      return setCache(`${SEASON_PREFIX}_${showId}_${seasonNumber}`, seasonObject).then(() => season)
     },
     get(showId: string, seasonNumber: number): Promise<StorageObject<Episode[]> | undefined> {
       return getCache(`${SEASON_PREFIX}_${showId}_${seasonNumber}`)
@@ -83,6 +86,18 @@ export const storage = {
     get(showId: string): Promise<StorageObject<UpcomingEpisodes> | undefined> {
       return getCache(`${UPCOMING_EPISODES}_${showId}`)
     }
+  },
+  userMetaData: {
+    set(userId: string, userMetaData: UserMetaData): Promise<void> {
+      const storeObject: StorageObject<UserMetaData> = {
+        date: new Date(),
+        data: userMetaData
+      }
+      return setCache(`${USER_META_DATA}_${userId}`, storeObject)
+    },
+    get(userId: string): Promise<StorageObject<UserMetaData> | undefined> {
+      return getCache(`${USER_META_DATA}_${userId}`)
+    }
   }
 }
 
@@ -98,6 +113,8 @@ export function isInvalid<T>(
   }
   return false
 }
+
+export const isValidAfter = <T>(storageObject: StorageObject<T> | undefined, nDays: number) => !isInvalid(storageObject, subDays(now(), nDays))
 
 export type Storage = typeof storage
 

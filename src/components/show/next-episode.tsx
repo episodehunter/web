@@ -1,26 +1,26 @@
-import React from 'react'
-import { Subscription } from 'rxjs'
-import { dateReleaseFormat, now } from '../../utils/date.utils'
-import { composeSeasonAndEpisodeNumber } from '../../utils/episode.util'
-import { nextEpisodeToWatch$ } from '../../utils/firebase/selectors'
-import { Episode, Show, State } from '../../utils/firebase/types'
-import { BottomTextWrapper } from '../episode/bottom-text-wrapper'
-import { EpisodeImage } from '../episode/episode-image'
-import { H3, P2 } from '../text'
+import React from 'react';
+import { Subscription } from 'rxjs';
+import { Episode, Show } from '../../model';
+import { dateReleaseFormat, now } from '../../utils/date.utils';
+import { composeSeasonAndEpisodeNumber } from '../../utils/episode.util';
+import { nextEpisodeToWatch$ } from '../../utils/firebase/selectors';
+import { BottomTextWrapper } from '../episode/bottom-text-wrapper';
+import { EpisodeImage } from '../episode/episode-image';
+import { H3, P2 } from '../text';
 
 type Props = {
   show: Show
 }
 
 type CompStore = {
-  episode: State<Episode | null>
+  episode: Episode | null
 }
 
 export class NextEpisode extends React.Component<Props, CompStore> {
   subscription: Subscription
 
   componentDidMount() {
-    this.subscription = nextEpisodeToWatch$(this.props.show.id).subscribe(
+    this.subscription = nextEpisodeToWatch$(this.props.show.ids.id).subscribe(
       episode => {
         this.setState({ episode })
       }
@@ -32,12 +32,10 @@ export class NextEpisode extends React.Component<Props, CompStore> {
   }
 
   render() {
-    if (!this.state || this.state.episode.status !== 'loaded') {
+    if (!this.state || !this.state.episode) {
       return <p>Loading...</p>
-    } else if (!this.state.episode.data) {
-      return null
     }
-    const episode = this.state.episode.data
+    const episode = this.state.episode
     return (
       <>
         <H3>Next episode to watch</H3>

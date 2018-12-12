@@ -1,6 +1,6 @@
 import React from 'react';
 import { Subscription } from 'rxjs';
-import { followingIds2$ } from '../../utils/firebase/selectors';
+import { followingIds$ } from '../../utils/firebase/selectors';
 import { followShow, unfollowShow } from '../../utils/firebase/util';
 import { Button } from '../button';
 import { Spinner } from '../spinner';
@@ -22,17 +22,11 @@ export class FollowingButton extends React.Component<Props> {
   } as CompState
 
   componentDidMount() {
-    this.subscription = followingIds2$.subscribe(followingIds => {
-      if (!followingIds.data) {
-        this.setState({ isFollowing: IsFollowing.unknwon })
-      } else {
-        const isFollowing = followingIds.data.includes(
-          Number(this.props.showId)
-        )
-          ? IsFollowing.yes
-          : IsFollowing.no
+    this.subscription = followingIds$.subscribe(followingIds => {
+      const isFollowing = followingIds.includes(this.props.showId)
+        ? IsFollowing.yes
+        : IsFollowing.no
         this.setState({ isFollowing })
-      }
     })
   }
 
