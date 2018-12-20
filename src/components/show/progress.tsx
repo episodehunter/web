@@ -16,21 +16,21 @@ type Props = {
   show: Show
 }
 
-type CompState = {
+type State = {
   episodesToWatch: Episode[]
   isLoading: boolean
-  totalNumberOfEpisode: number
+  numberOfWatchableEpisodes: number
   numberOfWatchedEpisodes: number
 }
 
-export class Progress extends React.Component<Props, CompState> {
+export class Progress extends React.Component<Props, State> {
   subscription: Subscription
   state = {
     episodesToWatch: [],
     isLoading: true,
-    totalNumberOfEpisode: 0,
+    numberOfWatchableEpisodes: 0,
     numberOfWatchedEpisodes: 0
-  } as CompState
+  } as State
 
   componentDidMount() {
     this.subscription = episodesToWatchForShow$(
@@ -39,8 +39,10 @@ export class Progress extends React.Component<Props, CompState> {
       const today = now()
       const episodesToWatch = episodes.filter(e => e.aired < today)
       const totalNumberOfEpisode = this.props.show.totalNumberOfEpisodes | 0
+      const watchableEpisodes =
+        totalNumberOfEpisode - (episodes.length - episodesToWatch.length)
       const numberOfWatchedEpisodes = Math.max(
-        (totalNumberOfEpisode - episodes.length) | 0,
+        (watchableEpisodes - episodesToWatch.length) | 0,
         0
       )
 
@@ -48,7 +50,7 @@ export class Progress extends React.Component<Props, CompState> {
         isLoading: false,
         episodesToWatch,
         numberOfWatchedEpisodes,
-        totalNumberOfEpisode
+        numberOfWatchableEpisodes: watchableEpisodes
       })
     })
   }
@@ -63,7 +65,7 @@ export class Progress extends React.Component<Props, CompState> {
       episodesToWatch,
       numberOfWatchedEpisodes,
       isLoading,
-      totalNumberOfEpisode
+      numberOfWatchableEpisodes
     } = this.state
     if (isLoading) {
       return (
@@ -80,7 +82,7 @@ export class Progress extends React.Component<Props, CompState> {
         <H3>Your progress</H3>
         <GapProgress
           percent={numberOfEpisodesToWatchPercent(
-            totalNumberOfEpisode,
+            numberOfWatchableEpisodes,
             numberOfWatchedEpisodes
           )}
           height="100px"
@@ -88,8 +90,8 @@ export class Progress extends React.Component<Props, CompState> {
         />
         <P2 center={true}>
           You've seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan>{' '}
-          out of <HighlightSpan>{totalNumberOfEpisode}</HighlightSpan> episodes.{' '}
-          <br />
+          out of <HighlightSpan>{numberOfWatchableEpisodes}</HighlightSpan>{' '}
+          episodes. <br />
           <HoursLeftText
             numberOfHoursLeft={numberOfUnwatchedHoursLeft(
               episodesToWatch.length,
