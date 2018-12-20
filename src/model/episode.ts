@@ -1,5 +1,5 @@
-import { parse } from 'date-fns';
-import * as FirebaseModel from '../utils/firebase/types';
+import { parse } from 'date-fns'
+import * as FirebaseModel from '../utils/firebase/types'
 
 export type Episode = {
   name: string
