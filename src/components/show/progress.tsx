@@ -1,12 +1,16 @@
-import React from 'react';
-import { Subscription } from 'rxjs';
-import styled from 'styled-components';
-import { Episode, Show } from '../../model';
-import { now } from '../../utils/date.utils';
-import { numberOfEpisodesToWatchPercent, numberOfUnwatchedHoursLeft } from '../../utils/episode.util';
-import { episodesToWatchForShow$ } from '../../utils/firebase/selectors';
-import { GapProgress } from '../progress/gap-progress';
-import { H3, HighlightSpan, P2 } from '../text';
+import React from 'react'
+import { Subscription } from 'rxjs'
+import styled from 'styled-components'
+import { Episode, Show } from '../../model'
+import { now } from '../../utils/date.utils'
+import {
+  numberOfEpisodesToWatchPercent,
+  numberOfUnwatchedHoursLeft
+} from '../../utils/episode.util'
+import { episodesToWatchForShow$ } from '../../utils/firebase/selectors'
+import { GapProgress } from '../progress/gap-progress'
+import { Spinner } from '../spinner'
+import { H3, HighlightSpan, P2 } from '../text'
 
 type Props = {
   show: Show
@@ -29,21 +33,24 @@ export class Progress extends React.Component<Props, CompState> {
   } as CompState
 
   componentDidMount() {
-    this.subscription = episodesToWatchForShow$(this.props.show.ids.id).subscribe(
-      episodes => {
-        const today = now()
-        const episodesToWatch = episodes.filter(e => e.aired < today)
-        const totalNumberOfEpisode = this.props.show.totalNumberOfEpisodes | 0
-        const numberOfWatchedEpisodes = Math.max((totalNumberOfEpisode - episodes.length) | 0, 0)
+    this.subscription = episodesToWatchForShow$(
+      this.props.show.ids.id
+    ).subscribe(episodes => {
+      const today = now()
+      const episodesToWatch = episodes.filter(e => e.aired < today)
+      const totalNumberOfEpisode = this.props.show.totalNumberOfEpisodes | 0
+      const numberOfWatchedEpisodes = Math.max(
+        (totalNumberOfEpisode - episodes.length) | 0,
+        0
+      )
 
-        this.setState({
-          isLoading: false,
-          episodesToWatch,
-          numberOfWatchedEpisodes,
-          totalNumberOfEpisode
-        })
-      }
-    )
+      this.setState({
+        isLoading: false,
+        episodesToWatch,
+        numberOfWatchedEpisodes,
+        totalNumberOfEpisode
+      })
+    })
   }
 
   componentWillUnmount() {
@@ -59,7 +66,14 @@ export class Progress extends React.Component<Props, CompState> {
       totalNumberOfEpisode
     } = this.state
     if (isLoading) {
-      return null
+      return (
+        <ProgressWarpper>
+          <H3>Your progress</H3>
+          <div>
+            <Spinner />
+          </div>
+        </ProgressWarpper>
+      )
     }
     return (
       <ProgressWarpper>
