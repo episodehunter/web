@@ -45,4 +45,5 @@ export type TitlesResponse = {
   id: number
   name: string
   tvdbId: number
+  followers: number
 }[]

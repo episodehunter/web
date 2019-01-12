@@ -1,24 +1,21 @@
-import { Navigate } from '@vieriksson/the-react-router'
-import { inject } from 'mobx-react'
-import React from 'react'
-import { Routes } from '../../routes'
-import { SearchStore } from '../../store/search.store'
-import { UserStore } from '../../store/user'
-import { NavbarItem } from './navbar-item'
-import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
-import { NavbarSubItem } from './navbar-subitem'
+import { Navigate } from '@vieriksson/the-react-router';
+import { inject } from 'mobx-react';
+import React from 'react';
+import { Routes } from '../../routes';
+import { UserStore } from '../../store/user';
+import { NavbarItem } from './navbar-item';
+import { NavbarItemWithSubItems } from './navbar-item-with-sub-items';
+import { NavbarSubItem } from './navbar-subitem';
 
 type Props = {
   user?: UserStore
   navigate: Navigate
   stateUrl: string
-  search?: SearchStore
 }
 
 const isPathEqual = (urlPath, statePath) => urlPath === statePath
 
 export const NavbarItemsComponent = ({
-  search,
   navigate,
   stateUrl,
   user
@@ -43,7 +40,7 @@ export const NavbarItemsComponent = ({
       <NavbarItem
         title="Search"
         selected={isPathEqual(Routes.search, stateUrl)}
-        onClick={() => search!.toggleSearchBar()}
+        onClick={() => (window as any).showSearchBar()}
       />
       <NavbarItemWithSubItems
         header={'Settings'}
@@ -66,4 +63,4 @@ export const NavbarItemsComponent = ({
   )
 }
 
-export const NavbarItems = inject('search', 'user')(NavbarItemsComponent)
+export const NavbarItems = inject('user')(NavbarItemsComponent)

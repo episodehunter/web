@@ -1,63 +1,102 @@
-import { Navigate, withNavigation } from '@vieriksson/the-react-router'
-import { inject, observer } from 'mobx-react'
-import React from 'react'
-import { fromEvent, Subscription } from 'rxjs'
-import styled from 'styled-components'
-import { SearchStore } from '../store/search.store'
-import { TitlesStore } from '../store/titles.store'
-import { media } from '../styles/media-queries'
-import { alabaster, shark } from '../utils/colors'
-import { composeHOC } from '../utils/function.util'
-import { SmallShowFanart } from './fanart/small-show-fanart'
-import { PosterCard } from './poster-cards/poster-card'
+import React from 'react';
+import { fromEvent, Subscription } from 'rxjs';
+import { debounceTime, filter, scan } from 'rxjs/operators';
+import styled from 'styled-components';
+import SearchWorker from 'worker-loader!../web-worker/search';
+import { Title } from '../model/title';
+import { media } from '../styles/media-queries';
+import { alabaster, shark } from '../utils/colors';
+import { SmallShowFanart } from './fanart/small-show-fanart';
+import { PosterCard } from './poster-cards/poster-card';
 
-type Props = {
-  search?: SearchStore
-  titles?: TitlesStore
-  navigate?: Navigate
-}
-
-export class SearchComponent extends React.Component<Props> {
-  subscription: Subscription
+export class SearchComponent extends React.Component {
+  state = {
+    showSearchBar: false,
+    searchString: '',
+    result: [] as Title[]
+  }
+  subscriptions: Subscription[] = []
+  searchWorker = new SearchWorker()
 
   componentDidMount() {
-    this.subscription = fromEvent<KeyboardEvent>(document, 'keydown').subscribe(
-      keyEvent => {
-        if (keyIsEscape(keyEvent.key)) {
-          this.props.search!.toggleSearchBar()
-        }
-      }
+    (window as any).showSearchBar = () => this.openSearchBar();
+    const keypress$ = fromEvent<KeyboardEvent>(document, 'keypress')
+
+    this.subscriptions.push(
+      keypress$.pipe(filter(keyEvent => keyIsEscape(keyEvent.key))).subscribe(() => this.closeSearchBar())
     )
+
+    this.subscriptions.push(
+      keypress$.pipe(
+        filter((key: any) =>
+          key.target &&
+          key.target.nodeName &&
+          key.target.nodeName.toLowerCase() !== 'input'
+        ),
+        scan((acc, curr: any) => acc + curr.key, ''),
+        filter(tot => tot.length > 2),
+        debounceTime(50)
+      )
+      .subscribe(text => {
+        this.openSearchBar()
+        this.setSearchString(text)
+      })
+    )
+
+    this.searchWorker.addEventListener('message', this.updateSearchResult)
   }
 
   componentWillUnmount() {
-    this.subscription.unsubscribe()
+    this.subscriptions.forEach(s => s.unsubscribe())
+    this.searchWorker.removeEventListener('message', this.updateSearchResult)
   }
 
-  onPress(event: React.MouseEvent<HTMLElement>) {
-    event.preventDefault()
+
+  closeSearchBar() {
+    this.setState({ showSearchBar: false })
   }
 
-  onSearchBoxPress(event: React.MouseEvent<HTMLElement>) {
+  openSearchBar() {
+    this.setState({ showSearchBar: true })
+  }
+
+  setSearchString(searchString: string) {
+    this.setState({ searchString })
+    this.search(searchString);
+  }
+
+  search = debounce((searchString: string) => {
+    this.searchWorker.postMessage(searchString)
+  }, 200)
+
+  updateSearchResult = (event: { data: { result: Title[] } }) => this.setState({ result: event.data.result })
+
+  // onPress(event: React.MouseEvent<HTMLElement>) {
+  //   event.preventDefault()
+  // }
+
+  preventEvent(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault()
     event.stopPropagation()
   }
 
   render() {
-    const { search } = this.props
-    return search!.show ? (
-      <OverlayWrapper onClick={() => search!.toggleSearchBar()}>
+    const { showSearchBar, searchString, result } = this.state
+    let r = result
+    console.log('result: ', r);
+    return showSearchBar ? (
+      <OverlayWrapper onClick={() => this.closeSearchBar()}>
         <Wrapper>
-          <SearchWrapper onClick={event => this.onSearchBoxPress(event)}>
+          <SearchWrapper onClick={this.preventEvent}>
             <SearchBox
               autoFocus
-              value={search!.searchText}
-              onChange={({ target: { value } }) => search!.setSearchText(value)}
+              value={searchString}
+              onChange={({ target: { value } }) => this.setSearchString(value)}
             />
           </SearchWrapper>
           <ResultWrapper>
-            {search!.result.map(title => (
-              <ResultItem key={title.id} onClick={event => this.onPress(event)}>
+            {r.map(title => (
+              <ResultItem key={title.id} onClick={this.preventEvent}>
                 <PosterCard
                   linkUrl={`/show/${title.id}`}
                   poster={<SmallShowFanart tvdbId={title.tvdbId} />}
@@ -76,11 +115,16 @@ export class SearchComponent extends React.Component<Props> {
 
 const keyIsEscape = key => key && key.toLowerCase() === 'escape'
 
-export const Search = composeHOC<Props>(
-  withNavigation,
-  inject('search', 'titles'),
-  observer
-)(SearchComponent)
+const debounce = (fn: Function, time: number) => {
+  let timeout: any
+
+  return (...args: any[]) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), time)
+  }
+}
+
+export const Search = SearchComponent
 
 const ResultWrapper = styled.div`
   display: grid;
@@ -101,7 +145,7 @@ const ResultItem = styled.div`
 `
 
 const Wrapper = styled.div`
-  width 90%;
+  width: 90%;
   height: 100%;
 `
 

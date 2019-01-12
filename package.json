@@ -48,7 +48,8 @@
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.7",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.4",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "@tjoskar/mobx-react-util": "^1.0.1",

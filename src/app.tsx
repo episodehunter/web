@@ -1,19 +1,19 @@
-import { createRouter, routerEvents } from '@vieriksson/the-react-router'
-import { observable, runInAction } from 'mobx'
-import { observer, Provider } from 'mobx-react'
-import * as React from 'react'
-import { hot } from 'react-hot-loader'
-import { of } from 'rxjs'
-import { mapTo, switchMap } from 'rxjs/operators'
-import { dispatch, store } from './app-state'
-import { routes } from './components/router'
-import { AuthenticatedState } from './enum'
-import { SpinnerPage } from './pages/spinner.page'
-import { authenticated$ } from './utils/auth.util'
-import { today } from './utils/date.utils'
-import { followingIds$ } from './utils/firebase/selectors'
-import { updateLocalUserMetadata } from './utils/firebase/util'
-import { composeHOC } from './utils/function.util'
+import { createRouter, routerEvents } from '@vieriksson/the-react-router';
+import { observable, runInAction } from 'mobx';
+import { observer, Provider } from 'mobx-react';
+import * as React from 'react';
+import { hot } from 'react-hot-loader';
+import { of } from 'rxjs';
+import { mapTo, switchMap } from 'rxjs/operators';
+import { dispatch, store } from './app-state';
+import { routes } from './components/router';
+import { AuthenticatedState } from './enum';
+import { SpinnerPage } from './pages/spinner.page';
+import { authenticated$ } from './utils/auth.util';
+import { today } from './utils/date.utils';
+import { followingIds$ } from './utils/firebase/selectors';
+import { updateLocalUserMetadata } from './utils/firebase/util';
+import { composeHOC } from './utils/function.util';
 
 routerEvents.addListener(state => dispatch.navigate(state.url))
 
@@ -45,7 +45,6 @@ class AppComponent extends React.Component {
     // Load the data when the user is authenticated
     authenticated$.subscribe(state => {
       if (state === AuthenticatedState.authenticated) {
-        store.titles.fetchTitles()
         updateLocalUserMetadata()
       }
     })

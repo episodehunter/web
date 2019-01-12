@@ -4,17 +4,15 @@ import { images } from '../../images.config';
 
 type Props = {
   tvdbId: number
-  scale?: number
 }
 
 export const SmallShowFanart = ({ tvdbId }: Props) => {
   const width = '100%'
-  const height = 200
   return Boolean(tvdbId) ? (
     <LazyLoadImage
       width={width}
-      height={height}
-      defaultImage={`https://www.placecage.com/g/${356}/${height}`}
+      height='auto'
+      defaultImage={`https://www.placecage.com/g/${356}/${200}`}
       image={images.fanart.big(tvdbId)}
     />
   ) : null

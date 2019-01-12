@@ -45,7 +45,7 @@ export function createShow(show: FirebaseModel.Show): Show {
     runtime: show.runtime,
     numberOfFollowers: show.numberOfFollowers,
     totalNumberOfEpisodes: show.totalNumberOfEpisodes,
-    seasons: show.seasons.sort()
+    seasons: Array.isArray(show.seasons) ? show.seasons.sort() : []
   } as Show
 }
 
