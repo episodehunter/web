@@ -3,55 +3,37 @@ import {
   RouterState,
   withNavigation
 } from '@vieriksson/the-react-router'
-import { action, observable } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import React from 'react'
+import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
-import { UserStore } from '../../store/user'
 import { media } from '../../styles/media-queries'
 import { Hamburger } from '../hamburger'
 import { NavbarItems } from './navbar-items'
 
 type Props = {
-  user?: UserStore
   navigate: Navigate
   state: RouterState
 }
 
-class NavbarComponent extends React.Component<Props> {
-  @observable
-  open: boolean = false
+function NavbarComponent({ state: { url }, navigate }: Props) {
+  const [isOpen, setOpen] = useState(false)
+  const toggle = () => setOpen(!isOpen)
 
-  @action
-  toggle = () => {
-    this.open = !this.open
-  }
-
-  render() {
-    const {
-      user,
-      navigate,
-      state: { url }
-    } = this.props
-    return (
-      <>
-        <Wide>
-          <NavbarItems navigate={navigate} stateUrl={url} user={user} />
-        </Wide>
-        <Narrow open={this.open}>
-          <NarrowWrapper>
-            <Hamburger open={this.open} onToggle={this.toggle} />
-            {this.open && (
-              <NavbarItems navigate={navigate} user={user} stateUrl={url} />
-            )}
-          </NarrowWrapper>
-        </Narrow>
-      </>
-    )
-  }
+  return (
+    <>
+      <Wide>
+        <NavbarItems navigate={navigate} stateUrl={url} />
+      </Wide>
+      <Narrow open={isOpen}>
+        <NarrowWrapper>
+          <Hamburger open={isOpen} onToggle={toggle} />
+          {isOpen && <NavbarItems navigate={navigate} stateUrl={url} />}
+        </NarrowWrapper>
+      </Narrow>
+    </>
+  )
 }
 
-export const Navbar = withNavigation(inject('user')(observer(NavbarComponent)))
+export const Navbar = withNavigation(NavbarComponent)
 
 const Wide = styled.div`
   justify-content: flex-end;

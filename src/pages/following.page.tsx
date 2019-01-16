@@ -3,14 +3,14 @@ import { Subscription } from 'rxjs'
 import { map } from 'rxjs/operators'
 import styled from 'styled-components'
 import { FollowingComponent } from '../components/following'
+import { Episode, Show } from '../model'
 import { shark } from '../utils/colors'
 import { episodesToWatch$ } from '../utils/firebase/selectors'
-import { Episode, Show, State } from '../utils/firebase/types'
 import { sortShowsAfterEpisodesAirDate } from '../utils/firebase/util'
 import { SpinnerPage } from './spinner.page'
 
 type ComState = {
-  shows: { show: Show; episodes: State<Episode[]> }[]
+  shows: { show: Show; episodes: Episode[] }[]
   loading: boolean
 }
 

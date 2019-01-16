@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Spinner } from '../components/spinner'
+import React from 'react';
+import styled from 'styled-components';
+import { Spinner } from '../components/spinner';
 
 const Content = styled.div`
   width: 100%;

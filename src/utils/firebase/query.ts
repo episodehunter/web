@@ -1,11 +1,19 @@
-import { format, subDays } from 'date-fns';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { createEpisode, createShow, createWatchedEpisode, Episode, Show, UpcomingEpisodes, WatchedEpisode } from '../../model';
-import { getUserId } from '../auth.util';
-import { isValidAfter, storage } from './storage';
-import * as FirebaseModel from './types';
-import { sortEpisodeAfterEpisodenumber } from './util';
+import { format, subDays } from 'date-fns'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import {
+  createEpisode,
+  createShow,
+  createWatchedEpisode,
+  Episode,
+  Show,
+  UpcomingEpisodes,
+  WatchedEpisode
+} from '../../model'
+import { auth } from '../auth.util'
+import { isValidAfter, storage } from './storage'
+import * as FirebaseModel from './types'
+import { sortEpisodeAfterEpisodenumber } from './util'
 
 type Db = firebase.firestore.Firestore
 
@@ -45,9 +53,7 @@ const showDoc = (id: string) =>
     .doc(String(id))
 
 const episodesCollection = (showId: string) =>
-  showDoc(String(showId))
-    .collection('episodes')
-
+  showDoc(String(showId)).collection('episodes')
 
 function emitAfter<T>(data: T, time = 2000): Promise<T> {
   return new Promise(r => setTimeout(r, time, data))
@@ -60,7 +66,9 @@ function handleOffline<T>(backupdata: T): (error: Error) => T {
   }
 }
 
-export async function getUserMetaData(userId = getUserId()): Promise<FirebaseModel.UserMetaData> {
+export async function getUserMetaData(
+  userId = auth.getUserId()
+): Promise<FirebaseModel.UserMetaData> {
   console.log('getUserMetaData')
   const gettingMetaDataFromNetwork = userDoc(userId)
     .get()
@@ -70,7 +78,9 @@ export async function getUserMetaData(userId = getUserId()): Promise<FirebaseMod
   const metaDataFromStoreage = await storage.userMetaData.get(userId)
   if (metaDataFromStoreage) {
     return Promise.race([
-      gettingMetaDataFromNetwork.catch(handleOffline(metaDataFromStoreage.data)),
+      gettingMetaDataFromNetwork.catch(
+        handleOffline(metaDataFromStoreage.data)
+      ),
       emitAfter(metaDataFromStoreage.data)
     ])
   }
@@ -99,33 +109,49 @@ export async function getShow(id: string): Promise<Show | null> {
   if (isValidAfter(gettingShowFromStoreage, 3)) {
     return Promise.resolve(gettingShowFromStoreage!.data)
   } else if (gettingShowFromStoreage) {
-    return Promise.race([ gettingShowFromNetwork.catch(handleOffline(gettingShowFromStoreage.data)), emitAfter(gettingShowFromStoreage.data) ])
+    return Promise.race([
+      gettingShowFromNetwork.catch(handleOffline(gettingShowFromStoreage.data)),
+      emitAfter(gettingShowFromStoreage.data)
+    ])
   } else {
     return gettingShowFromNetwork
   }
 }
 
-export async function getSeason(showId: string, season: number): Promise<Episode[]> {
-  console.log('getSeason', {showId, season})
+export async function getSeason(
+  showId: string,
+  season: number
+): Promise<Episode[]> {
+  console.log('getSeason', { showId, season })
   const gettingFromNetwork = episodesCollection(showId)
     .where('season', '==', season)
     .get()
     .then(r => r.docs.map(d => d.data()) as FirebaseModel.Episode[])
-    .then(episodes => episodes.map(createEpisode).sort(sortEpisodeAfterEpisodenumber))
+    .then(episodes =>
+      episodes.map(createEpisode).sort(sortEpisodeAfterEpisodenumber)
+    )
     .then(episodes => storage.season.set(showId, season, episodes))
 
   const gettingFromStoreage = await storage.season.get(showId, season)
   if (isValidAfter(gettingFromStoreage, 3)) {
     return Promise.resolve(gettingFromStoreage!.data)
   } else if (gettingFromStoreage) {
-    return Promise.race([ gettingFromNetwork.catch(handleOffline(gettingFromStoreage.data)), emitAfter(gettingFromStoreage.data) ])
+    return Promise.race([
+      gettingFromNetwork.catch(handleOffline(gettingFromStoreage.data)),
+      emitAfter(gettingFromStoreage.data)
+    ])
   } else {
     return gettingFromNetwork
   }
 }
 
-export function getWatchSeason(showId: string, season: number, cb: (episodes: WatchedEpisode[]) => void, userId = getUserId()): () => void {
-  console.log('getWatchSeason', {showId, season})
+export function getWatchSeason(
+  showId: string,
+  season: number,
+  cb: (episodes: WatchedEpisode[]) => void,
+  userId = auth.getUserId()
+): () => void {
+  console.log('getWatchSeason', { showId, season })
   return showsWatchHistoryCollection(userId)
     .where('season', '==', season)
     .where('showId', '==', Number(showId))
@@ -137,8 +163,11 @@ export function getWatchSeason(showId: string, season: number, cb: (episodes: Wa
     })
 }
 
-export function getEpisodesAfter(showId: string, episodeNumber: number): Promise<Episode[]> {
-  console.log('getEpisodesAfter', {showId, episodeNumber})
+export function getEpisodesAfter(
+  showId: string,
+  episodeNumber: number
+): Promise<Episode[]> {
+  console.log('getEpisodesAfter', { showId, episodeNumber })
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .get()
@@ -150,8 +179,11 @@ export function getEpisodesAfter(showId: string, episodeNumber: number): Promise
     })
 }
 
-export function getUpcommingEpisodes(showId: string, now = new Date()): Promise<UpcomingEpisodes> {
-  console.log('getUpcommingEpisodes', {showId})
+export function getUpcommingEpisodes(
+  showId: string,
+  now = new Date()
+): Promise<UpcomingEpisodes> {
+  console.log('getUpcommingEpisodes', { showId })
   const threeDaysAgo = subDays(now, 3)
   return episodesCollection(showId)
     .where('aired', '>=', format(threeDaysAgo, 'YYYY-MM-DD'))
@@ -182,9 +214,9 @@ export function getUpcommingEpisodes(showId: string, now = new Date()): Promise<
 export function getHighestWatchedEpisodeUpdate(
   showId: string,
   cb: (episode: WatchedEpisode | null) => void,
-  userId = getUserId()
+  userId = auth.getUserId()
 ): () => void {
-  console.log('getHighestWatchedEpisodeUpdate', {showId})
+  console.log('getHighestWatchedEpisodeUpdate', { showId })
   return showsWatchHistoryCollection(userId)
     .where('showId', '==', Number(showId))
     .orderBy('episodeNumber', 'desc')
@@ -193,7 +225,11 @@ export function getHighestWatchedEpisodeUpdate(
       if (querySnapshot.size === 0) {
         cb(null)
       } else {
-        cb(createWatchedEpisode(querySnapshot.docs[0].data() as FirebaseModel.WatchedEpisode))
+        cb(
+          createWatchedEpisode(
+            querySnapshot.docs[0].data() as FirebaseModel.WatchedEpisode
+          )
+        )
       }
     })
 }
@@ -202,7 +238,7 @@ export function getNextEpisode(
   showId: string,
   episodeNumber: number
 ): Promise<Episode | null> {
-  console.log('getNextEpisode', {showId, episodeNumber})
+  console.log('getNextEpisode', { showId, episodeNumber })
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .orderBy('episodeNumber')
@@ -220,18 +256,30 @@ export function getNextEpisode(
     })
 }
 
-export function removeShowIdFromFollowing(uid = getUserId(), showId: string) {
-  console.error('Do not write data to firebase');
-  return userDoc(uid).update({ following: firebase.firestore.FieldValue.arrayRemove(Number(showId)) })
+export function removeShowIdFromFollowing(
+  uid = auth.getUserId(),
+  showId: string
+) {
+  console.error('Do not write data to firebase')
+  return userDoc(uid).update({
+    following: firebase.firestore.FieldValue.arrayRemove(Number(showId))
+  })
 }
 
-export function addShowIdFromFollowing(uid = getUserId(), showId: string) {
-  console.error('Do not write data to firebase');
-  return userDoc(uid).update({ following: firebase.firestore.FieldValue.arrayUnion(Number(showId)) })
+export function addShowIdFromFollowing(uid = auth.getUserId(), showId: string) {
+  console.error('Do not write data to firebase')
+  return userDoc(uid).update({
+    following: firebase.firestore.FieldValue.arrayUnion(Number(showId))
+  })
 }
 
-export function watchEpisode(showId: string, season: number, episode: number, uid = getUserId()) {
-  console.error('Do not update watch history from the client');
+export function watchEpisode(
+  showId: string,
+  season: number,
+  episode: number,
+  uid = auth.getUserId()
+) {
+  console.error('Do not update watch history from the client')
   const wh = {
     episode,
     episodeNumber: season * 10000 + episode,
@@ -244,12 +292,21 @@ export function watchEpisode(showId: string, season: number, episode: number, ui
   return showsWatchHistoryCollection(uid).add(wh)
 }
 
-export function unwatchEpisode(showId: string, season: number, episode: number, uid = getUserId()) {
-  console.error('Do not update watch history from the client');
+export function unwatchEpisode(
+  showId: string,
+  season: number,
+  episode: number,
+  uid = auth.getUserId()
+) {
+  console.error('Do not update watch history from the client')
   const episodeNumber = season * 10000 + episode
-  console.log({episodeNumber, showId: Number(showId)})
-  return showsWatchHistoryCollection(uid).where('showId', '==', Number(showId)).where('episodeNumber', '==', episodeNumber).get().then(result => {
-    console.log('s', result.size)
-    return result.docs.filter(d => d.exists).map(d => d.ref.delete())
-  })
+  console.log({ episodeNumber, showId: Number(showId) })
+  return showsWatchHistoryCollection(uid)
+    .where('showId', '==', Number(showId))
+    .where('episodeNumber', '==', episodeNumber)
+    .get()
+    .then(result => {
+      console.log('s', result.size)
+      return result.docs.filter(d => d.exists).map(d => d.ref.delete())
+    })
 }

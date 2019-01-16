@@ -1,9 +1,13 @@
-import { of } from 'rxjs';
-import { switchMap, take, tap } from 'rxjs/operators';
-import { Episode, Show } from '../../model';
-import { getUserId } from '../auth.util';
-import { addShowIdFromFollowing, getUserMetaData, removeShowIdFromFollowing } from './query';
-import { followingIdsSubject, userMetaData$ } from './selectors';
+import { of } from 'rxjs'
+import { switchMap, take, tap } from 'rxjs/operators'
+import { Episode, Show } from '../../model'
+import { auth } from '../auth.util'
+import {
+  addShowIdFromFollowing,
+  getUserMetaData,
+  removeShowIdFromFollowing
+} from './query'
+import { followingIdsSubject, userMetaData$ } from './selectors'
 
 export function updateLocalUserMetadata() {
   return getUserMetaData().then(metadata => {
@@ -13,7 +17,7 @@ export function updateLocalUserMetadata() {
   })
 }
 
-export function unfollowShow(showId: string, userId = getUserId()) {
+export function unfollowShow(showId: string, userId = auth.getUserId()) {
   return followingIdsSubject.pipe(
     take(1),
     switchMap(ids => {
@@ -21,7 +25,9 @@ export function unfollowShow(showId: string, userId = getUserId()) {
         return of([])
       }
       if (ids!.includes(showId)) {
-        return removeShowIdFromFollowing(userId, showId).then(() => ids.filter(id => id !== showId))
+        return removeShowIdFromFollowing(userId, showId).then(() =>
+          ids.filter(id => id !== showId)
+        )
       }
       return of(ids)
     }),
@@ -29,7 +35,7 @@ export function unfollowShow(showId: string, userId = getUserId()) {
   )
 }
 
-export function followShow(showId: string, userId = getUserId()) {
+export function followShow(showId: string, userId = auth.getUserId()) {
   return followingIdsSubject.pipe(
     take(1),
     switchMap(ids => {
@@ -37,7 +43,10 @@ export function followShow(showId: string, userId = getUserId()) {
         return of([])
       }
       if (!ids!.includes(showId)) {
-        return addShowIdFromFollowing(userId, showId).then(() => [...ids, showId])
+        return addShowIdFromFollowing(userId, showId).then(() => [
+          ...ids,
+          showId
+        ])
       }
       return of(ids)
     }),

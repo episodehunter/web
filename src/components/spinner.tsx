@@ -1,6 +1,6 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import { gossamer } from '../utils/colors'
+import React from 'react';
+import styled from 'styled-components';
+import { gossamer } from '../utils/colors';
 
 type Props = {
   size?: number

@@ -1,23 +1,23 @@
 import { withNavigation } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
+import { Episode, Show } from '../model'
 import { media } from '../styles/media-queries'
-import { ShowWithEpisodesToWatch } from '../utils/firebase/types'
 import { ShowCard } from './show-card/show-card'
 
 type Props = {
-  following: ShowWithEpisodesToWatch[]
+  following: { show: Show; episodes: Episode[] }[]
 }
 
 const Following = ({ following }: Props) => (
   <FollowingWrapper>
-    {following.map(show => (
+    {following.map(({ show, episodes }) => (
       <ShowCard
-        key={show.id}
-        showId={show.id}
+        key={show.ids.id}
+        showId={show.ids.id}
         tvdbId={show.ids.tvdb}
         topRight={show.name}
-        bottomRight={episodeLeftText(show.episodesToWatch.length)}
+        bottomRight={episodeLeftText(episodes.length)}
       />
     ))}
   </FollowingWrapper>

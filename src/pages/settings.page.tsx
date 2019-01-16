@@ -1,11 +1,10 @@
-import { inject } from 'mobx-react'
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { FloatingLabel } from '../components/floating-label'
 import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
-import { UserStore } from '../store/user'
 import { FormButton } from '../styles/form-button'
+import { auth } from '../utils/auth.util'
 import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 
 enum Status {
@@ -13,10 +12,6 @@ enum Status {
   saving,
   error,
   success
-}
-
-type Props = {
-  user: UserStore
 }
 
 type State = {
@@ -27,7 +22,7 @@ type State = {
   status: Status
 }
 
-class SettingsPageComponent extends React.Component<Props, State> {
+export class SettingsPage extends React.Component<{}, State> {
   state = {
     newPassword: '',
     confirmPassword: '',
@@ -58,11 +53,11 @@ class SettingsPageComponent extends React.Component<Props, State> {
     }
 
     this.setState({ status: Status.saving })
-    this.props
-      .user!.reauthenticate(this.state.password)
+    auth
+      .reauthenticate(this.state.password)
       .then(() => {
-        this.props
-          .user!.changePassword(newPassword)
+        auth
+          .changePassword(newPassword)
           .then(() => {
             this.setState({
               status: Status.success,
@@ -153,8 +148,6 @@ class SettingsPageComponent extends React.Component<Props, State> {
     )
   }
 }
-
-export const SettingsPage = inject('user')(SettingsPageComponent)
 
 function getStatusComponent(state: State) {
   switch (state.status) {

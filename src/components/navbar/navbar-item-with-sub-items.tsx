@@ -1,6 +1,4 @@
-import { action, observable } from 'mobx'
-import { observer } from 'mobx-react'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { NavItem } from './navbar-item.styles'
 
@@ -9,30 +7,20 @@ type Props = {
   subItems: React.ReactNode[]
 }
 
-class NavbarItemWithSubItemsComp extends React.Component<Props> {
-  @observable
-  showSubItems = false
+export function NavbarItemWithSubItems({ subItems, header }: Props) {
+  const [showSubItems, setShowSubItems] = useState(false)
 
-  @action
-  setShowSubItems(showSubItems: boolean) {
-    this.showSubItems = showSubItems
-  }
-
-  render() {
-    return (
-      <Wrapper
-        onMouseEnter={() => this.setShowSubItems(true)}
-        onMouseLeave={() => this.setShowSubItems(false)}
-      >
-        <NavItem selected={false}>{this.props.header}</NavItem>
-        <div style={{ position: 'relative' }}>
-          {this.showSubItems && (
-            <SubItemsWrapper>{this.props.subItems}</SubItemsWrapper>
-          )}
-        </div>
-      </Wrapper>
-    )
-  }
+  return (
+    <Wrapper
+      onMouseEnter={() => setShowSubItems(true)}
+      onMouseLeave={() => setShowSubItems(false)}
+    >
+      <NavItem selected={false}>{header}</NavItem>
+      <div style={{ position: 'relative' }}>
+        {showSubItems && <SubItemsWrapper>{subItems}</SubItemsWrapper>}
+      </div>
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.div`
@@ -44,4 +32,3 @@ const SubItemsWrapper = styled.div`
   flex-direction: column;
   position: relative;
 `
-export const NavbarItemWithSubItems = observer(NavbarItemWithSubItemsComp)

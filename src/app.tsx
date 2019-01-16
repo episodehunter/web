@@ -1,29 +1,24 @@
-import { createRouter, routerEvents } from '@vieriksson/the-react-router';
-import { observable, runInAction } from 'mobx';
-import { observer, Provider } from 'mobx-react';
-import * as React from 'react';
-import { hot } from 'react-hot-loader';
-import { of } from 'rxjs';
-import { mapTo, switchMap } from 'rxjs/operators';
-import { dispatch, store } from './app-state';
-import { routes } from './components/router';
-import { AuthenticatedState } from './enum';
-import { SpinnerPage } from './pages/spinner.page';
-import { authenticated$ } from './utils/auth.util';
-import { today } from './utils/date.utils';
-import { followingIds$ } from './utils/firebase/selectors';
-import { updateLocalUserMetadata } from './utils/firebase/util';
-import { composeHOC } from './utils/function.util';
-
-routerEvents.addListener(state => dispatch.navigate(state.url))
+import { createRouter } from '@vieriksson/the-react-router'
+import React from 'react'
+import { of } from 'rxjs'
+import { mapTo, switchMap } from 'rxjs/operators'
+import { Provider } from 'unistore/react'
+import { routes } from './components/router'
+import { AuthenticatedState } from './enum'
+import { SpinnerPage } from './pages/spinner.page'
+import { store } from './store2/store'
+import { authenticated$, authStateChange$ } from './utils/auth.util'
+import { followingIds$ } from './utils/firebase/selectors'
+import { updateLocalUserMetadata } from './utils/firebase/util'
 
 const Router = createRouter(routes)
 
-class AppComponent extends React.Component {
-  @observable
-  showSpinner = true
+export class App extends React.Component {
+  state = {
+    showSpinner: true
+  }
 
-  constructor(props, context) {
+  constructor(props: any, context: any) {
     super(props, context)
 
     // Hide spinner when the user is authenticated and we have fetched the
@@ -39,8 +34,12 @@ class AppComponent extends React.Component {
         })
       )
       .subscribe(showSpinner => {
-        runInAction(() => (this.showSpinner = showSpinner))
+        this.setState({ showSpinner })
       })
+
+    authStateChange$.subscribe(currentUser =>
+      store.setState({ user: { currentUser } })
+    )
 
     // Load the data when the user is authenticated
     authenticated$.subscribe(state => {
@@ -51,15 +50,13 @@ class AppComponent extends React.Component {
   }
 
   render() {
-    if (this.showSpinner) {
+    if (this.state.showSpinner) {
       return <SpinnerPage />
     }
     return (
-      <Provider {...store} today={today}>
+      <Provider store={store}>
         <Router />
       </Provider>
     )
   }
 }
-
-export const App = composeHOC(hot(module), observer)(AppComponent)

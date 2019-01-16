@@ -35,7 +35,7 @@
     "@types/history": "^4.7.0",
     "@types/jest": "^23.3.1",
     "@types/ramda": "^0.25.37",
-    "@types/react": "^16.4.13",
+    "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.7",
     "@types/react-test-renderer": "^16.0.2",
     "babel-loader": "^8.0.0",
@@ -56,7 +56,7 @@
     "@tjoskar/react-lazyload-img": "^1.1.0",
     "@vieriksson/the-react-router": "^1.1.2",
     "date-fns": "^1.29.0",
-    "firebase": "^5.4.2",
+    "firebase": "^5.7.3",
     "fuse.js": "^3.2.1",
     "graphql-request": "^1.8.2",
     "idb-keyval": "^3.1.0",
@@ -66,11 +66,12 @@
     "path-to-regexp": "^2.4.0",
     "ramda": "^0.25.0",
     "rc-progress": "^2.2.5",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.8.0-alpha.0",
+    "react-dom": "^16.8.0-alpha.0",
     "react-hot-loader": "^4.3.5",
     "rxjs": "^6.3.1",
-    "styled-components": "^3.4.5"
+    "styled-components": "^3.4.5",
+    "unistore": "^3.2.1"
   },
   "jest": {
     "transform": {

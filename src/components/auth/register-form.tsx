@@ -1,51 +1,50 @@
-import { action, observable } from 'mobx'
-import { observer } from 'mobx-react'
-import React from 'react'
-import { FormButton } from '../../styles/form-button'
-import { melrose } from '../../utils/colors'
-import { FloatingLabel } from '../floating-label'
-import { FormStatusMessage } from '../form-status-message'
-import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
-import { translateFirebaseError } from './auth.util'
+import React from 'react';
+import { FormButton } from '../../styles/form-button';
+import { melrose } from '../../utils/colors';
+import { FloatingLabel } from '../floating-label';
+import { FormStatusMessage } from '../form-status-message';
+import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles';
+import { translateFirebaseError } from './auth.util';
 
 type Props = {
   register: (email: string, password: string) => Promise<any>
 }
 
-export class RegisterFormComponent extends React.Component<Props> {
-  @observable
-  signingIn = false
-  @observable
-  errorMsg = ''
-  @observable
-  email = ''
-  @observable
-  password = ''
+type State = {
+  signingIn: boolean
+  errorMsg: string
+  email: string
+  password: string
+}
 
-  @action
+export class RegisterForm extends React.Component<Props, State> {
+  state = {
+    signingIn: false,
+    errorMsg: '',
+    email: '',
+    password: ''
+  } as State
+
   setEmail(email: string) {
-    this.email = email
+    this.setState({ email });
   }
 
-  @action
   setPassword(password: string) {
-    this.password = password
+    this.setState({ password });
   }
 
-  @action
-  setErrorMessage(msg: string) {
-    this.errorMsg = msg
+  setErrorMessage(errorMsg: string) {
+    this.setState({ errorMsg });
   }
 
-  @action
   setSigningIn(signingIn: boolean) {
-    this.signingIn = signingIn
+    this.setState({ signingIn });
   }
 
   register() {
     this.setSigningIn(true)
     this.props
-      .register(this.email, this.password)
+      .register(this.state.email, this.state.password)
       .then(resp => console.log(resp))
       .catch(error => {
         this.setSigningIn(false)
@@ -56,7 +55,7 @@ export class RegisterFormComponent extends React.Component<Props> {
   render() {
     return (
       <AuthFormWrapper>
-        <FormStatusMessage message={this.errorMsg} />
+        <FormStatusMessage message={this.state.errorMsg} />
         <FloatingLabel
           autoComplete="new-password"
           styles={floatingLabelStyles}
@@ -77,7 +76,7 @@ export class RegisterFormComponent extends React.Component<Props> {
         <Space />
         <FormButton
           color={melrose}
-          disabled={this.signingIn}
+          disabled={this.state.signingIn}
           onClick={() => this.register()}
         >
           Register
@@ -86,5 +85,3 @@ export class RegisterFormComponent extends React.Component<Props> {
     )
   }
 }
-
-export const RegisterForm = observer(RegisterFormComponent)

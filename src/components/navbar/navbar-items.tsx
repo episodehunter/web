@@ -1,25 +1,17 @@
-import { Navigate } from '@vieriksson/the-react-router';
-import { inject } from 'mobx-react';
-import React from 'react';
-import { Routes } from '../../routes';
-import { UserStore } from '../../store/user';
-import { NavbarItem } from './navbar-item';
-import { NavbarItemWithSubItems } from './navbar-item-with-sub-items';
-import { NavbarSubItem } from './navbar-subitem';
+import { Navigate } from '@vieriksson/the-react-router'
+import React from 'react'
+import { Routes } from '../../routes'
+import { auth } from '../../utils/auth.util'
+import { NavbarItem } from './navbar-item'
+import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
+import { NavbarSubItem } from './navbar-subitem'
 
 type Props = {
-  user?: UserStore
   navigate: Navigate
   stateUrl: string
 }
 
-const isPathEqual = (urlPath, statePath) => urlPath === statePath
-
-export const NavbarItemsComponent = ({
-  navigate,
-  stateUrl,
-  user
-}: Props) => {
+export const NavbarItems = ({ navigate, stateUrl }: Props) => {
   return (
     <>
       <NavbarItem
@@ -55,7 +47,7 @@ export const NavbarItemsComponent = ({
             key={'logout'}
             title="Logout"
             selected={false}
-            onClick={() => user!.signOut()}
+            onClick={() => auth.signOut()}
           />
         ]}
       />
@@ -63,4 +55,5 @@ export const NavbarItemsComponent = ({
   )
 }
 
-export const NavbarItems = inject('user')(NavbarItemsComponent)
+const isPathEqual = (urlPath: string, statePath: string) =>
+  urlPath === statePath
