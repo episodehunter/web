@@ -1,9 +1,31 @@
-import 'firebase/firestore';
-import { defer, forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
-import { Episode, Show, ShowAndUpcomingEpisodes, UpcomingEpisodes, WatchedEpisode } from '../../model';
-import { getEpisodesAfter, getHighestWatchedEpisodeUpdate, getNextEpisode, getSeason, getShow, getUpcommingEpisodes, getWatchSeason } from './query';
-import { UserMetaData } from './types';
+import 'firebase/firestore'
+import {
+  defer,
+  forkJoin,
+  Observable,
+  ObservableInput,
+  of,
+  ReplaySubject,
+  Subject
+} from 'rxjs'
+import { filter, map, shareReplay, switchMap } from 'rxjs/operators'
+import {
+  Episode,
+  Show,
+  ShowAndUpcomingEpisodes,
+  UpcomingEpisodes,
+  WatchedEpisode
+} from '../../model'
+import {
+  getEpisodesAfter,
+  getHighestWatchedEpisodeUpdate,
+  getNextEpisode,
+  getSeason,
+  getShow,
+  getUpcommingEpisodes,
+  getWatchSeason
+} from './query'
+import { UserMetaData } from './types'
 
 export const userMetaData$ = new ReplaySubject<UserMetaData | null>(1)
 export const followingIdsSubject = new ReplaySubject<string[]>(1)
@@ -12,27 +34,36 @@ export const followingIds$ = followingIdsSubject
 
 const followingShows$ = followingIds$.pipe(
   filter(Boolean), // If no network and no chache
-  switchMap(ids => forkJoin(...ids.map(id => show$(id)))),
+  switchMap(ids => safeForkJoin(...ids.map(id => show$(id)))),
   map((shows: Show[]) => shows.filter(Boolean)) // For shows that we dont find
 )
 
-export function getUpcommingEpisodes$(showId: string): Observable<UpcomingEpisodes> {
-  return defer(() => getUpcommingEpisodes(showId));
+export function getUpcommingEpisodes$(
+  showId: string
+): Observable<UpcomingEpisodes> {
+  return defer(() => getUpcommingEpisodes(showId))
 }
 
-export const upcomingEpisodes$: Observable<ShowAndUpcomingEpisodes[]> = followingShows$.pipe(
+export const upcomingEpisodes$: Observable<
+  ShowAndUpcomingEpisodes[]
+> = followingShows$.pipe(
   switchMap(shows => {
     const ue = shows!.map(show => {
-      return getUpcommingEpisodes$(show.ids.id)
-        .pipe(map(upcomingEpisodes => ({ show, upcomingEpisodes }) as ShowAndUpcomingEpisodes))
+      return getUpcommingEpisodes$(show.ids.id).pipe(
+        map(
+          upcomingEpisodes =>
+            ({ show, upcomingEpisodes } as ShowAndUpcomingEpisodes)
+        )
+      )
     })
-    return forkJoin(...ue);
+    return safeForkJoin(...ue)
   })
 )
 
 export const episodesToWatch$ = followingShows$.pipe(
   switchMap(shows =>
-    forkJoin(shows.map(show =>
+    safeForkJoin(
+      shows.map(show =>
         episodesToWatchForShow$(show.ids.id).pipe(
           map(episodes => ({
             show,
@@ -48,10 +79,9 @@ const episodesToWatchForShowObs: {
   [key: string]: Observable<Episode[]>
 } = {}
 
-export function episodesToWatchForShow$(
-  showId: string
-): Observable<Episode[]> {
-  const possibleToWatchFilter = (e: Episode[], h: number) => e.filter(e => e.episodeNumber > h)
+export function episodesToWatchForShow$(showId: string): Observable<Episode[]> {
+  const possibleToWatchFilter = (e: Episode[], h: number) =>
+    e.filter(e => e.episodeNumber > h)
 
   if (!episodesToWatchForShowObs[showId]) {
     episodesToWatchForShowObs[showId] = getHighestWatchedEpisode$(showId).pipe(
@@ -61,7 +91,9 @@ export function episodesToWatchForShow$(
           highestWatchedEpisode = episode.episodeNumber
         }
 
-        return getEpisodesAfter(showId, highestWatchedEpisode).then(etw => possibleToWatchFilter(etw, highestWatchedEpisode))
+        return getEpisodesAfter(showId, highestWatchedEpisode).then(etw =>
+          possibleToWatchFilter(etw, highestWatchedEpisode)
+        )
       }),
       shareReplay(1)
     ) as any
@@ -73,12 +105,12 @@ const getHighestWatchedEpisodeObs: {
   [key: string]: Observable<Episode>
 } = {}
 
-export function getHighestWatchedEpisode$(
-  showId: string
-): Observable<Episode> {
+export function getHighestWatchedEpisode$(showId: string): Observable<Episode> {
   if (!getHighestWatchedEpisodeObs[showId]) {
     getHighestWatchedEpisodeObs[showId] = Observable.create(obs => {
-      const unsubscribe = getHighestWatchedEpisodeUpdate(showId, episode => obs.next(episode))
+      const unsubscribe = getHighestWatchedEpisodeUpdate(showId, episode =>
+        obs.next(episode)
+      )
       return () => unsubscribe()
     }).pipe(shareReplay(1))
   }
@@ -86,14 +118,16 @@ export function getHighestWatchedEpisode$(
 }
 
 export function show$(showId: string): Observable<Show | null> {
-  return defer(() => getShow(showId));
+  return defer(() => getShow(showId))
 }
 
 const nextEpisodeToWatchObs: {
   [key: string]: Observable<Episode | null>
 } = {}
 
-export function nextEpisodeToWatch$(showId: string): Observable<Episode | null> {
+export function nextEpisodeToWatch$(
+  showId: string
+): Observable<Episode | null> {
   if (!nextEpisodeToWatchObs[showId]) {
     nextEpisodeToWatchObs[showId] = getHighestWatchedEpisode$(showId).pipe(
       switchMap(episode => {
@@ -139,4 +173,13 @@ export function watchedSeasonSubject$(showId: string) {
     setWatchSeason,
     watchSeason$: currentSeason$
   }
+}
+
+function safeForkJoin(
+  ...args: Array<ObservableInput<any> | Function>
+): Observable<any> {
+  if (args.length === 0) {
+    return of([])
+  }
+  return forkJoin(...args)
 }

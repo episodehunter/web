@@ -1,10 +1,10 @@
-import React from 'react';
-import { FormButton } from '../../styles/form-button';
-import { mountainMeadow } from '../../utils/colors';
-import { FloatingLabel } from '../floating-label';
-import { FormStatusMessage } from '../form-status-message';
-import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles';
-import { translateFirebaseError } from './auth.util';
+import React from 'react'
+import { FormButton } from '../../styles/form-button'
+import { mountainMeadow } from '../../utils/colors'
+import { FloatingLabel } from '../floating-label'
+import { FormStatusMessage } from '../form-status-message'
+import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
+import { translateFirebaseError } from './auth.util'
 
 type Props = {
   login: (email: string, password: string) => Promise<any>
@@ -26,19 +26,19 @@ export class LoginForm extends React.Component<Props, State> {
   } as State
 
   setEmail(email: string) {
-    this.setState({ email });
+    this.setState({ email })
   }
 
   setPassword(password: string) {
-    this.setState({ password });
+    this.setState({ password })
   }
 
   setErrorMessage(errorMsg: string) {
-    this.setState({ errorMsg });
+    this.setState({ errorMsg })
   }
 
   setSigningIn(signingIn: boolean) {
-    this.setState({ signingIn });
+    this.setState({ signingIn })
   }
 
   login() {
