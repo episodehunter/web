@@ -2,11 +2,10 @@ import { createRouter } from '@vieriksson/the-react-router'
 import React from 'react'
 import { of } from 'rxjs'
 import { mapTo, switchMap } from 'rxjs/operators'
-import { Provider } from 'unistore/react'
 import { routes } from './components/router'
 import { AuthenticatedState } from './enum'
 import { SpinnerPage } from './pages/spinner.page'
-import { store } from './store2/store'
+import { setUser, UserProvider } from './store'
 import { authenticated$, authStateChange$ } from './utils/auth.util'
 import { followingIds$ } from './utils/firebase/selectors'
 import { updateLocalUserMetadata } from './utils/firebase/util'
@@ -37,9 +36,7 @@ export class App extends React.Component {
         this.setState({ showSpinner })
       })
 
-    authStateChange$.subscribe(currentUser =>
-      store.setState({ user: { currentUser } })
-    )
+    authStateChange$.subscribe(currentUser => setUser({ currentUser }))
 
     // Load the data when the user is authenticated
     authenticated$.subscribe(state => {
@@ -54,9 +51,9 @@ export class App extends React.Component {
       return <SpinnerPage />
     }
     return (
-      <Provider store={store}>
+      <UserProvider>
         <Router />
-      </Provider>
+      </UserProvider>
     )
   }
 }

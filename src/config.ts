@@ -1,4 +1,5 @@
-export const apiUrl = 'https://devapi.episodehunter.tv'
+export const apiUrl =
+  'https://us-central1-newagent-dc3d1.cloudfunctions.net/fn/'
 // export const apiUrl = 'http://localhost:5000'
 
 export const firebaseAuthConfig = {

@@ -1,4 +1,4 @@
-import Fuse, { FuseOptions } from 'fuse.js';
+import Fuse, { FuseOptions } from 'fuse.js'
 
 type Title = {
   id: string
@@ -13,7 +13,7 @@ enum FetchStatus {
   Completed
 }
 
-const fuseOptions: FuseOptions = {
+const fuseOptions: FuseOptions<any> = {
   keys: ['name'],
   maxPatternLength: 32,
   minMatchCharLength: 2,
@@ -23,47 +23,54 @@ const fuseOptions: FuseOptions = {
 }
 
 const returnData = (data: any) => {
-  (self.postMessage as any)(data)
+  ;(self.postMessage as any)(data)
 }
 
-let fetchStatus = FetchStatus.Started;
+let fetchStatus = FetchStatus.Started
 
-const fuseP: Promise<Fuse> = fetch('https://us-central1-newagent-dc3d1.cloudfunctions.net/fn/titles')
+const fuseP: Promise<Fuse<{ item: Title; score: number }>> = fetch(
+  'https://us-central1-newagent-dc3d1.cloudfunctions.net/fn/titles'
+)
   .then(result => {
-    fetchStatus = FetchStatus.Completed;
+    fetchStatus = FetchStatus.Completed
     return result.json()
   })
-  .then(titles => new Fuse(titles, fuseOptions));
+  .then(titles => new Fuse(titles, fuseOptions))
 
-function search(fuse: Fuse, searchWord: string) {
-  return fuse.search<{ item: Title, score: number }>(searchWord)
+function search(
+  fuse: Fuse<{ item: Title; score: number }>,
+  searchWord: string
+) {
+  return fuse
+    .search(searchWord)
     .map(searchResult => {
-      searchResult.score = (1 - searchResult.score) * searchResult.item.followers
-      return searchResult;
+      searchResult.score =
+        (1 - searchResult.score) * searchResult.item.followers
+      return searchResult
     })
     .sort((a, b) => b.score - a.score)
-    .map(a => a.item);
+    .map(a => a.item)
 }
 
-let currectSearchWord = '';
+let currectSearchWord = ''
 
 self.addEventListener('message', async event => {
   if (fetchStatus === FetchStatus.Started) {
     returnData({
       fetchStatus: FetchStatus[fetchStatus],
       result: []
-    });
+    })
   }
 
-  currectSearchWord = event.data;
+  currectSearchWord = event.data
 
-  const fuse = await fuseP;
+  const fuse = await fuseP
   if (currectSearchWord) {
-    const result = search(fuse, currectSearchWord);
+    const result = search(fuse, currectSearchWord)
     returnData({
       fetchStatus: FetchStatus[fetchStatus],
       result: result
-    });
-    currectSearchWord = '';
+    })
+    currectSearchWord = ''
   }
 })
