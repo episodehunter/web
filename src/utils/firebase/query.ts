@@ -167,7 +167,7 @@ export function getEpisodesAfter(
   showId: string,
   episodeNumber: number
 ): Promise<Episode[]> {
-  console.log('getEpisodesAfter', { showId, episodeNumber })
+  // console.log('getEpisodesAfter', { showId, episodeNumber })
   return episodesCollection(showId)
     .where('episodeNumber', '>', episodeNumber)
     .get()
@@ -216,7 +216,7 @@ export function getHighestWatchedEpisodeUpdate(
   cb: (episode: WatchedEpisode | null) => void,
   userId = auth.getUserId()
 ): () => void {
-  console.log('getHighestWatchedEpisodeUpdate', { showId })
+  // console.log('getHighestWatchedEpisodeUpdate', { showId })
   return showsWatchHistoryCollection(userId)
     .where('showId', '==', Number(showId))
     .orderBy('episodeNumber', 'desc')

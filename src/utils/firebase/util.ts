@@ -59,9 +59,9 @@ export function sortShowsAfterEpisodesAirDate(
 ) {
   return data.sort((a, b) => {
     const aCaughtUp = a.episodes.length === 0
-    const bCaughtUp = a.episodes.length === 0
+    const bCaughtUp = b.episodes.length === 0
     const aEndedAndCaughtUp = a.show.ended && aCaughtUp
-    const bEndedAndCaughtUp = a.show.ended && bCaughtUp
+    const bEndedAndCaughtUp = b.show.ended && bCaughtUp
     if (aEndedAndCaughtUp && bEndedAndCaughtUp) {
       return 0
     } else if (aEndedAndCaughtUp) {

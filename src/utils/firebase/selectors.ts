@@ -1,5 +1,6 @@
 import 'firebase/firestore'
 import {
+  combineLatest,
   defer,
   forkJoin,
   Observable,
@@ -34,7 +35,7 @@ export const followingIds$ = followingIdsSubject
 
 const followingShows$ = followingIds$.pipe(
   filter(Boolean), // If no network and no chache
-  switchMap(ids => safeForkJoin(...ids.map(id => show$(id)))),
+  switchMap(ids => safeForkJoin(ids.map(id => show$(id)))),
   map((shows: Show[]) => shows.filter(Boolean)) // For shows that we dont find
 )
 
@@ -56,13 +57,13 @@ export const upcomingEpisodes$: Observable<
         )
       )
     })
-    return safeForkJoin(...ue)
+    return safeForkJoin(ue)
   })
 )
 
 export const episodesToWatch$ = followingShows$.pipe(
   switchMap(shows =>
-    safeForkJoin(
+    safeCombineLatest(
       shows.map(show =>
         episodesToWatchForShow$(show.ids.id).pipe(
           map(episodes => ({
@@ -176,10 +177,17 @@ export function watchedSeasonSubject$(showId: string) {
 }
 
 function safeForkJoin(
-  ...args: Array<ObservableInput<any> | Function>
+  args: Array<ObservableInput<any> | Function>
 ): Observable<any> {
   if (args.length === 0) {
     return of([])
   }
-  return forkJoin(...args)
+  return forkJoin(args)
+}
+
+function safeCombineLatest<T>(array: ObservableInput<T>[]): Observable<T[]> {
+  if (array.length === 0) {
+    return of([])
+  }
+  return combineLatest(array)
 }

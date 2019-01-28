@@ -9,10 +9,8 @@ export function useObservable<T>(
   const [value, setValue] = useState(initialState)
 
   useEffect(() => {
-    console.log('useEffect')
     const subscription = observable.subscribe(
       value => {
-        console.log(value)
         onNext && onNext(value)
         setValue(value)
       },

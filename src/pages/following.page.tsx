@@ -1,48 +1,28 @@
-import React from 'react'
-import { Subscription } from 'rxjs'
+import React, { useState } from 'react'
 import { map } from 'rxjs/operators'
 import styled from 'styled-components'
 import { FollowingComponent } from '../components/following'
-import { Episode, Show } from '../model'
 import { shark } from '../utils/colors'
 import { episodesToWatch$ } from '../utils/firebase/selectors'
 import { sortShowsAfterEpisodesAirDate } from '../utils/firebase/util'
+import { useObservable } from '../utils/use-observable'
 import { SpinnerPage } from './spinner.page'
 
-type ComState = {
-  shows: { show: Show; episodes: Episode[] }[]
-  loading: boolean
+export const FollowingPage = () => {
+  const [loading, setLoading] = useState(true)
+  const shows = useObservable($shows, [], () => setLoading(false))
+  return loading ? (
+    <SpinnerPage />
+  ) : (
+    <Wrapper>
+      <FollowingComponent following={shows} />
+    </Wrapper>
+  )
 }
 
-export class FollowingPage extends React.Component<{}, ComState> {
-  private subscribtion: Subscription
-  state = {
-    shows: [],
-    loading: true
-  } as ComState
-
-  componentDidMount() {
-    this.subscribtion = episodesToWatch$
-      .pipe(map(data => sortShowsAfterEpisodesAirDate(data)))
-      .subscribe(shows => {
-        this.setState({ shows, loading: false })
-      })
-  }
-
-  componentWillUnmount() {
-    this.subscribtion.unsubscribe()
-  }
-
-  render() {
-    return this.state.loading ? (
-      <SpinnerPage />
-    ) : (
-      <Wrapper>
-        <FollowingComponent following={this.state.shows} />
-      </Wrapper>
-    )
-  }
-}
+const $shows = episodesToWatch$.pipe(
+  map(data => sortShowsAfterEpisodesAirDate(data))
+)
 
 const Wrapper = styled.div`
   background-color: ${shark};
