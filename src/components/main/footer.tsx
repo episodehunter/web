@@ -12,7 +12,7 @@ type Props = {
 const FooterComponent = ({ navigate }: Props) => (
   <FooterWrapper>
     <FooterItem onClick={() => navigate(Routes.about)}>
-      ©EpisodeHunter 2018
+      ©EpisodeHunter 2019
     </FooterItem>
     <FooterItem onClick={() => navigate(Routes.privacy)}>
       Privacy Policy
@@ -21,7 +21,6 @@ const FooterComponent = ({ navigate }: Props) => (
       Terms of Service
     </FooterItem>
     <FooterItem onClick={() => navigate(Routes.kodi)}>Kodi</FooterItem>
-    <FooterItem onClick={() => navigate(Routes.plex)}>Plex</FooterItem>
     <FooterItem onClick={() => goToGithub()}>Github</FooterItem>
   </FooterWrapper>
 )
