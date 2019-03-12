@@ -1,34 +1,30 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Episode, ShowAndUpcomingEpisodes } from '../model';
-import { media } from '../styles/media-queries';
-import { ddmmm } from '../utils/date.utils';
-import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card';
+import React from 'react'
+import styled from 'styled-components'
+import { PublicTypes } from '../data-loader/public-types'
+import { ShowAndEpisode } from '../store/upcoming-episodes.store'
+import { media } from '../styles/media-queries'
+import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
 
 type Props = {
   title: string
-  shows: ShowAndUpcomingEpisodes[]
-  extractEpisode: (show: ShowAndUpcomingEpisodes) => Episode | null
+  showsWithEpisode: ShowAndEpisode[]
 }
 
-export const Upcoming = ({ title, shows, extractEpisode }: Props) => {
-  if (!shows.length) {
+export const Upcoming = ({ title, showsWithEpisode }: Props) => {
+  if (!showsWithEpisode.length) {
     return null
   }
   return (
     <UpcomingWrapper>
       <Timespan>{title}</Timespan>
       <ShowsWrapper>
-        {shows.map(show => (
+        {showsWithEpisode.map(({ show, episode }) => (
           <UpcomingEpisodeCard
-            key={show.show.ids.id}
-            episodeAirDate={formatEpisodeAirDate(
-              show.show.ended,
-              extractEpisode(show)
-            )}
-            showId={show.show.ids.id}
-            tvdbId={show.show.ids.tvdb}
-            showName={show.show.name}
+            key={show.data.ids.id}
+            episodeAirDate={formatEpisodeAirDate(show.data.ended, episode)}
+            showId={show.data.ids.id}
+            tvdbId={show.data.ids.tvdb}
+            showName={show.data.name}
           />
         ))}
       </ShowsWrapper>
@@ -36,12 +32,9 @@ export const Upcoming = ({ title, shows, extractEpisode }: Props) => {
   )
 }
 
-export const formatEpisodeAirDate = (
-  ended: boolean,
-  episode: Episode | null
-) => {
+export const formatEpisodeAirDate = (ended: boolean, episode?: PublicTypes.UpcomingEpisode) => {
   if (episode) {
-    return ddmmm(episode.aired)
+    return episode.aired
   } else if (ended) {
     return 'Ended'
   } else {

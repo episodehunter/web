@@ -1,59 +1,44 @@
-import { createRouter } from '@vieriksson/the-react-router'
-import React from 'react'
-import { of } from 'rxjs'
-import { mapTo, switchMap } from 'rxjs/operators'
+import { createRouter, routerEvents } from '@vieriksson/the-react-router'
+import React, { useEffect, useState } from 'react'
 import { routes } from './components/router'
-import { AuthenticatedState } from './enum'
+import { createLoaders, createRouteResolver } from './data-loader'
+import { GlobalContext, GlobalContextProvider } from './global-context'
 import { SpinnerPage } from './pages/spinner.page'
-import { setUser, UserProvider } from './store'
-import { authenticated$, authStateChange$ } from './utils/auth.util'
-import { followingIds$ } from './utils/firebase/selectors'
-import { updateLocalUserMetadata } from './utils/firebase/util'
+import { UserProvider } from './store'
+import { RootSore } from './store/root-store'
+import { auth, authStateChange$ } from './utils/auth.util'
 
 const Router = createRouter(routes)
 
-export class App extends React.Component {
-  state = {
-    showSpinner: true
-  }
+const rootStore = new RootSore()
+const loaders = createLoaders(rootStore, auth.getIdToken)
+const rootResolver = createRouteResolver(loaders)
+;(window as any).oskar = loaders
 
-  constructor(props: any, context: any) {
-    super(props, context)
+const globalContext: GlobalContext = {
+  rootStore,
+  loaders
+}
 
-    // Hide spinner when the user is authenticated and we have fetched the
-    // following show list or the user is not authenticated (and we will
-    // redirect her to login)
-    authenticated$
-      .pipe(
-        switchMap(authenticatedState => {
-          if (authenticatedState === AuthenticatedState.authenticated) {
-            return followingIds$.pipe(mapTo(false))
-          }
-          return of(false)
-        })
-      )
-      .subscribe(showSpinner => {
-        this.setState({ showSpinner })
-      })
+routerEvents.addListener(event => rootResolver(event.url))
 
-    authStateChange$.subscribe(currentUser => setUser({ currentUser }))
-
-    // Load the data when the user is authenticated
-    authenticated$.subscribe(state => {
-      if (state === AuthenticatedState.authenticated) {
-        updateLocalUserMetadata()
-      }
+export function App() {
+  const [showSpinner, setShowSpinner] = useState(true)
+  useEffect(() => {
+    authStateChange$.subscribe(currentUser => {
+      globalContext.rootStore.user.setUser(currentUser)
+      setShowSpinner(false)
     })
-  }
+  }, [])
 
-  render() {
-    if (this.state.showSpinner) {
-      return <SpinnerPage />
-    }
-    return (
+  if (showSpinner) {
+    return <SpinnerPage />
+  }
+  return (
+    <GlobalContextProvider value={globalContext}>
       <UserProvider>
         <Router />
       </UserProvider>
-    )
-  }
+    </GlobalContextProvider>
+  )
 }

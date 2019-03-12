@@ -3,7 +3,7 @@ import { auth } from '../utils/auth.util'
 import { HistoryResponse } from './responses'
 
 export const apiClient = {
-  getHistory(): Promise<HistoryResponse> {
+  getHistory(): Promise<HistoryResponse[]> {
     return auth.getIdToken().then(token =>
       fetch(apiUrl + 'history', {
         headers: { Authorization: 'bearer ' + token }

@@ -11,14 +11,12 @@ import {
 
 export const yyyymmdd = (date: Date) => date.toISOString().slice(0, 10)
 
-export const isValid = (date: Date | null): date is Date =>
-  Boolean(date && isValidDate(date))
+export const isValid = (date: Date | null): date is Date => Boolean(date && isValidDate(date))
 
 export const format = (date: Date | null, dateFormat: string) =>
   isValid(date) ? fromatDate(date, dateFormat) : ''
 
-export const ddmmm = (date: Date): string =>
-  format(date, 'D MMMM').toUpperCase()
+export const ddmmm = (date: Date): string => format(date, 'D MMMM').toUpperCase()
 
 export const now = () => new Date()
 export type Now = typeof now
@@ -28,8 +26,8 @@ export type Today = typeof today
 
 export const daysFrom = (days: number, from: Date) => addDays(from, days)
 
-export const isSameDayOrAfter = (date: Date, dateToCompare: Now) =>
-  isAfter(date, addDays(dateToCompare(), -1))
+export const isSameDayOrAfter = (date: Date, dateToCompare: Date) =>
+  isAfter(date, addDays(dateToCompare, -1))
 
 export const isBeforeDaysFrom = (days: number, from: Date) => {
   const daysFromNow = daysFrom(days, from)
