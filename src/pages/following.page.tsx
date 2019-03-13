@@ -1,28 +1,23 @@
-import React, { useState } from 'react'
-import { map } from 'rxjs/operators'
+import { observer } from 'mobx-react-lite'
+import React from 'react'
 import styled from 'styled-components'
-import { FollowingComponent } from '../components/following'
+import { Following } from '../components/following'
+import { useWhatToWatch } from '../global-context'
 import { shark } from '../utils/colors'
-import { episodesToWatch$ } from '../utils/firebase/selectors'
-import { sortShowsAfterEpisodesAirDate } from '../utils/firebase/util'
-import { useObservable } from '../utils/use-observable'
 import { SpinnerPage } from './spinner.page'
 
-export const FollowingPage = () => {
-  const [loading, setLoading] = useState(true)
-  const shows = useObservable($shows, [], () => setLoading(false))
-  return loading ? (
-    <SpinnerPage />
-  ) : (
+export const FollowingPage = observer(() => {
+  const whatToWatch = useWhatToWatch()
+
+  if (whatToWatch.loadingState.isLoading()) {
+    return <SpinnerPage />
+  }
+  return (
     <Wrapper>
-      <FollowingComponent following={shows} />
+      <Following following={whatToWatch.whatToWatch} />
     </Wrapper>
   )
-}
-
-const $shows = episodesToWatch$.pipe(
-  map(data => sortShowsAfterEpisodesAirDate(data))
-)
+})
 
 const Wrapper = styled.div`
   background-color: ${shark};

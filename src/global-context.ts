@@ -20,3 +20,4 @@ const hookCreator = <T>(map: (gc: GlobalContext) => T) => (): T => {
 export const useRootStore = hookCreator(g => g.rootStore)
 export const useUser = hookCreator(g => g.rootStore.user)
 export const useUpcomingEpisodes = hookCreator(g => g.rootStore.upcomingEpisodes)
+export const useWhatToWatch = hookCreator(g => g.rootStore.whatToWatch)

@@ -1,5 +1,5 @@
-import { RootSore } from '../store/root-store'
-import { createFetcher } from './fetcher'
+import { RootSore } from '../../store/root-store'
+import { createFetcher } from '../fetcher'
 import { createUpcomingLoader } from './upcoming.loader'
 import { createUserLoader } from './user.loader'
 

@@ -1,26 +1,29 @@
-import { withNavigation } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
-import { Episode, Show } from '../model'
+import { Show } from '../store/show.store'
 import { media } from '../styles/media-queries'
 import { ShowCard } from './show-card/show-card'
+import { H1 } from './text'
 
 type Props = {
-  following: { show: Show; episodes: Episode[] }[]
+  following: { show: Show; numberOfEpisodesToWatch: number }[]
 }
 
-const Following = ({ following }: Props) => (
-  <FollowingWrapper>
-    {following.map(({ show, episodes }) => (
-      <ShowCard
-        key={show.ids.id}
-        showId={show.ids.id}
-        tvdbId={show.ids.tvdb}
-        topRight={show.name}
-        bottomRight={episodeLeftText(episodes.length)}
-      />
-    ))}
-  </FollowingWrapper>
+export const Following = ({ following }: Props) => (
+  <Wrapper>
+    <H1>Following</H1>
+    <FollowingWrapper>
+      {following.map(({ show, numberOfEpisodesToWatch }) => (
+        <ShowCard
+          key={show.data.ids.id}
+          showId={show.data.ids.id}
+          tvdbId={show.data.ids.tvdb}
+          topRight={show.data.name}
+          bottomRight={episodeLeftText(numberOfEpisodesToWatch)}
+        />
+      ))}
+    </FollowingWrapper>
+  </Wrapper>
 )
 
 export const episodeLeftText = (n: number) => {
@@ -30,16 +33,17 @@ export const episodeLeftText = (n: number) => {
   return `You have ${n} episodes left`
 }
 
-export const FollowingComponent = withNavigation(Following)
-
 const FollowingWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  ${media.giant`width: 80%;`};
-  ${media.desktop`width: 80%;`};
-  ${media.tablet`width: 90%;`};
   ${media.mobile`
     grid-template-columns: 1fr;
   `};
+`
+
+const Wrapper = styled.div`
+  ${media.giant`width: 80%;`};
+  ${media.desktop`width: 80%;`};
+  ${media.tablet`width: 90%;`};
   width: 95%;
 `

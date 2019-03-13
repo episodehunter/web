@@ -1,13 +1,16 @@
-import React from 'react';
-import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime, filter, scan } from 'rxjs/operators';
-import styled from 'styled-components';
-import SearchWorker from 'worker-loader!../web-worker/search';
-import { Title } from '../model/title';
-import { media } from '../styles/media-queries';
-import { alabaster, shark } from '../utils/colors';
-import { SmallShowFanart } from './fanart/small-show-fanart';
-import { PosterCard } from './poster-cards/poster-card';
+import React from 'react'
+import { fromEvent, Subscription } from 'rxjs'
+import { debounceTime, filter, scan } from 'rxjs/operators'
+import styled from 'styled-components'
+import SearchWorker from 'worker-loader!../web-worker/search'
+import { Title } from '../model/title'
+import { media } from '../styles/media-queries'
+import { alabaster, shark } from '../utils/colors'
+import { SmallShowFanart } from './fanart/small-show-fanart'
+import { PosterCard } from './poster-cards/poster-card'
+
+// Move this
+const searchWorker = new SearchWorker()
 
 export class SearchComponent extends React.Component {
   state = {
@@ -16,41 +19,41 @@ export class SearchComponent extends React.Component {
     result: [] as Title[]
   }
   subscriptions: Subscription[] = []
-  searchWorker = new SearchWorker()
 
   componentDidMount() {
-    (window as any).showSearchBar = () => this.openSearchBar();
+    ;(window as any).showSearchBar = () => this.openSearchBar()
     const keypress$ = fromEvent<KeyboardEvent>(document, 'keypress')
 
     this.subscriptions.push(
-      keypress$.pipe(filter(keyEvent => keyIsEscape(keyEvent.key))).subscribe(() => this.closeSearchBar())
+      keypress$
+        .pipe(filter(keyEvent => keyIsEscape(keyEvent.key)))
+        .subscribe(() => this.closeSearchBar())
     )
 
     this.subscriptions.push(
-      keypress$.pipe(
-        filter((key: any) =>
-          key.target &&
-          key.target.nodeName &&
-          key.target.nodeName.toLowerCase() !== 'input'
-        ),
-        scan((acc, curr: any) => acc + curr.key, ''),
-        filter(tot => tot.length > 2),
-        debounceTime(50)
-      )
-      .subscribe(text => {
-        this.openSearchBar()
-        this.setSearchString(text)
-      })
+      keypress$
+        .pipe(
+          filter(
+            (key: any) =>
+              key.target && key.target.nodeName && key.target.nodeName.toLowerCase() !== 'input'
+          ),
+          scan((acc, curr: any) => acc + curr.key, ''),
+          filter(tot => tot.length > 2),
+          debounceTime(50)
+        )
+        .subscribe(text => {
+          this.openSearchBar()
+          this.setSearchString(text)
+        })
     )
 
-    this.searchWorker.addEventListener('message', this.updateSearchResult)
+    searchWorker.addEventListener('message', this.updateSearchResult)
   }
 
   componentWillUnmount() {
     this.subscriptions.forEach(s => s.unsubscribe())
-    this.searchWorker.removeEventListener('message', this.updateSearchResult)
+    searchWorker.removeEventListener('message', this.updateSearchResult)
   }
-
 
   closeSearchBar() {
     this.setState({ showSearchBar: false })
@@ -62,18 +65,15 @@ export class SearchComponent extends React.Component {
 
   setSearchString(searchString: string) {
     this.setState({ searchString })
-    this.search(searchString);
+    this.search(searchString)
   }
 
   search = debounce((searchString: string) => {
-    this.searchWorker.postMessage(searchString)
+    searchWorker.postMessage(searchString)
   }, 200)
 
-  updateSearchResult = (event: { data: { result: Title[] } }) => this.setState({ result: event.data.result })
-
-  // onPress(event: React.MouseEvent<HTMLElement>) {
-  //   event.preventDefault()
-  // }
+  updateSearchResult = (event: { data: { result: Title[] } }) =>
+    this.setState({ result: event.data.result })
 
   preventEvent(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault()
@@ -83,7 +83,7 @@ export class SearchComponent extends React.Component {
   render() {
     const { showSearchBar, searchString, result } = this.state
     let r = result
-    console.log('result: ', r);
+    console.log('result: ', r)
     return showSearchBar ? (
       <OverlayWrapper onClick={() => this.closeSearchBar()}>
         <Wrapper>

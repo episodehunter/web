@@ -10,8 +10,7 @@ const headLine = css`
 
 const addMargin = ({ margin }: { margin?: number | string }) =>
   margin != null ? `margin: ${margin}` : ''
-const addCenter = ({ center }: { center?: boolean }) =>
-  center ? `text-align: center` : ''
+const addCenter = ({ center }: { center?: boolean }) => (center ? `text-align: center` : '')
 
 export const H1 = styled.h1`
   ${headLine};
