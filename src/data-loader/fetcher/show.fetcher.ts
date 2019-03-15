@@ -28,7 +28,7 @@ function createQuery(id: string) {
 
 export const createShowFetcher = (client: Client) => ({
   async fetchShow(ids: string[]) {
-    const query = ids.map(createQuery).join('\r\n')
+    const query = '{' + ids.map(createQuery).join('\r\n') + '}'
     const result = await client<{ [key: string]: PublicTypes.Show }>(query)
     return Object.values(result)
   }

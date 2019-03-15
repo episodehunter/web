@@ -10,6 +10,7 @@ import {
 } from 'date-fns'
 
 export const yyyymmdd = (date: Date) => date.toISOString().slice(0, 10)
+export const time = (date: Date) => format(date, 'HH:mm')
 
 export const isValid = (date: Date | null): date is Date => Boolean(date && isValidDate(date))
 

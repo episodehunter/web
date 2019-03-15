@@ -3,8 +3,8 @@ import { Fetcher } from '../fetcher'
 import { PublicTypes } from '../public-types'
 
 export const createUserLoader = (
-  { following, whatToWatch, shows }: RootSore,
-  { userFetcher, showFetcher }: Fetcher
+  { following, whatToWatch, shows, historyPage }: RootSore,
+  { userFetcher, showFetcher, historyFetcher }: Fetcher
 ) => ({
   async loadFolloingShowsIds() {
     if (following.loadingState.hasLoaded()) {
@@ -41,5 +41,17 @@ export const createUserLoader = (
 
     whatToWatch.loadingState.setLoaded()
     return whatToWatch.data
+  },
+  async loadHistoryPage(page: number) {
+    if (historyPage.loadingState.isLoading()) {
+      return historyPage.history
+    } else if (historyPage.loadingState.hasLoaded()) {
+      historyPage.loadingState.setUpdating()
+    } else {
+      historyPage.loadingState.setLoading()
+    }
+    const history = await historyFetcher.fetchHistoryPage(page)
+    historyPage.addHistory(page, history)
+    historyPage.loadingState.setLoaded()
   }
 })

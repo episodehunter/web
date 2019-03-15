@@ -26,6 +26,10 @@ class LoadingState {
     this.loadingState = LoadingStateType.Loaded
   }
 
+  setUpdating() {
+    this.loadingState = LoadingStateType.Updating
+  }
+
   hasLoaded() {
     return this.loadingState === LoadingStateType.Loaded
   }

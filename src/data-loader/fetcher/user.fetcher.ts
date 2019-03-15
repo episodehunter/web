@@ -10,12 +10,12 @@ const createWhatToWatchQuery = (id: string) => {
 
 export const createUserFetcher = (client: Client) => ({
   async fetchFolloingList() {
-    return client<{ following: PublicTypes.FollowingList }>(`following`).then(
+    return client<{ following: PublicTypes.FollowingList }>(`{ following }`).then(
       result => result.following
     )
   },
   async fetchWhatToWatch(showIds: string[]) {
-    const query = showIds.map(createWhatToWatchQuery).join('\r\n')
+    const query = '{' + showIds.map(createWhatToWatchQuery).join('\r\n') + '}'
     const result = await client<{ [key: string]: [PublicTypes.WhatToWatch] }>(query)
     return Object.values(result).map(r => r[0])
   }

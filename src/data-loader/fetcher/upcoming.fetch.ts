@@ -5,7 +5,7 @@ export const createUpcomingFetcher = (client: Client) => ({
   async fetchUpcomingEpisodes(showIds: string[]) {
     const ids = '"' + showIds.join('", "') + '"'
     return client<{ upcomingEpisode: PublicTypes.UpcomingEpisodesWithShowId[] }>(
-      `upcomingEpisode(showIds: [${ids}]) {
+      `{upcomingEpisode(showIds: [${ids}]) {
   showId
   episodes {
     aired
@@ -14,7 +14,7 @@ export const createUpcomingFetcher = (client: Client) => ({
     episode
     tvdbId
   }
-}
+}}
 `
     ).then(result => result.upcomingEpisode)
   }

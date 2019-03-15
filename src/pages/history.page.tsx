@@ -1,41 +1,52 @@
-// import * as React from 'react'
-// import styled from 'styled-components'
-// import { apiClient } from '../api/api'
-// import { EpisodeImage } from '../components/episode/episode-image'
-// import { H3, P2 } from '../components/text'
-// // import { ModelStatus } from '../enum'
-// import { media } from '../styles/media-queries'
-// import { shark } from '../utils/colors'
-// import { useApiOnMount } from '../utils/use-api-on-mount'
-// // import { time } from '../utils/date.utils'
-// import { SpinnerPage } from './spinner.page'
+import { observer } from 'mobx-react-lite'
+import React from 'react'
+import styled from 'styled-components'
+import { BottomTextWrapper } from '../components/episode/bottom-text-wrapper'
+import { EpisodeImage } from '../components/episode/episode-image'
+import { H1, H3, P2 } from '../components/text'
+import { useHistoryPage } from '../global-context'
+import { media } from '../styles/media-queries'
+import { shark } from '../utils/colors'
+import { time } from '../utils/date.utils'
+import { composeSeasonAndEpisodeNumber } from '../utils/episode.util'
+import { SpinnerPage } from './spinner.page'
 
-// type Props = {
-//   // history: HistoryStore
-// }
+export const HistoryPage = observer(() => {
+  const historyPageStore = useHistoryPage()
 
-// function HistoryPage() {
-//   const historys = useApiOnMount(() => apiClient.getHistory(), undefined)
+  if (historyPageStore.loadingState.isLoading()) {
+    return <SpinnerPage />
+  }
 
-//   if (!historys) {
-//     return <SpinnerPage />
-//   }
-//   const episodesSections = historys.map(history => (
-//     <React.Fragment key={date}>
-//       <H3>{date}</H3>
-//       <EpisodeGrid>
-//         {episodes.map((episode, index) => (
-//           <EpisodeImage tvdbId={episode.tvdbId} key={index}>
-//             <P2 margin={0}>
-//               {episode.seasonAndEpisodeNumber} {episode.name}
-//             </P2>
-//             <P2 margin={0}>{time(episode.time)}</P2>
-//           </EpisodeImage>
-//         ))}
-//       </EpisodeGrid>
-//     </React.Fragment>
-//   ))
-// }
+  const episodesSections = historyPageStore.groupedHistory.map(([dateString, history]) => (
+    <React.Fragment key={dateString}>
+      <H3>{dateString}</H3>
+      <EpisodeGrid>
+        {history.map((h, index) => (
+          <EpisodeImage tvdbId={h.episode.tvdbId} key={index}>
+            <BottomTextWrapper>
+              <P2 margin={0}>
+                {composeSeasonAndEpisodeNumber(h.watchedEpisode.season, h.watchedEpisode.episode)}{' '}
+                {h.episode.name}
+              </P2>
+              <P2 margin={0}>{time(h.watchedEpisode.time)}</P2>
+            </BottomTextWrapper>
+          </EpisodeImage>
+        ))}
+      </EpisodeGrid>
+    </React.Fragment>
+  ))
+  return (
+    <Wrapper>
+      <InnerWarpper>
+        <>
+          <H1>History</H1>
+          {episodesSections}
+        </>
+      </InnerWarpper>
+    </Wrapper>
+  )
+})
 
 // export class HistoryPageComponent extends React.Component<Props> {
 //   componentDidMount() {}
@@ -74,31 +85,28 @@
 //     )
 //   }
 // }
-// export const HistoryPage = inject('history')(observer(HistoryPageComponent))
 
-// const EpisodeGrid = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(6, 1fr);
-//   grid-column-gap: 20px;
-// `
+const EpisodeGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column-gap: 20px;
+`
 
-// const Wrapper = styled.div`
-//   padding-top: 70px;
-//   background-color: ${shark};
-//   display: flex;
-//   justify-content: center;
-// `
+const Wrapper = styled.div`
+  padding-top: 70px;
+  background-color: ${shark};
+  display: flex;
+  justify-content: center;
+`
 
-// const InnerWarpper = styled.div`
-//   ${media.giant`width: 80%;`};
-//   ${media.desktop`width: 80%;`};
-//   ${media.tablet`width: 90%;`};
-//   width: 95%;
-// `
+const InnerWarpper = styled.div`
+  ${media.giant`width: 80%;`};
+  ${media.desktop`width: 80%;`};
+  ${media.tablet`width: 90%;`};
+  width: 95%;
+`
 
 // const Loading = styled.div`
 //   text-align: center;
 //   margin-top: 100px;
 // `
-
-export const HistoryPage = () => null

@@ -10,6 +10,9 @@ export function createRouteResolver(loaders: Loaders) {
       case '/following':
         loaders.userLoader.loadWhatToWatch()
         break
+      case '/history':
+        loaders.userLoader.loadHistoryPage(0)
+        break
       default:
         break
     }

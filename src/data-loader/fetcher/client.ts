@@ -9,7 +9,7 @@ export const createClient = (getIdToken: () => Promise<string>) => {
   return async <T>(query: string, variables?: Variables): Promise<T> => {
     const token = await getIdToken()
     client.setHeader('authorization', `Bearer ${token}`)
-    return client.request<T>(`{${query}}`, variables)
+    return client.request<T>(query, variables)
   }
 }
 
