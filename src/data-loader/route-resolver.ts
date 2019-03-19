@@ -1,20 +1,17 @@
+import { Routes } from '../routes'
 import { Loaders } from './loaders'
 
 export function createRouteResolver(loaders: Loaders) {
-  return (route: string) => {
+  return (route: Routes) => {
     console.log('route: ', route)
-    switch (route) {
-      case '/':
-        loaders.upcomingLoader.loadUpcoming()
-        break
-      case '/following':
-        loaders.userLoader.loadWhatToWatch()
-        break
-      case '/history':
-        loaders.userLoader.loadHistoryPage(0)
-        break
-      default:
-        break
+    if (route === Routes.upcoming) {
+      loaders.upcomingLoader.loadUpcoming()
+    } else if (route === Routes.following) {
+      loaders.userLoader.loadWhatToWatch()
+    } else if (route === Routes.history) {
+      loaders.userLoader.loadHistoryPage(0)
+    } else if (route.startsWith('/show/') && route.length > 6) {
+      loaders.showLoader.loadShowForShowPage(route.split('/show/').pop() || '')
     }
   }
 }

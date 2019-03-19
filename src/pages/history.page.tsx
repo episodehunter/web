@@ -25,12 +25,8 @@ export const HistoryPage = observer(() => {
       <H3>{dateString}</H3>
       <EpisodeGrid>
         {history.map((h, index) => (
-          <ImageWarpper onClick={() => navigate('/show/' + h.show.ids.id)}>
-            <EpisodeImage
-              tvdbId={h.episode.tvdbId}
-              key={index}
-              width={isMobile() ? '100%' : undefined}
-            >
+          <ImageWarpper key={index} onClick={() => navigate('/show/' + h.show.ids.id)}>
+            <EpisodeImage tvdbId={h.episode.tvdbId} width={isMobile() ? '100%' : undefined}>
               <BottomTextWrapper>
                 <P2 margin={0}>
                   {composeSeasonAndEpisodeNumber(h.watchedEpisode.season, h.watchedEpisode.episode)}{' '}

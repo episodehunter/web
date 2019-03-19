@@ -1,7 +1,8 @@
 import React from 'react'
 import { Subscription } from 'rxjs'
 import styled from 'styled-components'
-import { Episode, Show } from '../../model'
+import { PublicTypes } from '../../data-loader/public-types'
+import { Episode } from '../../model'
 import { now } from '../../utils/date.utils'
 import {
   numberOfEpisodesToWatchPercent,
@@ -13,7 +14,7 @@ import { Spinner } from '../spinner'
 import { H3, HighlightSpan, P2 } from '../text'
 
 type Props = {
-  show: Show
+  show: PublicTypes.Show
 }
 
 type State = {
@@ -33,18 +34,12 @@ export class Progress extends React.Component<Props, State> {
   } as State
 
   componentDidMount() {
-    this.subscription = episodesToWatchForShow$(
-      this.props.show.ids.id
-    ).subscribe(episodes => {
+    this.subscription = episodesToWatchForShow$(this.props.show.ids.id).subscribe(episodes => {
       const today = now()
       const episodesToWatch = episodes.filter(e => e.aired < today)
       const totalNumberOfEpisode = this.props.show.totalNumberOfEpisodes | 0
-      const watchableEpisodes =
-        totalNumberOfEpisode - (episodes.length - episodesToWatch.length)
-      const numberOfWatchedEpisodes = Math.max(
-        (watchableEpisodes - episodesToWatch.length) | 0,
-        0
-      )
+      const watchableEpisodes = totalNumberOfEpisode - (episodes.length - episodesToWatch.length)
+      const numberOfWatchedEpisodes = Math.max((watchableEpisodes - episodesToWatch.length) | 0, 0)
 
       this.setState({
         isLoading: false,
@@ -89,14 +84,10 @@ export class Progress extends React.Component<Props, State> {
           width="100px"
         />
         <P2 center={true}>
-          You've seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan>{' '}
-          out of <HighlightSpan>{numberOfWatchableEpisodes}</HighlightSpan>{' '}
-          episodes. <br />
+          You've seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan> out of{' '}
+          <HighlightSpan>{numberOfWatchableEpisodes}</HighlightSpan> episodes. <br />
           <HoursLeftText
-            numberOfHoursLeft={numberOfUnwatchedHoursLeft(
-              episodesToWatch.length,
-              show.runtime
-            )}
+            numberOfHoursLeft={numberOfUnwatchedHoursLeft(episodesToWatch.length, show.runtime)}
           />
         </P2>
       </ProgressWarpper>
@@ -110,8 +101,7 @@ function HoursLeftText({ numberOfHoursLeft }: { numberOfHoursLeft: number }) {
   }
   return (
     <>
-      That means you have about{' '}
-      <HighlightSpan>{numberOfHoursLeft}</HighlightSpan> hours left
+      That means you have about <HighlightSpan>{numberOfHoursLeft}</HighlightSpan> hours left
     </>
   )
 }

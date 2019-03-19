@@ -12,20 +12,21 @@ export declare namespace PublicTypes {
 
 export interface ShowType {
   airs: {
-    first?: string
-    time?: string
+    first: string | null
+    time: string | null
+    day: number | null
   }
   ended: boolean
   genre: string[]
   ids: {
     id: string
-    imdb?: string
+    imdb: string | null
     tvdb: number
   }
-  language?: string
+  language: string | null
   lastupdated: number
   name: string
-  network?: string
+  network: string | null
   numberOfFollowers: number
   overview: string
   runtime: number

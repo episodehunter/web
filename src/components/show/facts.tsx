@@ -1,29 +1,19 @@
-import { parse } from 'date-fns';
-import React from 'react';
-import { Show } from '../../model';
-import { safeJoin } from '../../utils/array.util';
-import { format } from '../../utils/date.utils';
-import { safeStringConvertion } from '../../utils/string.util';
-import { HighlightSpan, P2 } from '../text';
+import React from 'react'
+import { PublicTypes } from '../../data-loader/public-types'
+import { safeJoin } from '../../utils/array.util'
+import { formatFromString } from '../../utils/date.utils'
+import { safeStringConvertion } from '../../utils/string.util'
+import { HighlightSpan, P2 } from '../text'
 
-export const Facts = ({ show }: { show: Show }) => (
+export const Facts = ({ show }: { show: PublicTypes.Show }) => (
   <ul style={{ listStyle: 'none', padding: 0 }}>
-    <FactLine
-      headline="Airs"
-      info={buildAirsString(show.airs.day, show.airs.time, show.network)}
-    />
-    <FactLine
-      headline="Premiered"
-      info={format(parse(show.airs.first), 'Do MMM -YY')}
-    />
+    <FactLine headline="Airs" info={buildAirsString(show.airs.day, show.airs.time, show.network)} />
+    <FactLine headline="Premiered" info={formatFromString(show.airs.first, 'Do MMM -YY')} />
     <FactLine headline="Language" info={safeStringConvertion(show.language)} />
     <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
     <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
     <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
-    <FactLine
-      headline="Followers"
-      info={safeStringConvertion(show.numberOfFollowers)}
-    />
+    <FactLine headline="Followers" info={safeStringConvertion(show.numberOfFollowers)} />
   </ul>
 )
 
@@ -46,12 +36,24 @@ const dayOfWeekString = [
 ]
 
 const buildAirsString = (
-  dayOfWeek: number,
-  airsTime: string,
-  network: string
+  dayOfWeek: number | null,
+  airsTime: string | null,
+  network: string | null
 ) => {
-  const airsDayOfWeek = dayOfWeekString[dayOfWeek]
-  return Boolean(airsDayOfWeek && airsTime && network)
-    ? `${airsDayOfWeek} at ${airsTime} on ${network}`
-    : ''
+  if (dayOfWeek && airsTime && network) {
+    const airsDayOfWeek = dayOfWeekString[dayOfWeek]
+    return `${airsDayOfWeek} at ${airsTime} on ${network}`
+  } else if (airsTime && network) {
+    return `${airsTime} on ${network}`
+  } else if (dayOfWeek && airsTime) {
+    const airsDayOfWeek = dayOfWeekString[dayOfWeek]
+    return `${airsDayOfWeek} at ${airsTime}`
+  } else if (dayOfWeek && network) {
+    const airsDayOfWeek = dayOfWeekString[dayOfWeek]
+    return `${airsDayOfWeek} on ${network}`
+  } else if (network) {
+    return `on ${network}`
+  } else {
+    return ''
+  }
 }

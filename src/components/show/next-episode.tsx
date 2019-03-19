@@ -1,6 +1,7 @@
 import React from 'react'
 import { Subscription } from 'rxjs'
-import { Episode, Show } from '../../model'
+import { PublicTypes } from '../../data-loader/public-types'
+import { Episode } from '../../model'
 import { dateReleaseFormat, now } from '../../utils/date.utils'
 import { composeSeasonAndEpisodeNumber } from '../../utils/episode.util'
 import { nextEpisodeToWatch$ } from '../../utils/firebase/selectors'
@@ -10,7 +11,7 @@ import { Spinner } from '../spinner'
 import { H3, P2 } from '../text'
 
 type Props = {
-  show: Show
+  show: PublicTypes.Show
 }
 
 type State = {
@@ -26,11 +27,9 @@ export class NextEpisode extends React.Component<Props, State> {
   } as State
 
   componentDidMount() {
-    this.subscription = nextEpisodeToWatch$(this.props.show.ids.id).subscribe(
-      episode => {
-        this.setState({ episode, loading: false })
-      }
-    )
+    this.subscription = nextEpisodeToWatch$(this.props.show.ids.id).subscribe(episode => {
+      this.setState({ episode, loading: false })
+    })
   }
 
   componentWillUnmount() {
@@ -58,8 +57,7 @@ export class NextEpisode extends React.Component<Props, State> {
         <EpisodeImage tvdbId={episode.tvdbId}>
           <BottomTextWrapper>
             <P2 margin={0}>
-              {composeSeasonAndEpisodeNumber(episode.season, episode.episode)}{' '}
-              {episode.name}
+              {composeSeasonAndEpisodeNumber(episode.season, episode.episode)} {episode.name}
             </P2>
             <P2 margin={0}>
               {dateReleaseFormat(

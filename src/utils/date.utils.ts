@@ -6,6 +6,7 @@ import {
   isAfter,
   isBefore,
   isValid as isValidDate,
+  parse,
   startOfToday
 } from 'date-fns'
 
@@ -16,6 +17,14 @@ export const isValid = (date: Date | null): date is Date => Boolean(date && isVa
 
 export const format = (date: Date | null, dateFormat: string) =>
   isValid(date) ? fromatDate(date, dateFormat) : ''
+
+export const formatFromString = (dateString: string | null, dateFormat: string) => {
+  if (typeof dateString !== 'string') {
+    return ''
+  }
+  const date = parse(dateString)
+  return isValid(date) ? fromatDate(date, dateFormat) : ''
+}
 
 export const ddmmm = (date: Date): string => format(date, 'D MMMM').toUpperCase()
 
