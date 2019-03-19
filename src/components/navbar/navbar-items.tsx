@@ -1,5 +1,6 @@
 import { Navigate } from '@vieriksson/the-react-router'
 import React from 'react'
+import { useSearch } from '../../global-context'
 import { Routes } from '../../routes'
 import { auth } from '../../utils/auth.util'
 import { NavbarItem } from './navbar-item'
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export const NavbarItems = ({ navigate, stateUrl }: Props) => {
+  const searchStore = useSearch()
   return (
     <>
       <NavbarItem
@@ -32,7 +34,7 @@ export const NavbarItems = ({ navigate, stateUrl }: Props) => {
       <NavbarItem
         title="Search"
         selected={isPathEqual(Routes.search, stateUrl)}
-        onClick={() => (window as any).showSearchBar()}
+        onClick={() => searchStore.openSearchBar()}
       />
       <NavbarItemWithSubItems
         header={'Settings'}
@@ -55,5 +57,4 @@ export const NavbarItems = ({ navigate, stateUrl }: Props) => {
   )
 }
 
-const isPathEqual = (urlPath: string, statePath: string) =>
-  urlPath === statePath
+const isPathEqual = (urlPath: string, statePath: string) => urlPath === statePath

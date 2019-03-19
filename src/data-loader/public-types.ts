@@ -7,6 +7,7 @@ export declare namespace PublicTypes {
   interface UpcomingEpisodesWithShowId extends UpcomingEpisodesWithShowIdType {}
   interface UpcomingEpisode extends UpcomingEpisodeType {}
   interface History extends HistoryType {}
+  interface Title extends TitleType {}
 }
 
 export interface ShowType {
@@ -77,4 +78,11 @@ export interface HistoryType {
   watchedEpisode: WatchedEpisodeType
   show: Pick<ShowType, 'ids' | 'name'>
   episode: Pick<EpisodeType, 'name' | 'tvdbId'>
+}
+
+interface TitleType {
+  id: string
+  followers: number
+  name: string
+  tvdbId: number
 }

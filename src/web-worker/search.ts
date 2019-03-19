@@ -1,11 +1,7 @@
 import Fuse, { FuseOptions } from 'fuse.js'
-
-type Title = {
-  id: string
-  followers: number
-  name: string
-  tvdbId: number
-}
+import { request } from 'graphql-request'
+import { dragonstoneUrl } from '../config'
+import { PublicTypes } from '../data-loader/public-types'
 
 enum FetchStatus {
   NotStarted,
@@ -28,28 +24,34 @@ const returnData = (data: any) => {
 
 let fetchStatus = FetchStatus.Started
 
-const fuseP: Promise<Fuse<{ item: Title; score: number }>> = fetch(
-  'https://us-central1-newagent-dc3d1.cloudfunctions.net/fn/titles'
+const fetchingFuse = request<{ titles: PublicTypes.Title[] }>(
+  dragonstoneUrl,
+  `{
+    titles {
+      id
+      name
+      followers
+      tvdbId
+    }
+  }`
 )
-  .then(result => {
-    fetchStatus = FetchStatus.Completed
-    return result.json()
+  .then(result => result.titles)
+  .then(titles => new Fuse<{ item: PublicTypes.Title; score: number }>(titles as any, fuseOptions))
+  .catch(error => {
+    console.error(error)
+    return new Fuse<{ item: PublicTypes.Title; score: number }>([], fuseOptions)
   })
-  .then(titles => new Fuse(titles, fuseOptions))
 
-function search(
-  fuse: Fuse<{ item: Title; score: number }>,
-  searchWord: string
-) {
+function search(fuse: Fuse<{ item: PublicTypes.Title; score: number }>, searchWord: string) {
   return fuse
     .search(searchWord)
     .map(searchResult => {
-      searchResult.score =
-        (1 - searchResult.score) * searchResult.item.followers
+      searchResult.score = (1 - searchResult.score) * searchResult.item.followers
       return searchResult
     })
     .sort((a, b) => b.score - a.score)
     .map(a => a.item)
+    .slice(0, 20)
 }
 
 let currectSearchWord = ''
@@ -64,7 +66,7 @@ self.addEventListener('message', async event => {
 
   currectSearchWord = event.data
 
-  const fuse = await fuseP
+  const fuse = await fetchingFuse
   if (currectSearchWord) {
     const result = search(fuse, currectSearchWord)
     returnData({

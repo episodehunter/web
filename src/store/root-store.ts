@@ -1,5 +1,6 @@
 import { Following } from './following.store'
 import { HistoryPage } from './history-page.store'
+import { Search } from './search.store'
 import { Shows } from './shows.store'
 import { UpcomingEpisodes } from './upcoming-episodes.store'
 import { User } from './user.store'
@@ -12,4 +13,5 @@ export class RootSore {
   shows = new Shows(this)
   whatToWatch = new WhatToWatch(this)
   historyPage = new HistoryPage(this)
+  search = new Search(this)
 }

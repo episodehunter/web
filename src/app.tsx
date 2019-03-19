@@ -13,7 +13,6 @@ const Router = createRouter(routes)
 const rootStore = new RootSore()
 const loaders = createLoaders(rootStore, auth.getIdToken)
 const rootResolver = createRouteResolver(loaders)
-;(window as any).oskar = loaders
 
 const globalContext: GlobalContext = {
   rootStore,
@@ -25,10 +24,15 @@ routerEvents.addListener(event => rootResolver(event.url))
 export function App() {
   const [showSpinner, setShowSpinner] = useState(true)
   useEffect(() => {
-    authStateChange$.subscribe(currentUser => {
+    const searchDispose = loaders.searchLoader.subscribe()
+    const authSubscription = authStateChange$.subscribe(currentUser => {
       globalContext.rootStore.user.setUser(currentUser)
       setShowSpinner(false)
     })
+    return () => {
+      authSubscription.unsubscribe()
+      searchDispose()
+    }
   }, [])
 
   if (showSpinner) {

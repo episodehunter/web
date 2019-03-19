@@ -1,130 +1,63 @@
-import React from 'react'
-import { fromEvent, Subscription } from 'rxjs'
-import { debounceTime, filter, scan } from 'rxjs/operators'
+import { observer } from 'mobx-react-lite'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import SearchWorker from 'worker-loader!../web-worker/search'
-import { Title } from '../model/title'
+import { useSearch, useSearchLoader } from '../global-context'
 import { media } from '../styles/media-queries'
 import { alabaster, shark } from '../utils/colors'
 import { SmallShowFanart } from './fanart/small-show-fanart'
 import { PosterCard } from './poster-cards/poster-card'
 
-// Move this
-const searchWorker = new SearchWorker()
-
-export class SearchComponent extends React.Component {
-  state = {
-    showSearchBar: false,
-    searchString: '',
-    result: [] as Title[]
-  }
-  subscriptions: Subscription[] = []
-
-  componentDidMount() {
-    ;(window as any).showSearchBar = () => this.openSearchBar()
-    const keypress$ = fromEvent<KeyboardEvent>(document, 'keypress')
-
-    this.subscriptions.push(
-      keypress$
-        .pipe(filter(keyEvent => keyIsEscape(keyEvent.key)))
-        .subscribe(() => this.closeSearchBar())
-    )
-
-    this.subscriptions.push(
-      keypress$
-        .pipe(
-          filter(
-            (key: any) =>
-              key.target && key.target.nodeName && key.target.nodeName.toLowerCase() !== 'input'
-          ),
-          scan((acc, curr: any) => acc + curr.key, ''),
-          filter(tot => tot.length > 2),
-          debounceTime(50)
-        )
-        .subscribe(text => {
-          this.openSearchBar()
-          this.setSearchString(text)
-        })
-    )
-
-    searchWorker.addEventListener('message', this.updateSearchResult)
+export const Search = observer(() => {
+  const searchStore = useSearch()
+  const searchLoader = useSearchLoader()
+  const [searchTerm, setSearchTerm] = useState('')
+  useEffect(() => {
+    const onKeyPress = (event: KeyboardEvent) => {
+      if (keyIsEscape(event.key)) {
+        searchStore.closeSearchBar()
+      }
+    }
+    document.addEventListener('keydown', onKeyPress)
+    return () => document.removeEventListener('keydown', onKeyPress)
+  }, [])
+  if (!searchStore.isSearchBarOpen) {
+    return null
   }
 
-  componentWillUnmount() {
-    this.subscriptions.forEach(s => s.unsubscribe())
-    searchWorker.removeEventListener('message', this.updateSearchResult)
-  }
-
-  closeSearchBar() {
-    this.setState({ showSearchBar: false })
-  }
-
-  openSearchBar() {
-    this.setState({ showSearchBar: true })
-  }
-
-  setSearchString(searchString: string) {
-    this.setState({ searchString })
-    this.search(searchString)
-  }
-
-  search = debounce((searchString: string) => {
-    searchWorker.postMessage(searchString)
-  }, 200)
-
-  updateSearchResult = (event: { data: { result: Title[] } }) =>
-    this.setState({ result: event.data.result })
-
-  preventEvent(event: React.MouseEvent<HTMLElement>) {
+  // TODO: Do we need this?
+  const preventEvent = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
     event.stopPropagation()
   }
 
-  render() {
-    const { showSearchBar, searchString, result } = this.state
-    let r = result
-    console.log('result: ', r)
-    return showSearchBar ? (
-      <OverlayWrapper onClick={() => this.closeSearchBar()}>
-        <Wrapper>
-          <SearchWrapper onClick={this.preventEvent}>
-            <SearchBox
-              autoFocus
-              value={searchString}
-              onChange={({ target: { value } }) => this.setSearchString(value)}
-            />
-          </SearchWrapper>
-          <ResultWrapper>
-            {r.map(title => (
-              <ResultItem key={title.id} onClick={this.preventEvent}>
-                <PosterCard
-                  linkUrl={`/show/${title.id}`}
-                  poster={<SmallShowFanart tvdbId={title.tvdbId} />}
-                  bottomRight={title.name}
-                />
-              </ResultItem>
-            ))}
-          </ResultWrapper>
-        </Wrapper>
-      </OverlayWrapper>
-    ) : (
-      <div />
-    )
+  const updateSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value)
+    searchLoader.searchDebounce(event.target.value)
   }
-}
+
+  return (
+    <OverlayWrapper onClick={() => searchStore.closeSearchBar()}>
+      <Wrapper>
+        <SearchWrapper onClick={preventEvent}>
+          <SearchBox autoFocus value={searchTerm} onChange={updateSearchTerm} />
+        </SearchWrapper>
+        <ResultWrapper>
+          {searchStore.searchResult.map(title => (
+            <ResultItem key={title.id} onClick={preventEvent}>
+              <PosterCard
+                linkUrl={`/show/${title.id}`}
+                poster={<SmallShowFanart tvdbId={title.tvdbId} />}
+                bottomRight={title.name}
+              />
+            </ResultItem>
+          ))}
+        </ResultWrapper>
+      </Wrapper>
+    </OverlayWrapper>
+  )
+})
 
 const keyIsEscape = key => key && key.toLowerCase() === 'escape'
-
-const debounce = (fn: Function, time: number) => {
-  let timeout: any
-
-  return (...args: any[]) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => fn(...args), time)
-  }
-}
-
-export const Search = SearchComponent
 
 const ResultWrapper = styled.div`
   display: grid;
