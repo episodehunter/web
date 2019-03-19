@@ -1,4 +1,4 @@
-import { Navigate, withNavigation } from '@vieriksson/the-react-router'
+import { Navigate, useNavigation } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
 import { alabaster, melrose } from '../../utils/colors'
@@ -9,26 +9,20 @@ type Props = {
   poster: JSX.Element
   topRight?: JSX.Element | string
   bottomRight?: JSX.Element | string
-  navigate: Navigate
 }
 
-const PosterCardComponent = ({
-  navigate,
-  linkUrl,
-  poster,
-  bottomRight,
-  topRight
-}: Props) => (
-  <Wrapper onClick={() => navigate(linkUrl)}>
-    {poster}
-    <InfoWrapper>
-      <TopRight>{topRight}</TopRight>
-      <BottomRight>{bottomRight}</BottomRight>
-    </InfoWrapper>
-  </Wrapper>
-)
-
-export const PosterCard = withNavigation(PosterCardComponent)
+export const PosterCard = ({ linkUrl, poster, bottomRight, topRight }: Props) => {
+  const [navigate] = useNavigation() as [Navigate]
+  return (
+    <Wrapper onClick={() => navigate(linkUrl)}>
+      {poster}
+      <InfoWrapper>
+        <TopRight>{topRight}</TopRight>
+        <BottomRight>{bottomRight}</BottomRight>
+      </InfoWrapper>
+    </Wrapper>
+  )
+}
 
 const TopRight = styled.div``
 const BottomRight = styled.div`

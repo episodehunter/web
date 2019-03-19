@@ -10,13 +10,7 @@ type Props = {
   style?: any
 }
 
-export const EpisodeImage = ({
-  tvdbId,
-  width = 250,
-  height = 140,
-  children,
-  style
-}: Props) => (
+export const EpisodeImage = ({ tvdbId, width = 250, height = 140, children, style }: Props) => (
   <>
     <LazyLoadBackgroundImage
       width={width}
