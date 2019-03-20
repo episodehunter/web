@@ -1,87 +1,62 @@
-import React from 'react';
-import { FormButton } from '../../styles/form-button';
-import { melrose } from '../../utils/colors';
-import { FloatingLabel } from '../floating-label';
-import { FormStatusMessage } from '../form-status-message';
-import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles';
-import { translateFirebaseError } from './auth.util';
+import { useNavigation } from '@vieriksson/the-react-router'
+import React, { useState } from 'react'
+import { Routes } from '../../routes'
+import { FormButton } from '../../styles/form-button'
+import { melrose } from '../../utils/colors'
+import { FloatingLabel } from '../floating-label'
+import { FormStatusMessage } from '../form-status-message'
+import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
+import { translateFirebaseError } from './auth.util'
 
-type Props = {
+export const RegisterForm = ({
+  register
+}: {
   register: (email: string, password: string) => Promise<any>
-}
+}) => {
+  const [navigate] = useNavigation()
+  const [errorMsg, setErrorMsg] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-type State = {
-  signingIn: boolean
-  errorMsg: string
-  email: string
-  password: string
-}
-
-export class RegisterForm extends React.Component<Props, State> {
-  state = {
-    signingIn: false,
-    errorMsg: '',
-    email: '',
-    password: ''
-  } as State
-
-  setEmail(email: string) {
-    this.setState({ email });
-  }
-
-  setPassword(password: string) {
-    this.setState({ password });
-  }
-
-  setErrorMessage(errorMsg: string) {
-    this.setState({ errorMsg });
-  }
-
-  setSigningIn(signingIn: boolean) {
-    this.setState({ signingIn });
-  }
-
-  register() {
-    this.setSigningIn(true)
-    this.props
-      .register(this.state.email, this.state.password)
-      .then(resp => console.log(resp))
+  const onRegister = () => {
+    setLoading(true)
+    register(email, password)
+      .then(() => {
+        navigate(Routes.upcoming)
+      })
       .catch(error => {
-        this.setSigningIn(false)
-        this.setErrorMessage(translateFirebaseError(error))
+        setLoading(false)
+        setErrorMsg(translateFirebaseError(error))
       })
   }
 
-  render() {
-    return (
-      <AuthFormWrapper>
-        <FormStatusMessage message={this.state.errorMsg} />
-        <FloatingLabel
-          autoComplete="new-password"
-          styles={floatingLabelStyles}
-          placeholder="email"
-          type="email"
-          onChange={email => this.setEmail(email.target.value)}
-          required
-        />
-        <Space />
-        <FloatingLabel
-          autoComplete="new-password"
-          styles={floatingLabelStyles}
-          placeholder="password"
-          type="password"
-          onChange={password => this.setPassword(password.target.value)}
-          required
-        />
-        <Space />
-        <FormButton
-          color={melrose}
-          disabled={this.state.signingIn}
-          onClick={() => this.register()}
-        >
-          Register
-        </FormButton>
-      </AuthFormWrapper>
-    )
-  }
+  return (
+    <AuthFormWrapper>
+      <FormStatusMessage message={errorMsg} />
+      <FloatingLabel
+        autoComplete="email"
+        styles={floatingLabelStyles}
+        placeholder="email"
+        type="email"
+        value={email}
+        onChange={email => setEmail(email.target.value)}
+        required
+      />
+      <Space />
+      <FloatingLabel
+        autoComplete="password"
+        styles={floatingLabelStyles}
+        placeholder="password"
+        type="password"
+        value={password}
+        onChange={password => setPassword(password.target.value)}
+        required
+      />
+      <Space />
+      <FormButton color={melrose} disabled={loading} onClick={onRegister}>
+        Register
+      </FormButton>
+    </AuthFormWrapper>
+  )
 }

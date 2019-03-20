@@ -1,6 +1,9 @@
-import React from 'react'
+import { useNavigation } from '@vieriksson/the-react-router'
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { Routes } from '../../routes'
 import { FormButton } from '../../styles/form-button'
-import { mountainMeadow } from '../../utils/colors'
+import { mountainMeadow, shark } from '../../utils/colors'
 import { FloatingLabel } from '../floating-label'
 import { FormStatusMessage } from '../form-status-message'
 import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
@@ -10,54 +13,38 @@ type Props = {
   login: (email: string, password: string) => Promise<any>
 }
 
-type State = {
-  signingIn: boolean
-  errorMsg: string
-  email: string
-  password: string
-}
+export const LoginForm = ({ login }: Props) => {
+  const [errorMsg, setErrorMsg] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [showLoginAnimation, setShowLoginAnimation] = useState(false)
+  const [navigate] = useNavigation()
 
-export class LoginForm extends React.Component<Props, State> {
-  state = {
-    signingIn: false,
-    errorMsg: '',
-    email: '',
-    password: ''
-  } as State
-
-  setEmail(email: string) {
-    this.setState({ email })
+  const onLogin = () => {
+    setLoading(true)
+    login(email, password)
+      .then(() => {
+        setShowLoginAnimation(true)
+        setTimeout(navigate, 2000, Routes.upcoming)
+      })
+      .catch(error => {
+        setLoading(false)
+        setErrorMsg(translateFirebaseError(error))
+      })
   }
 
-  setPassword(password: string) {
-    this.setState({ password })
-  }
-
-  setErrorMessage(errorMsg: string) {
-    this.setState({ errorMsg })
-  }
-
-  setSigningIn(signingIn: boolean) {
-    this.setState({ signingIn })
-  }
-
-  login() {
-    this.setSigningIn(true)
-    this.props.login(this.state.email, this.state.password).catch(error => {
-      this.setSigningIn(false)
-      this.setErrorMessage(translateFirebaseError(error))
-    })
-  }
-
-  render() {
-    return (
-      <AuthFormWrapper>
-        <FormStatusMessage message={this.state.errorMsg} />
+  return (
+    <>
+      {showLoginAnimation && <LoginAnimation />}
+      <AuthFormWrapper onSubmit={onLogin}>
+        <FormStatusMessage message={errorMsg} />
         <FloatingLabel
           styles={floatingLabelStyles}
           placeholder="email"
           type="email"
-          onChange={email => this.setEmail(email.target.value)}
+          value={email}
+          onChange={event => setEmail(event.target.value)}
           required
         />
         <Space />
@@ -65,18 +52,39 @@ export class LoginForm extends React.Component<Props, State> {
           styles={floatingLabelStyles}
           placeholder="password"
           type="password"
-          onChange={password => this.setPassword(password.target.value)}
+          value={password}
+          onChange={event => setPassword(event.target.value)}
           required
         />
         <Space />
-        <FormButton
-          color={mountainMeadow}
-          disabled={this.state.signingIn}
-          onClick={() => this.login()}
-        >
+        <FormButton color={mountainMeadow} disabled={loading} onClick={onLogin}>
           Let me in
         </FormButton>
       </AuthFormWrapper>
-    )
-  }
+    </>
+  )
 }
+
+const LoginAnimation = styled.div`
+  background: ${shark};
+  position: fixed;
+  width: ${window.innerWidth}px;
+  height: ${window.innerWidth}px;
+  margin: auto;
+  border-radius: 100%;
+  overflow: hidden;
+  animation: grow 5s;
+  animation-fill-mode: forwards;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  @keyframes grow {
+    0% {
+      transform: scale(0);
+    }
+
+    100% {
+      transform: scale(3);
+    }
+  }
+`

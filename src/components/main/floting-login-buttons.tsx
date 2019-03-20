@@ -23,6 +23,7 @@ const Wrapper = styled.div`
   top: 20px;
   right: 20px;
   display: flex;
+  z-index: 1;
 `
 const ButtonWrapper = styled.div`
   margin-right: 20px;

@@ -1,8 +1,7 @@
 import { Navigate } from '@vieriksson/the-react-router'
 import React from 'react'
-import { useSearch } from '../../global-context'
+import { useAuth, useSearch } from '../../global-context'
 import { Routes } from '../../routes'
-import { auth } from '../../utils/auth.util'
 import { NavbarItem } from './navbar-item'
 import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
 import { NavbarSubItem } from './navbar-subitem'
@@ -14,6 +13,7 @@ type Props = {
 
 export const NavbarItems = ({ navigate, stateUrl }: Props) => {
   const searchStore = useSearch()
+  const auth = useAuth()
   return (
     <>
       <NavbarItem

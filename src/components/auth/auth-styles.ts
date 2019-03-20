@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { mountainMeadow, silver } from '../../utils/colors'
 
-export const AuthFormWrapper = styled.div`
+export const AuthFormWrapper = styled.form`
   display: flex;
   flex: 1;
   justify-content: center;

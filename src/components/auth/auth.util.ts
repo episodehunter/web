@@ -8,7 +8,7 @@ export const translateFirebaseError = (error: FirebaseError) => {
     case 'auth/wrong-password':
       return 'Wrong password'
     case 'auth/user-not-found':
-      return 'No user found with username'
+      return 'Could not find user. Do you have an account?'
     case 'auth/invalid-credential':
       return 'Invalid credentials'
     default:

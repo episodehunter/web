@@ -1,9 +1,12 @@
 import { Routes } from '../routes'
+import { Auth } from '../utils/auth.util'
 import { Loaders } from './loaders'
 
-export function createRouteResolver(loaders: Loaders) {
+export function createRouteResolver(loaders: Loaders, auth: Auth) {
   return (route: Routes) => {
-    console.log('route: ', route)
+    if (!auth.isSigndInUser) {
+      return
+    }
     if (route === Routes.upcoming) {
       loaders.upcomingLoader.loadUpcoming()
     } else if (route === Routes.following) {

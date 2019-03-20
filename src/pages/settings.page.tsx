@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { FloatingLabel } from '../components/floating-label'
 import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
+import { useAuth } from '../global-context'
 import { FormButton } from '../styles/form-button'
-import { auth } from '../utils/auth.util'
 import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 
 enum Status {
@@ -14,149 +14,129 @@ enum Status {
   success
 }
 
-type State = {
-  newPassword: string
-  confirmPassword: string
-  password: string
-  errorMessage: string
-  status: Status
-}
+export const SettingsPage = () => {
+  const auth = useAuth()
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [status, setStatus] = useState(Status.none)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [password, setPassword] = useState('')
 
-export class SettingsPage extends React.Component<{}, State> {
-  state = {
-    newPassword: '',
-    confirmPassword: '',
-    status: Status.none,
-    errorMessage: '',
-    password: ''
+  const setInput = (setValue: (value: string) => void) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (errorMessage) {
+      setErrorMessage('')
+      setStatus(Status.none)
+    }
+    setValue(event.target.value)
   }
 
-  async save() {
-    const { newPassword, confirmPassword } = this.state
+  const save = () => {
     const passwordEdited = isEdited(newPassword, confirmPassword)
 
-    if (!passwordEdited) return
-
-    if (passwordEdited && hasMismatch(newPassword, confirmPassword)) {
-      this.setErrorMessage('The passwords do not match')
+    if (!passwordEdited) {
       return
     }
 
-    if (!this.state.password) {
-      this.setErrorMessage('Enter your current password')
+    if (hasMismatch(newPassword, confirmPassword)) {
+      setErrorMessage('The passwords do not match')
       return
     }
 
-    if (this.state.newPassword.length < 6) {
-      this.setErrorMessage('Enter at least 6 characters')
+    if (!password) {
+      setErrorMessage('Enter your current password')
       return
     }
 
-    this.setState({ status: Status.saving })
+    if (newPassword.length < 6) {
+      setErrorMessage('Enter at least 6 characters')
+      return
+    }
+
+    setStatus(Status.saving)
     auth
-      .reauthenticate(this.state.password)
+      .reauthenticate(password)
       .then(() => {
         auth
           .changePassword(newPassword)
           .then(() => {
-            this.setState({
-              status: Status.success,
-              newPassword: '',
-              confirmPassword: '',
-              password: ''
-            })
+            setStatus(Status.success)
+            setNewPassword('')
+            setConfirmPassword('')
+            setPassword('')
           })
           .catch(() => {
-            this.setErrorMessage('Could not update settings')
-            this.setState({ status: Status.error })
+            setErrorMessage('Could not update settings')
+            setStatus(Status.error)
           })
       })
       .catch(() => {
-        this.setErrorMessage('Enter the correct current password')
-        this.setState({ status: Status.error })
+        setErrorMessage('Enter the correct current password')
+        setStatus(Status.error)
       })
   }
 
-  setInput(stateUpdate) {
-    if (this.state.errorMessage) {
-      this.setState({ status: Status.none, errorMessage: '' })
-    }
-    this.setState(stateUpdate)
-  }
-
-  setErrorMessage(errorMessage: string) {
-    this.setState({ status: Status.error, errorMessage })
-  }
-
-  render() {
-    const status = getStatusComponent(this.state)
-    console.log(this.state)
-    return (
-      <Wrapper>
-        <FormWrapper>
-          <Header>Settings</Header>
-          <StatusWrapper>{status}</StatusWrapper>
-          <InputWrapper>
-            <LabelWrapper>
-              <FloatingLabel
-                styles={styles}
-                autoComplete="current-password"
-                placeholder="New password"
-                type="password"
-                value={this.state.newPassword}
-                onChange={e => this.setInput({ newPassword: e.target.value })}
-                required
-              />
-            </LabelWrapper>
-            <LabelWrapper>
-              <FloatingLabel
-                styles={styles}
-                autoComplete="current-password"
-                placeholder="Confirm password"
-                type="password"
-                value={this.state.confirmPassword}
-                onChange={e =>
-                  this.setInput({ confirmPassword: e.target.value })
-                }
-                required
-              />
-            </LabelWrapper>
-          </InputWrapper>
-          <Space />
-          <InputWrapper>
-            <LabelWrapper>
-              <FloatingLabel
-                styles={styles}
-                placeholder="Current password"
-                type="password"
-                value={this.state.password}
-                onChange={e => this.setInput({ password: e.target.value })}
-                required
-              />
-            </LabelWrapper>
-          </InputWrapper>
-          <Space />
-          <FormButton
-            color={mountainMeadow}
-            disabled={this.state.status == Status.saving}
-            onClick={() => this.save()}
-          >
-            Save
-          </FormButton>
-        </FormWrapper>
-      </Wrapper>
-    )
-  }
+  return (
+    <Wrapper>
+      <FormWrapper>
+        <Header>Settings</Header>
+        <StatusWrapper>
+          <StatusComponent errorMessage={errorMessage} status={status} />
+        </StatusWrapper>
+        <InputWrapper>
+          <LabelWrapper>
+            <FloatingLabel
+              styles={styles}
+              autoComplete="new-password"
+              placeholder="New password"
+              type="password"
+              value={newPassword}
+              onChange={setInput(setNewPassword)}
+              required
+            />
+          </LabelWrapper>
+          <LabelWrapper>
+            <FloatingLabel
+              styles={styles}
+              autoComplete="confirm-password"
+              placeholder="Confirm password"
+              type="password"
+              value={confirmPassword}
+              onChange={setInput(setConfirmPassword)}
+              required
+            />
+          </LabelWrapper>
+        </InputWrapper>
+        <Space />
+        <InputWrapper>
+          <LabelWrapper>
+            <FloatingLabel
+              styles={styles}
+              placeholder="Current password"
+              type="password"
+              autoComplete="password"
+              value={password}
+              onChange={setInput(setPassword)}
+              required
+            />
+          </LabelWrapper>
+        </InputWrapper>
+        <Space />
+        <FormButton color={mountainMeadow} disabled={status == Status.saving} onClick={save}>
+          Save
+        </FormButton>
+      </FormWrapper>
+    </Wrapper>
+  )
 }
 
-function getStatusComponent(state: State) {
-  switch (state.status) {
+function StatusComponent({ status, errorMessage }: { status: Status; errorMessage: string }) {
+  switch (status) {
     case Status.error:
-      return <FormStatusMessage message={state.errorMessage} />
+      return <FormStatusMessage message={errorMessage} />
     case Status.success:
-      return (
-        <FormStatusMessage message="Password updated successfully" success />
-      )
+      return <FormStatusMessage message="Password updated successfully" success />
     case Status.saving:
       return <Spinner />
     default:
@@ -164,11 +144,11 @@ function getStatusComponent(state: State) {
   }
 }
 
-function isEdited(inputOne, inputTwo) {
-  return inputOne || inputTwo
+function isEdited(inputOne: string, inputTwo: string) {
+  return Boolean(inputOne || inputTwo)
 }
 
-function hasMismatch(inputOne, inputTwo) {
+function hasMismatch(inputOne: string, inputTwo: string) {
   return inputOne !== inputTwo
 }
 

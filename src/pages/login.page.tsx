@@ -1,23 +1,30 @@
-import React, { useState } from 'react'
+import { useNavigation } from '@vieriksson/the-react-router'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { LoginForm } from '../components/auth/login-form'
 import { RegisterForm } from '../components/auth/register-form'
 import { FlotingLoginButtons } from '../components/main/floting-login-buttons'
 import { MainAbout } from '../components/main/main-about'
 import { AuthFormState } from '../enum'
+import { useAuth } from '../global-context'
 import { images } from '../images.config'
-import { auth } from '../utils/auth.util'
+import { Routes } from '../routes'
 import { shark } from '../utils/colors'
 
 export function LoginPage() {
   const [authFormState, setAuthFormState] = useState(AuthFormState.login)
+  const auth = useAuth()
+  const [navigate] = useNavigation()
+  useEffect(() => {
+    if (auth.isSigndInUser()) {
+      navigate(Routes.upcoming)
+    }
+  }, [])
 
   return (
     <>
       <Wrapper>
-        <FlotingLoginButtons
-          changeFormState={state => setAuthFormState(state)}
-        />
+        <FlotingLoginButtons changeFormState={state => setAuthFormState(state)} />
         <TopImage>
           <MainAbout />
         </TopImage>
@@ -32,6 +39,7 @@ export function LoginPage() {
 }
 
 function AuthForm({ authFormState }: { authFormState: AuthFormState }) {
+  const auth = useAuth()
   switch (authFormState) {
     case AuthFormState.login:
       return <LoginForm login={(e, p) => auth.login(e, p)} />
