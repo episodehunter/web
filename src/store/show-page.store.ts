@@ -2,7 +2,7 @@ import { computed, observable } from 'mobx'
 import { IsFollowing } from '../enum/is-following'
 import { BaseStore } from './base-store'
 
-export class ShowPage extends BaseStore {
+export class ShowPageStore extends BaseStore {
   @observable private showId: string
   @observable selectedSeason = 1
 

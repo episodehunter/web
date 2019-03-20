@@ -2,7 +2,7 @@ import { observable } from 'mobx'
 import { PublicTypes } from '../data-loader/public-types'
 import { BaseStore } from './base-store'
 
-export class Search extends BaseStore {
+export class SearchStore extends BaseStore {
   @observable isSearchBarOpen: Boolean
   @observable searchResult: PublicTypes.Title[] = []
 

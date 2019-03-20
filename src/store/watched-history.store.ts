@@ -2,7 +2,7 @@ import { action, observable } from 'mobx'
 import { PublicTypes } from '../data-loader/public-types'
 import { BaseStore } from './base-store'
 
-export class WatchedHistory extends BaseStore {
+export class WatchedHistoryStore extends BaseStore {
   @observable private historyForShow: Map<string, PublicTypes.WatchedEpisode[]> = new Map()
 
   @action

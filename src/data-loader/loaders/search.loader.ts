@@ -1,4 +1,4 @@
-import { RootSore } from '../../store/root-store'
+import { RootSore } from '../../store/root.store'
 import { Fetcher } from '../fetcher'
 
 export const createSearchLoader = ({ search }: RootSore, { searchFetcher }: Fetcher) => ({

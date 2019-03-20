@@ -3,7 +3,7 @@ import { computed, observable } from 'mobx'
 import { PublicTypes } from '../data-loader/public-types'
 import { isAfterDaysFrom, isBeforeDaysFrom, isSameDayOrAfter, now } from '../utils/date.utils'
 import { BaseStore } from './base-store'
-import { Show } from './show.store'
+import { Show } from './show'
 
 export class UpcomingEpisodes extends BaseStore {
   @observable upcomingEpisodes: PublicTypes.UpcomingEpisodesWithShowId[] = []

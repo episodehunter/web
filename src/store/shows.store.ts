@@ -1,7 +1,7 @@
 import { observable } from 'mobx'
 import { PublicTypes } from '../data-loader/public-types'
 import { BaseStore } from './base-store'
-import { Show } from './show.store'
+import { Show } from './show'
 
 export class Shows extends BaseStore {
   @observable shows: Show[] = []

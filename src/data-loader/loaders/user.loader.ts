@@ -1,4 +1,4 @@
-import { RootSore } from '../../store/root-store'
+import { RootSore } from '../../store/root.store'
 import { calculateEpisodeNumber } from '../../utils/episode.util'
 import { Fetcher } from '../fetcher'
 import { PublicTypes, WatchedEnum } from '../public-types'

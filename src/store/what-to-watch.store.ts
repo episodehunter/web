@@ -1,9 +1,9 @@
 import { computed, observable } from 'mobx'
 import { PublicTypes } from '../data-loader/public-types'
 import { BaseStore } from './base-store'
-import { Show } from './show.store'
+import { Show } from './show'
 
-export class WhatToWatch extends BaseStore {
+export class WhatToWatchStore extends BaseStore {
   @observable data: PublicTypes.WhatToWatch[] = []
 
   keep(showIds: string[]) {

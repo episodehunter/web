@@ -1,5 +1,5 @@
 import { LoadingState } from './loading-state'
-import { RootSore } from './root-store'
+import { RootSore } from './root.store'
 
 export class BaseStore {
   protected rootStore: RootSore

@@ -4,8 +4,7 @@ import { routes } from './components/router'
 import { createLoaders, createRouteResolver } from './data-loader'
 import { GlobalContext, GlobalContextProvider } from './global-context'
 import { SpinnerPage } from './pages/spinner.page'
-import { UserProvider } from './store'
-import { RootSore } from './store/root-store'
+import { RootSore } from './store/root.store'
 import { auth, authStateChange$ } from './utils/auth.util'
 
 const Router = createRouter(routes)
@@ -18,7 +17,6 @@ const globalContext: GlobalContext = {
   rootStore,
   loaders
 }
-
 ;(window as any).oskar = rootStore
 
 routerEvents.addListener(event => rootResolver(event.url))
@@ -42,9 +40,7 @@ export function App() {
   }
   return (
     <GlobalContextProvider value={globalContext}>
-      <UserProvider>
-        <Router />
-      </UserProvider>
+      <Router />
     </GlobalContextProvider>
   )
 }

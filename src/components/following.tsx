@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Show } from '../store/show.store'
+import { Show } from '../store/show'
 import { media } from '../styles/media-queries'
 import { ShowCard } from './show-card/show-card'
 import { H1 } from './text'

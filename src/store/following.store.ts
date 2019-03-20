@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx'
 import { BaseStore } from './base-store'
 
-export class Following extends BaseStore {
+export class FollowingStore extends BaseStore {
   @observable private folloingShowsIds: Set<string> = new Set()
 
   @action

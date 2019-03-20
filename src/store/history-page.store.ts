@@ -3,7 +3,7 @@ import { PublicTypes } from '../data-loader/public-types'
 import { format } from '../utils/date.utils'
 import { BaseStore } from './base-store'
 
-export class HistoryPage extends BaseStore {
+export class HistoryPageStore extends BaseStore {
   @observable history: Map<number, PublicTypes.History[]> = new Map()
 
   @action

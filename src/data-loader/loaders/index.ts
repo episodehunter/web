@@ -1,4 +1,4 @@
-import { RootSore } from '../../store/root-store'
+import { RootSore } from '../../store/root.store'
 import { createFetcher } from '../fetcher'
 import { createSearchLoader } from './search.loader'
 import { createShowLoader } from './show.loader'

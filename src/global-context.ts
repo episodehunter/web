@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { Loaders } from './data-loader/loaders'
-import { RootSore } from './store/root-store'
+import { RootSore } from './store/root.store'
 
 export interface GlobalContext {
   rootStore: RootSore

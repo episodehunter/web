@@ -1,5 +1,5 @@
 import { Loaders } from '.'
-import { RootSore } from '../../store/root-store'
+import { RootSore } from '../../store/root.store'
 import { Fetcher } from '../fetcher'
 import { PublicTypes } from '../public-types'
 
