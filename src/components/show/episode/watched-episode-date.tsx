@@ -1,11 +1,11 @@
-import React from 'react';
-import { WatchedEpisode } from '../../../model';
-import { dateReleaseFormat, format } from '../../../utils/date.utils';
-import { BottomTextWrapper } from '../../episode/bottom-text-wrapper';
-import { P } from '../../text';
+import React from 'react'
+import { PublicTypes } from '../../../data-loader/public-types'
+import { dateReleaseFormat, format } from '../../../utils/date.utils'
+import { BottomTextWrapper } from '../../episode/bottom-text-wrapper'
+import { P } from '../../text'
 
 type Props = {
-  watched: WatchedEpisode | undefined
+  watched: PublicTypes.WatchedEpisode | undefined
 }
 
 export const WatchedEpisodeDate = ({ watched }: Props) => {
@@ -17,12 +17,12 @@ export const WatchedEpisodeDate = ({ watched }: Props) => {
     <BottomTextWrapper>
       <P
         margin={0}
-        title={`You wached this episode at ${format(
-          latestWatchedDate,
-          'Do MMM YYYY'
-        )}`}
+        title={`You wached this episode at ${format(latestWatchedDate, 'Do MMM YYYY')}`}
       >
-        <i style={textStyle} className="material-icons">check_circle_outline</i> {dateReleaseFormat(latestWatchedDate)}
+        <i style={textStyle} className="material-icons">
+          check_circle_outline
+        </i>{' '}
+        {dateReleaseFormat(latestWatchedDate)}
       </P>
     </BottomTextWrapper>
   )

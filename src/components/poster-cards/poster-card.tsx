@@ -9,12 +9,17 @@ type Props = {
   poster: JSX.Element
   topRight?: JSX.Element | string
   bottomRight?: JSX.Element | string
+  onClick?: () => void
 }
 
-export const PosterCard = ({ linkUrl, poster, bottomRight, topRight }: Props) => {
+export const PosterCard = ({ linkUrl, poster, bottomRight, topRight, onClick }: Props) => {
   const [navigate] = useNavigation()
+  const onWrapperClick = () => {
+    onClick && onClick()
+    navigate(linkUrl)
+  }
   return (
-    <Wrapper onClick={() => navigate(linkUrl)}>
+    <Wrapper onClick={onWrapperClick}>
       {poster}
       <InfoWrapper>
         <TopRight>{topRight}</TopRight>

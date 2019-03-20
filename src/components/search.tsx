@@ -24,7 +24,6 @@ export const Search = observer(() => {
     return null
   }
 
-  // TODO: Do we need this?
   const preventEvent = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
     event.stopPropagation()
@@ -37,14 +36,15 @@ export const Search = observer(() => {
 
   return (
     <OverlayWrapper onClick={() => searchStore.closeSearchBar()}>
-      <Wrapper>
-        <SearchWrapper onClick={preventEvent}>
+      <Wrapper onClick={preventEvent}>
+        <SearchWrapper>
           <SearchBox autoFocus value={searchTerm} onChange={updateSearchTerm} />
         </SearchWrapper>
         <ResultWrapper>
           {searchStore.searchResult.map(title => (
-            <ResultItem key={title.id} onClick={preventEvent}>
+            <ResultItem key={title.id}>
               <PosterCard
+                onClick={() => searchStore.closeSearchBar()}
                 linkUrl={`/show/${title.id}`}
                 poster={<SmallShowFanart tvdbId={title.tvdbId} />}
                 bottomRight={title.name}

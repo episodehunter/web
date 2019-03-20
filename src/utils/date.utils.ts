@@ -49,13 +49,17 @@ export const isAfterDaysFrom = (days: number, from: Date) => {
 }
 
 export const dateReleaseFormat = (
-  date: Date | null,
+  dateString: string | Date | null,
   options?: {
     future?: (date: string) => string
     past?: (date: string) => string
   },
   _today = today()
 ): string => {
+  if (!dateString) {
+    return ''
+  }
+  const date = parse(dateString)
   if (!isValid(date)) {
     return ''
   }

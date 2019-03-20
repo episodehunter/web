@@ -11,13 +11,15 @@ import { FollowingButton } from '../components/show/following-button'
 import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
 import { H1, H3 } from '../components/text'
-import { useShowPage } from '../global-context'
+import { useEpisodeStore, useShowPage, useWatchedHistoryStore } from '../global-context'
 import { images } from '../images.config'
 import { HideOnMobile, isMobile, media } from '../styles/media-queries'
 import { SpinnerPage } from './spinner.page'
 
 export const ShowPage = observer(() => {
   const showPageStore = useShowPage()
+  const episodeStore = useEpisodeStore()
+  const watchedHistoryStore = useWatchedHistoryStore()
 
   if (showPageStore.loadingState.isLoading()) {
     return <SpinnerPage />
@@ -26,6 +28,14 @@ export const ShowPage = observer(() => {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
   const show = showPageStore.show.data
+  const episodesForSelectedSeason = episodeStore.getEpisodes(
+    show.ids.id,
+    showPageStore.selectedSeason
+  )
+  const watchedHistory = watchedHistoryStore.getHistoryForSeason(
+    show.ids.id,
+    showPageStore.selectedSeason
+  )
   return (
     <PageWrapper tvdbId={show.ids.tvdb}>
       <HideOnMobile>
@@ -46,7 +56,7 @@ export const ShowPage = observer(() => {
               {show.name}
             </H1>
             <EllipsisText length={500}>{show.overview}</EllipsisText>
-            <FollowingButton showId={show.ids.id} />
+            <FollowingButton isFollowing={showPageStore.isFollowing} showId={show.ids.id} />
           </ShowTitleAndOverview>
         </PosterAndTitleWrapper>
         <Content>
@@ -56,163 +66,36 @@ export const ShowPage = observer(() => {
               <Facts show={show} />
             </FactWarpper>
           </HideOnMobile>
-          <Progress show={show} />
+          <Progress showId={show.ids.id} episodeRuntime={show.runtime} />
           <NextEpisodeWarpper>
-            <NextEpisode show={show} />
+            <NextEpisode showId={show.ids.id} />
           </NextEpisodeWarpper>
         </Content>
       </Wrapper>
 
       <Wrapper>
         <SeasonButtonsWrapper>
-          {show.seasons.map(season => (
+          {showPageStore.seasons.map(season => (
             <Button
               key={season}
-              onClick={() => console.log('We should call this.setSeason(season) now')}
-              active={season === 1}
+              onClick={() => showPageStore.setSelectedSeason(season)}
+              active={season === showPageStore.selectedSeason}
             >
               Season {season}
             </Button>
           ))}
         </SeasonButtonsWrapper>
         <EpisodesWrapper>
-          <Episodes showId={show.ids.id} episodes={[]} watchedEpisode={[]} />
+          <Episodes
+            showId={show.ids.id}
+            episodes={episodesForSelectedSeason}
+            watchedEpisode={watchedHistory}
+          />
         </EpisodesWrapper>
       </Wrapper>
     </PageWrapper>
   )
 })
-
-// type Props = {
-//   params: {
-//     id: string
-//   }
-// }
-
-// type CompState = {
-//   show: Show | null
-//   season: Episode[] | null
-//   watchedSeason: WatchedEpisode[] | null
-//   selectedSeason: number
-// }
-
-// export class ShowPage extends React.Component<Props, CompState> {
-//   subscriptions: Subscription[] = []
-//   state = {
-//     show: null,
-//     season: null,
-//     watchedSeason: null,
-//     selectedSeason: -1
-//   } as CompState
-//   setSeasonOnSubject: (season: number) => void
-
-//   componentDidMount() {
-//     const { season$, setSeason } = seasonSubject$(this.props.params.id)
-//     const { watchSeason$, setWatchSeason } = watchedSeasonSubject$(this.props.params.id)
-//     this.setSeasonOnSubject = (season: number) => {
-//       setSeason(season)
-//       setWatchSeason(season)
-//     }
-//     this.subscriptions.push(
-//       show$(this.props.params.id).subscribe(show => this.setState({ show })),
-//       combineLatest(season$, watchSeason$).subscribe(([ season, watchedSeason ]) => {
-//         this.setState({ season })
-//         this.setState({ watchedSeason })
-//       }),
-//       nextEpisodeToWatch$(this.props.params.id).pipe(take(1)).subscribe(episode => {
-//         if (this.state.selectedSeason !== -1) {
-//           return
-//         }
-//         if(!episode) {
-//           this.setSeason(1)
-//         } else {
-//           this.setSeason(episode.season)
-//         }
-//       })
-//     )
-//   }
-
-//   componentWillUnmount() {
-//     this.subscriptions.forEach(sub => sub.unsubscribe())
-//   }
-
-//   get isLoading() {
-//     return !Boolean(this.state.show)
-//   }
-
-//   setSeason(season: number) {
-//     if (!this.setSeasonOnSubject) {
-//       return
-//     }
-//     this.setState({ selectedSeason: season })
-//     this.setSeasonOnSubject(season)
-//   }
-
-//   render() {
-//     if (this.isLoading) {
-//       return <SpinnerPage />
-//     }
-//     const show = this.state.show
-//     if (!show) {
-//       return <p>404</p>
-//     }
-//     return (
-//       <PageWrapper tvdbId={show.ids.tvdb}>
-//         <HideOnMobile>
-//           <ShowFanart tvdbId={show.ids.tvdb} />
-//         </HideOnMobile>
-//         <Wrapper>
-//           <PosterAndTitleWrapper>
-//             <HideOnMobile>
-//               <SmallShowPoster tvdbId={show.ids.tvdb} />
-//             </HideOnMobile>
-//             <ShowTitleAndOverview>
-//               <H1
-//                 style={{
-//                   maxWidth: 'calc(100vw - 40px)',
-//                   wordWrap: 'break-word'
-//                 }}
-//               >
-//                 {show.name}
-//               </H1>
-//               <EllipsisText length={500}>{show.overview}</EllipsisText>
-//               <FollowingButton showId={show.ids.id} />
-//             </ShowTitleAndOverview>
-//           </PosterAndTitleWrapper>
-//           <Content>
-//             <HideOnMobile>
-//               <FactWarpper>
-//                 <H3>Facts</H3>
-//                 <Facts show={show} />
-//               </FactWarpper>
-//             </HideOnMobile>
-//             <Progress show={show} />
-//             <NextEpisodeWarpper>
-//               <NextEpisode show={show} />
-//             </NextEpisodeWarpper>
-//           </Content>
-//         </Wrapper>
-
-//         <Wrapper>
-//           <SeasonButtonsWrapper>
-//             {show.seasons.map(season => (
-//               <Button
-//                 key={season}
-//                 onClick={() => this.setSeason(season)}
-//                 active={season === this.state.selectedSeason}
-//               >
-//                 Season {season}
-//               </Button>
-//             ))}
-//           </SeasonButtonsWrapper>
-//           <EpisodesWrapper>
-//             <Episodes showId={this.props.params.id} episodes={this.state.season} watchedEpisode={this.state.watchedSeason} />
-//           </EpisodesWrapper>
-//         </Wrapper>
-//       </PageWrapper>
-//     )
-//   }
-// }
 
 const PageWrapperTabletAndUp = styled.div<{ tvdbId: number }>``
 

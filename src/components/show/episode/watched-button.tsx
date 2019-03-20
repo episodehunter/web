@@ -1,51 +1,61 @@
-import React from 'react';
-import { Episode, WatchedEpisode } from '../../../model';
-import { melrose } from '../../../utils/colors';
-import { unwatchEpisode, watchEpisode } from '../../../utils/firebase/query';
-import { TextButton } from '../../button';
-import { Spinner } from '../../spinner';
+import { observer } from 'mobx-react-lite'
+import React, { useState } from 'react'
+import { PublicTypes } from '../../../data-loader/public-types'
+import { useUserLoader } from '../../../global-context'
+import { melrose } from '../../../utils/colors'
+import { TextButton } from '../../button'
 
 type Props = {
-  episode: Episode
-  watched: WatchedEpisode | undefined
+  episode: PublicTypes.Episode
+  watched?: PublicTypes.WatchedEpisode
   showId: string
 }
 
-type State = {
-  loading: boolean
-}
+export const WatchedButton = observer(({ episode, showId, watched }: Props) => {
+  const [disabled, setDisabled] = useState(false)
+  const userLoader = useUserLoader()
 
-export class WatchedButton extends React.Component<Props, State> {
-  state = {
-    loading: false
-  }
-
-  markAsWatched = () => {
-    console.log('markAsWatched')
-    watchEpisode(this.props.showId, this.props.episode.season, this.props.episode.episode)
-  }
-
-  markAsUnWatched = () => {
-    console.log('markAsUnWatched')
-    unwatchEpisode(this.props.showId, this.props.episode.season, this.props.episode.episode)
-  }
-
-  render() {
-    if (this.state.loading) {
-      return <Spinner size={14} style={{ alignSelf: 'flex-end' }} />
-    } else if (this.props.watched) {
-      return (
-        <TextButton onClick={this.markAsUnWatched}>
-          Mark as unwatched <i className="material-icons" style={iconStyle}>remove_circle_outline</i>
-        </TextButton>
-      )
-    } else {
-      return (
-        <TextButton onClick={this.markAsWatched}>Mark as watched <i className="material-icons" style={iconStyle}>tv</i></TextButton>
-      )
+  const guard = () => {
+    if (disabled) {
+      return false
     }
+    setDisabled(true)
+    setTimeout(setDisabled, 2000, false)
+    return true
   }
-}
+
+  if (watched) {
+    const removeCheckInEpisode = () => {
+      if (!guard()) {
+        return
+      }
+      userLoader.removeCheckInEpisode(showId, watched)
+    }
+    return (
+      <TextButton onClick={removeCheckInEpisode}>
+        Mark as unwatched{' '}
+        <i className="material-icons" style={iconStyle}>
+          remove_circle_outline
+        </i>
+      </TextButton>
+    )
+  } else {
+    const checkInEpisode = () => {
+      if (!guard()) {
+        return
+      }
+      userLoader.checkInEpisode(showId, episode.season, episode.episode, new Date())
+    }
+    return (
+      <TextButton onClick={checkInEpisode}>
+        Mark as watched{' '}
+        <i className="material-icons" style={iconStyle}>
+          tv
+        </i>
+      </TextButton>
+    )
+  }
+})
 
 const iconStyle = {
   fontSize: 'inherit',

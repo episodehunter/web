@@ -12,7 +12,7 @@ export const createLoaders = (rootStore: RootSore, getToken: () => Promise<strin
     userLoader: createUserLoader(rootStore, fetcher),
     upcomingLoader: createUpcomingLoader(rootStore, fetcher, getLoaders),
     searchLoader: createSearchLoader(rootStore, fetcher),
-    showLoader: createShowLoader(rootStore, fetcher)
+    showLoader: createShowLoader(rootStore, fetcher, getLoaders)
   }
   return loaders
 }

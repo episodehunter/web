@@ -1,11 +1,12 @@
 import { GraphQLClient } from 'graphql-request'
+import { dragonstoneUrl } from '../../config'
 
 type Variables = {
   [key: string]: any
 }
 
 export const createClient = (getIdToken: () => Promise<string>) => {
-  const client = new GraphQLClient('http://localhost:8080/')
+  const client = new GraphQLClient(dragonstoneUrl)
   return async <T>(query: string, variables?: Variables): Promise<T> => {
     const token = await getIdToken()
     client.setHeader('authorization', `Bearer ${token}`)

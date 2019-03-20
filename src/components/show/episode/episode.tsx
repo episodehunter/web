@@ -1,18 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Episode as EpisodeModel, WatchedEpisode } from '../../../model';
-import { isMobile, media } from '../../../styles/media-queries';
-import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util';
-import { EllipsisText } from '../../ellipsis-text';
-import { EpisodeImage } from '../../episode/episode-image';
-import { H4, HighlightSpan } from '../../text';
-import { AirDate } from './air-date';
-import { WatchedButton } from './watched-button';
-import { WatchedEpisodeDate } from './watched-episode-date';
+import React from 'react'
+import styled from 'styled-components'
+import { PublicTypes } from '../../../data-loader/public-types'
+import { isMobile, media } from '../../../styles/media-queries'
+import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util'
+import { EllipsisText } from '../../ellipsis-text'
+import { EpisodeImage } from '../../episode/episode-image'
+import { H4, HighlightSpan } from '../../text'
+import { AirDate } from './air-date'
+import { WatchedButton } from './watched-button'
+import { WatchedEpisodeDate } from './watched-episode-date'
 
 type Props = {
-  episode: EpisodeModel
-  watched: WatchedEpisode | undefined
+  episode: PublicTypes.Episode
+  watched?: PublicTypes.WatchedEpisode
   showId: string
 }
 
@@ -25,7 +25,9 @@ export const Episode = ({ episode, watched, showId }: Props) => (
     <DescriptionWrapper>
       <HeadlineWrapper>
         <H4 margin={0}>
-          <HighlightSpan>{composeSeasonAndEpisodeNumber(episode.season, episode.episode)}</HighlightSpan>{' '}
+          <HighlightSpan>
+            {composeSeasonAndEpisodeNumber(episode.season, episode.episode)}
+          </HighlightSpan>{' '}
           {episode.name}
         </H4>
         <WatchedButton showId={showId} watched={watched} episode={episode} />
@@ -38,7 +40,7 @@ export const Episode = ({ episode, watched, showId }: Props) => (
   </EpisodeWrapper>
 )
 
-const episodeImageProps = tvdbId =>
+const episodeImageProps = (tvdbId: number) =>
   isMobile()
     ? {
         tvdbId,

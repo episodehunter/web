@@ -44,7 +44,6 @@ interface UpcomingEpisodeType {
 
 export interface EpisodeType extends UpcomingEpisodeType {
   episodeNumber: number
-  lastupdated: number
   overview: string
 }
 

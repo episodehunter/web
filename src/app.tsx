@@ -19,6 +19,8 @@ const globalContext: GlobalContext = {
   loaders
 }
 
+;(window as any).oskar = rootStore
+
 routerEvents.addListener(event => rootResolver(event.url))
 
 export function App() {

@@ -1,10 +1,10 @@
-import React from 'react';
-import { melrose } from '../../../utils/colors';
-import { dateReleaseFormat, Today, today } from '../../../utils/date.utils';
-import { SmallText } from '../../text';
+import React from 'react'
+import { melrose } from '../../../utils/colors'
+import { dateReleaseFormat, Today, today } from '../../../utils/date.utils'
+import { SmallText } from '../../text'
 
 type Props = {
-  firstAired: Date | null
+  firstAired: string
   _today?: Today
 }
 
@@ -22,7 +22,9 @@ export const AirDate = ({ firstAired, _today = today }: Props) => {
   }
   return (
     <SmallText>
-      <i className="material-icons" style={iconStyle}>calendar_today</i>
+      <i className="material-icons" style={iconStyle}>
+        calendar_today
+      </i>
       {releaseText}
     </SmallText>
   )

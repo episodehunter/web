@@ -1,7 +1,4 @@
-export function numberOfUnwatchedHoursLeft(
-  episodesToWatch: number,
-  runtime: number
-) {
+export function numberOfUnwatchedHoursLeft(episodesToWatch: number, runtime: number) {
   return Math.round((episodesToWatch * runtime) / 60)
 }
 
@@ -16,10 +13,9 @@ export function numberOfEpisodesToWatchPercent(
 }
 
 export function composeSeasonAndEpisodeNumber(season: number, episode: number) {
-  return (
-    'S' +
-    String(season).padStart(2, '0') +
-    'E' +
-    String(episode).padStart(2, '0')
-  )
+  return 'S' + String(season).padStart(2, '0') + 'E' + String(episode).padStart(2, '0')
+}
+
+export function calculateEpisodeNumber(season: number, episode: number) {
+  return season * 10000 + episode
 }

@@ -31,5 +31,21 @@ export const createShowFetcher = (client: Client) => ({
     const query = '{' + ids.map(createQuery).join('\r\n') + '}'
     const result = await client<{ [key: string]: PublicTypes.Show }>(query)
     return Object.values(result)
+  },
+  async fetchEpisodes(showId: string) {
+    const result = await client<{ episodes: PublicTypes.Episode[] }>(`
+      {
+        episodes(showId: "${showId}") {
+          name
+          aired
+          episode
+          season
+          overview
+          tvdbId
+          episodeNumber
+        }
+      }
+    `)
+    return result.episodes
   }
 })
