@@ -1,4 +1,4 @@
-import React, { ClassAttributes, InputHTMLAttributes } from 'react'
+import React, { ClassAttributes, InputHTMLAttributes, useState } from 'react'
 import styled from 'styled-components'
 
 type Styles = {
@@ -13,83 +13,67 @@ type Styles = {
 type Props = InputHTMLAttributes<HTMLInputElement> &
   ClassAttributes<HTMLInputElement> &
   Styles & { value?: string }
-type State = {
-  floating: boolean
-  focused: boolean
-  value?: string
-}
 
-export class FloatingLabel extends React.Component<Props, State> {
-  state = {
-    floating: false,
-    focused: false
-  }
+export const FloatingLabel = (props: Props) => {
+  const [focused, setFocused] = useState(false)
+  const [value, setValue] = useState('')
 
-  handleChange = evt => {
+  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const value = evt.target.value
 
-    if (this.props.onChange) {
-      this.props.onChange(evt)
+    if (props.onChange) {
+      props.onChange(evt)
     }
 
-    this.setState({ value })
+    setValue(value)
   }
 
-  handleFocusChange = evt => {
-    if (this.props.onFocus && evt.type === 'focus') {
-      this.props.onFocus(evt)
-    } else if (this.props.onBlur && evt.type !== 'focus') {
-      this.props.onBlur(evt)
+  const handleFocusChange = (evt: React.FocusEvent<HTMLInputElement>) => {
+    if (props.onFocus && evt.type === 'focus') {
+      props.onFocus(evt)
+    } else if (props.onBlur && evt.type !== 'focus') {
+      props.onBlur(evt)
     }
 
-    this.setState({ focused: evt.type === 'focus' })
+    setFocused(evt.type === 'focus')
   }
 
-  isFloating(value: string | undefined, focused: boolean) {
-    return (value && value.length) || focused
-  }
+  const styles = props.styles || {}
+  const isFloating = (value && value.length) || focused
+  const floatingStyle = isFloating && Object.assign({}, floatingStyles, styles.floating)
+  const focusStyle = focused && Object.assign({}, focusStyles, styles.focus)
+  const labelStyle = Object.assign({}, labelStyles, styles.label)
+  const spanStyle = Object.assign({}, spanStyles, styles.span, floatingStyle)
+  const inputStyle = Object.assign({}, inputStyles, styles.input, focusStyle)
 
-  render() {
-    const { value } = this.props
-    const { focused } = this.state
-    const styles = this.props.styles || {}
-    const isFloating = this.isFloating(value, focused)
-    const floatingStyle =
-      isFloating && Object.assign({}, floatingStyles, styles.floating)
-    const focusStyle = focused && Object.assign({}, focusStyles, styles.focus)
-    const labelStyle = Object.assign({}, labelStyles, styles.label)
-    const spanStyle = Object.assign({}, spanStyles, styles.span, floatingStyle)
-    const inputStyle = Object.assign({}, inputStyles, styles.input, focusStyle)
-
-    return (
-      <label htmlFor={this.props.id} style={labelStyle}>
-        <span style={spanStyle}>{this.props.placeholder}</span>
-        <Input
-          value={value}
-          autoCapitalize={this.props.autoCapitalize}
-          autoComplete={this.props.autoComplete}
-          autoFocus={this.props.autoFocus}
-          id={this.props.id}
-          inputMode={this.props.inputMode}
-          max={this.props.max}
-          maxLength={this.props.maxLength}
-          min={this.props.min}
-          minLength={this.props.minLength}
-          name={this.props.name}
-          onBlur={this.handleFocusChange}
-          onChange={this.handleChange}
-          onFocus={this.handleFocusChange}
-          pattern={this.props.pattern}
-          readOnly={this.props.readOnly}
-          required={this.props.required}
-          spellCheck={false}
-          step={this.props.step}
-          style={inputStyle}
-          type={this.props.type}
-        />
-      </label>
-    )
-  }
+  return (
+    <label htmlFor={props.id} style={labelStyle}>
+      <span style={spanStyle}>{props.placeholder}</span>
+      <Input
+        value={value}
+        autoCapitalize={props.autoCapitalize}
+        autoComplete={props.autoComplete}
+        autoFocus={props.autoFocus}
+        id={props.id}
+        inputMode={props.inputMode}
+        max={props.max}
+        maxLength={props.maxLength}
+        min={props.min}
+        minLength={props.minLength}
+        name={props.name}
+        onBlur={handleFocusChange}
+        onChange={handleChange}
+        onFocus={handleFocusChange}
+        pattern={props.pattern}
+        readOnly={props.readOnly}
+        required={props.required}
+        spellCheck={false}
+        step={props.step}
+        style={inputStyle}
+        type={props.type}
+      />
+    </label>
+  )
 }
 
 const Input = styled.input`

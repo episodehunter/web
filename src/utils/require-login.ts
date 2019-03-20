@@ -3,7 +3,7 @@ import React from 'react'
 import { useUser } from '../global-context'
 import { Routes } from '../routes'
 
-type ComponentType<P> = ((props: P) => JSX.Element) | React.ComponentClass<P>
+type ComponentType<P> = (props: P) => JSX.Element
 type ExtendedProps<P> = P & { navigate: Navigate }
 
 export const requireLogin = <P>(Component: ComponentType<P>) => {
