@@ -1,6 +1,4 @@
-export const apiUrl = 'https://us-central1-newagent-dc3d1.cloudfunctions.net/fn/'
-// export const apiUrl = 'http://localhost:5000'
-export const dragonstoneUrl = 'http://localhost:8080/'
+export const dragonstoneUrl = 'https://zwh4jtrdh0.execute-api.us-east-1.amazonaws.com/prod/graphql'
 
 export const firebaseAuthConfig = {
   apiKey: 'AIzaSyB01Rediz1OxOlIRBr5t2WxQpDrxaxEcVU',

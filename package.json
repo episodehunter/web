@@ -8,7 +8,8 @@
     "test": "jest --watch",
     "test:ci": "jest --coverage",
     "build": "webpack --config webpack.prod.js && cp src/index.html build/index.html",
-    "start": "webpack-dev-server --hot --config webpack.dev.js"
+    "start": "webpack-dev-server --hot --config webpack.dev.js",
+    "deploy": "npm run build && firebase deploy"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,6 @@
     "simple-spy": "^2.2.1",
     "ts-jest": "^24.0.0",
     "typescript": "^3.3.4000",
-    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1",

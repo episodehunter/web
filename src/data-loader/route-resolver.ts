@@ -4,7 +4,7 @@ import { Loaders } from './loaders'
 
 export function createRouteResolver(loaders: Loaders, auth: Auth) {
   return (route: Routes) => {
-    if (!auth.isSigndInUser) {
+    if (!auth.isSigndInUser()) {
       return
     }
     if (route === Routes.upcoming) {

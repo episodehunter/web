@@ -10,7 +10,10 @@ export class Shows extends BaseStore {
     return this.shows.some(show => show.data.ids.id === showId)
   }
 
-  add(show: PublicTypes.Show) {
+  add(show: PublicTypes.Show | null) {
+    if (!show) {
+      return
+    }
     const s = new Show(this.rootStore)
     s.data = show
     this.shows.push(s)

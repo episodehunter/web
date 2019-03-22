@@ -21,7 +21,7 @@ export const createUpcomingLoader = (
     }
 
     const missingShowsIds = followingList.filter(id => !shows.has(id))
-    let fetchingMissingShows: Promise<PublicTypes.Show[]> = Promise.resolve([])
+    let fetchingMissingShows: Promise<(PublicTypes.Show | null)[]> = Promise.resolve([])
     if (missingShowsIds.length) {
       fetchingMissingShows = fetcher.showFetcher.fetchShow(missingShowsIds)
     }

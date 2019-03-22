@@ -30,8 +30,6 @@ export interface ShowType {
   numberOfFollowers: number
   overview: string
   runtime: number
-  seasons: number[]
-  totalNumberOfEpisodes: number
 }
 
 interface UpcomingEpisodeType {
