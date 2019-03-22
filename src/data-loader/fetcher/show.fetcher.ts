@@ -1,8 +1,8 @@
 import { PublicTypes } from '../public-types'
 import { Client } from './client'
 
-function createQuery(id: string) {
-  return `id${id}: show(id: "${id}") {
+function createQuery(id: string, index: number) {
+  return `id${index}: show(id: "${id}") {
     name,
     airs {
       first
