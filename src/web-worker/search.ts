@@ -46,7 +46,8 @@ function search(fuse: Fuse<{ item: PublicTypes.Title; score: number }>, searchWo
   return fuse
     .search(searchWord)
     .map(searchResult => {
-      searchResult.score = (1 - searchResult.score) * searchResult.item.followers
+      searchResult.score =
+        (1 - searchResult.score) * 10 + Math.min(Math.log10(searchResult.item.followers + 10), 20)
       return searchResult
     })
     .sort((a, b) => b.score - a.score)
