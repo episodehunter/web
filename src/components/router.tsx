@@ -1,5 +1,7 @@
+import { useNavigation } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
+import { useUser } from '../global-context'
 import { Fallback } from '../pages/fallback.page'
 import { FollowingPage } from '../pages/following.page'
 import { HistoryPage } from '../pages/history.page'
@@ -79,7 +81,7 @@ export const routes = {
 
 function RouteLayout(Component: RouteComponent, { allowUnauthed }: RouteOptions = {}) {
   if (allowUnauthed) {
-    return props => (
+    return (props: unknown) => (
       <Wrapper>
         <Component {...props} />
         <Footer />
@@ -88,14 +90,23 @@ function RouteLayout(Component: RouteComponent, { allowUnauthed }: RouteOptions 
   }
 
   const RequireLoginComponent = requireLogin<any>(Component)
-  return props => (
-    <Wrapper>
-      <Search />
-      <Navbar />
-      <RequireLoginComponent {...props} />
-      <Footer />
-    </Wrapper>
-  )
+  return (props: unknown) => {
+    const user = useUser()
+    const [navigate] = useNavigation()
+    if (!user.getUser()) {
+      navigate(Routes.login)
+      return null
+    }
+
+    return (
+      <Wrapper>
+        <Search />
+        <Navbar />
+        <RequireLoginComponent {...props} />
+        <Footer />
+      </Wrapper>
+    )
+  }
 }
 
 const Wrapper = styled.div`
