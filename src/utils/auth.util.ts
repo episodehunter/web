@@ -48,6 +48,14 @@ export const createAuth = (firebase: typeof firebaseApp) => {
       return firebase.auth().currentUser
     },
 
+    getUsername() {
+      const user = auth.getUser()
+      if (!user) {
+        throw new Error('User unknown')
+      }
+      return user.displayName || ''
+    },
+
     isSigndInUser() {
       return Boolean(auth.getUser())
     },

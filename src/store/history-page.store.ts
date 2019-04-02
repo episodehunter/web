@@ -13,12 +13,8 @@ export class HistoryPageStore extends BaseStore {
 
   @computed
   get groupedHistory() {
-    const allHistoryPages: PublicTypes.History[] = Array.prototype.concat.apply(
-      [],
-      Array.from(this.history.values())
-    )
     const historyGroup = new Map<string, PublicTypes.History[]>()
-    for (let history of allHistoryPages) {
+    for (let history of this.allHistoryPages) {
       const dateString = format(history.watchedEpisode.time, 'dddd, MMM D YYYY')
       const existingGroup = historyGroup.get(dateString)
       if (!existingGroup) {
@@ -28,5 +24,15 @@ export class HistoryPageStore extends BaseStore {
       }
     }
     return Array.from(historyGroup.entries())
+  }
+
+  @computed
+  get allHistoryPages() {
+    return Array.prototype.concat.apply([], Array.from(this.history.values()))
+  }
+
+  @computed
+  get hasHistory() {
+    return this.allHistoryPages.length > 0
   }
 }

@@ -4,26 +4,26 @@ import { BaseStore } from './base-store'
 import { Show } from './show'
 
 export class WhatToWatchStore extends BaseStore {
-  @observable data: PublicTypes.WhatToWatch[] = []
+  @observable following: PublicTypes.WhatToWatch[] = []
 
   keep(showIds: string[]) {
-    this.data = this.data.filter(whatToWatch => showIds.includes(whatToWatch.showId))
-    return this.data
+    this.following = this.following.filter(whatToWatch => showIds.includes(whatToWatch.showId))
+    return this.following
   }
 
   has(showId: string) {
-    return this.data.some(upcoming => upcoming.showId === showId)
+    return this.following.some(upcoming => upcoming.showId === showId)
   }
 
   add(upcoming: PublicTypes.WhatToWatch) {
-    this.data.push(upcoming)
+    this.following.push(upcoming)
   }
 
   @computed
   get whatToWatch() {
     const whatToWatch: { show: Show; numberOfEpisodesToWatch: number }[] = []
 
-    this.data.forEach(wtw => {
+    this.following.forEach(wtw => {
       const show = this.rootStore.shows.find(wtw.showId)
       if (show) {
         whatToWatch.push({
@@ -36,5 +36,10 @@ export class WhatToWatchStore extends BaseStore {
       return w2.numberOfEpisodesToWatch - w1.numberOfEpisodesToWatch
     })
     return whatToWatch
+  }
+
+  @computed
+  get hasSomethingToWatch() {
+    return this.following.length > 0
   }
 }

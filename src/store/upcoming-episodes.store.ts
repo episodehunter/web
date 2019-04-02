@@ -27,6 +27,14 @@ export class UpcomingEpisodes extends BaseStore {
   get upcoming() {
     return upcoming(this.upcomingEpisodes, (showId: string) => this.showsStore.find(showId))
   }
+
+  @computed
+  get hasUpcoming() {
+    const upcomingEpisodes = upcoming(this.upcomingEpisodes, (showId: string) =>
+      this.showsStore.find(showId)
+    )
+    return Object.values(upcomingEpisodes).some(ue => ue.length > 0)
+  }
 }
 
 export interface ShowAndEpisode {
