@@ -2,7 +2,7 @@ export enum Routes {
   upcoming = '/',
   following = '/following',
   history = '/history',
-  changePassword = '/change-password',
+  settings = '/settings',
   search = '/search',
   show = '/show/:id',
   login = '/login',

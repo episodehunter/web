@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom'
 import { App } from './app'
 
 init({
-  dsn: 'https://3e0fa9a3f331416fbeb4058e3447e90b@sentry.io/1429500'
+  dsn: 'https://3e0fa9a3f331416fbeb4058e3447e90b@sentry.io/1429500',
+  environment: process.env.NODE_ENV,
+  enabled: process.env.NODE_ENV !== 'development'
 })
 
 class ErrorBoundary extends Component<{}, { error: Error | null }> {

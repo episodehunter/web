@@ -1,23 +1,23 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Fallback } from '../pages/fallback.page';
-import { FollowingPage } from '../pages/following.page';
-import { HistoryPage } from '../pages/history.page';
-import { LoginPage } from '../pages/login.page';
-import { SettingsPage } from '../pages/settings.page';
-import { ShowPage } from '../pages/show.page';
-import { AboutPage } from '../pages/static/about.page';
-import { KodiPage } from '../pages/static/kodi.page';
-import { PlexPage } from '../pages/static/plex.page';
-import { PrivacyPage } from '../pages/static/privacy.page';
-import { TosPage } from '../pages/static/tos.page';
-import { UpcomingPage } from '../pages/upcoming.page';
-import { Routes } from '../routes';
-import { shark } from '../utils/colors';
-import { requireLogin } from '../utils/require-login';
-import { Footer } from './main/footer';
-import { Navbar } from './navbar/navbar';
-import { Search } from './search';
+import React from 'react'
+import styled from 'styled-components'
+import { Fallback } from '../pages/fallback.page'
+import { FollowingPage } from '../pages/following.page'
+import { HistoryPage } from '../pages/history.page'
+import { LoginPage } from '../pages/login.page'
+import { SettingsPage } from '../pages/settings.page'
+import { ShowPage } from '../pages/show.page'
+import { AboutPage } from '../pages/static/about.page'
+import { KodiPage } from '../pages/static/kodi.page'
+import { PlexPage } from '../pages/static/plex.page'
+import { PrivacyPage } from '../pages/static/privacy.page'
+import { TosPage } from '../pages/static/tos.page'
+import { UpcomingPage } from '../pages/upcoming.page'
+import { Routes } from '../routes'
+import { shark } from '../utils/colors'
+import { requireLogin } from '../utils/require-login'
+import { Footer } from './main/footer'
+import { Navbar } from './navbar/navbar'
+import { Search } from './search'
 
 type RouteComponent = any
 type RouteOptions = {
@@ -42,7 +42,7 @@ export const routes = {
       component: RouteLayout(HistoryPage)
     },
     {
-      path: Routes.changePassword,
+      path: Routes.settings,
       component: RouteLayout(SettingsPage)
     },
     {
@@ -79,10 +79,7 @@ export const routes = {
   ]
 }
 
-function RouteLayout(
-  component: RouteComponent,
-  { hideNavbar, unauthed }: RouteOptions = {}
-) {
+function RouteLayout(component: RouteComponent, { hideNavbar, unauthed }: RouteOptions = {}) {
   const RenderComponent = unauthed ? component : requireLogin<any>(component)
   return props => (
     <Wrapper>

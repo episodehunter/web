@@ -80,7 +80,7 @@ export const SettingsPage = () => {
   return (
     <Wrapper>
       <FormWrapper>
-        <Header>Settings</Header>
+        <Header>Change Password</Header>
         <StatusWrapper>
           <StatusComponent errorMessage={errorMessage} status={status} />
         </StatusWrapper>
@@ -126,6 +126,24 @@ export const SettingsPage = () => {
         <FormButton color={mountainMeadow} disabled={status == Status.saving} onClick={save}>
           Save
         </FormButton>
+      </FormWrapper>
+      <FormWrapper>
+        <Header>Delete you account</Header>
+        <Text>
+          Send an email to info@episodehunter.tv and I will remove your account and all your data as
+          soon as possible (max 48h). In the meantime, watch this{' '}
+          <a style={{ color: 'white' }} href="https://www.youtube.com/watch?v=wVyggTKDcOE">
+            video
+          </a>
+          .
+        </Text>
+      </FormWrapper>
+      <FormWrapper>
+        <Header>Change your email</Header>
+        <Text>
+          Send an email to info@episodehunter.tv and I will change your email as soon as possible
+          (max 48h).
+        </Text>
       </FormWrapper>
     </Wrapper>
   )
@@ -176,17 +194,18 @@ const Space = styled.div`
 const FormWrapper = styled.div`
   display: flex;
   flex: 1;
-  margin-top: 150px;
+  margin-top: 100px;
   align-items: center;
   flex-direction: column;
 `
 
 const Wrapper = styled.div`
-  min-height: 1000px;
   color: ${alabaster};
   background-color: ${shark};
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  justify-content: start;
 `
 
 const Header = styled.h1`
@@ -195,6 +214,12 @@ const Header = styled.h1`
   text-transform: uppercase;
   font-weight: lighter;
   font-size: 32px;
+`
+
+const Text = styled.p`
+  font-family: 'Lato', sans-serif;
+  color: white;
+  font-size: 18px;
 `
 
 const styles = {

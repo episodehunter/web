@@ -40,10 +40,10 @@ export const NavbarItems = ({ navigate, stateUrl }: Props) => {
         header={'Settings'}
         subItems={[
           <NavbarSubItem
-            key={'change-password'}
-            title="Change password"
-            selected={isPathEqual(Routes.changePassword, stateUrl)}
-            onClick={() => navigate(Routes.changePassword)}
+            key={'settings'}
+            title="Settings"
+            selected={isPathEqual(Routes.settings, stateUrl)}
+            onClick={() => navigate(Routes.settings)}
           />,
           <NavbarSubItem
             key={'logout'}
