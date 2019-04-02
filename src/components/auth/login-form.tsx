@@ -21,7 +21,9 @@ export const LoginForm = ({ login }: Props) => {
   const [showLoginAnimation, setShowLoginAnimation] = useState(false)
   const [navigate] = useNavigation()
 
-  const onLogin = () => {
+  const onLogin = (event: React.MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
     setLoading(true)
     login(email, password)
       .then(() => {

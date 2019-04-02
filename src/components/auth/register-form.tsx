@@ -19,7 +19,9 @@ export const RegisterForm = ({
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const onRegister = () => {
+  const onRegister = (event: React.MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
     setLoading(true)
     register(email, password)
       .then(() => {

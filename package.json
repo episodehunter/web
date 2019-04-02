@@ -52,6 +52,7 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
+    "@sentry/browser": "^5.0.3",
     "@tjoskar/react-lazyload-img": "^1.2.0",
     "@vieriksson/the-react-router": "^2.0.2",
     "date-fns": "^1.29.0",
