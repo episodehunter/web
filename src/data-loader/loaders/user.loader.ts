@@ -41,7 +41,7 @@ export const createUserLoader = (
     missingShows.forEach(show => shows.add(show))
 
     whatToWatch.loadingState.setLoaded()
-    return whatToWatch.data
+    return whatToWatch.following
   },
   async loadHistoryPage(page: number) {
     if (historyPage.loadingState.isLoading()) {

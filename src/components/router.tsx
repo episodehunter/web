@@ -21,8 +21,7 @@ import { Search } from './search'
 
 type RouteComponent = any
 type RouteOptions = {
-  hideNavbar?: boolean
-  unauthed?: boolean
+  allowUnauthed?: boolean
 }
 
 export const routes = {
@@ -52,8 +51,7 @@ export const routes = {
     {
       path: Routes.login,
       component: RouteLayout(LoginPage, {
-        hideNavbar: true,
-        unauthed: true
+        allowUnauthed: true
       })
     },
     {
@@ -79,13 +77,22 @@ export const routes = {
   ]
 }
 
-function RouteLayout(component: RouteComponent, { hideNavbar, unauthed }: RouteOptions = {}) {
-  const RenderComponent = unauthed ? component : requireLogin<any>(component)
+function RouteLayout(Component: RouteComponent, { allowUnauthed }: RouteOptions = {}) {
+  if (allowUnauthed) {
+    return props => (
+      <Wrapper>
+        <Component {...props} />
+        <Footer />
+      </Wrapper>
+    )
+  }
+
+  const RequireLoginComponent = requireLogin<any>(Component)
   return props => (
     <Wrapper>
       <Search />
-      {!hideNavbar && <Navbar />}
-      {<RenderComponent {...props} />}
+      <Navbar />
+      <RequireLoginComponent {...props} />
       <Footer />
     </Wrapper>
   )

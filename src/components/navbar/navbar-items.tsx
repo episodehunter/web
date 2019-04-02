@@ -37,7 +37,7 @@ export const NavbarItems = ({ navigate, stateUrl }: Props) => {
         onClick={() => searchStore.openSearchBar()}
       />
       <NavbarItemWithSubItems
-        header={'Settings'}
+        header={auth.getUsername()}
         subItems={[
           <NavbarSubItem
             key={'settings'}

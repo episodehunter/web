@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
+import { EmptyState } from '../components/empty-state'
 import { Upcoming } from '../components/upcoming'
 import { useUpcomingEpisodes } from '../global-context'
 import { media } from '../styles/media-queries'
@@ -14,8 +15,11 @@ export const UpcomingPage = observer(() => {
     return <SpinnerPage />
   }
 
-  const upcoming = upcomingEpisodesStore.upcoming
+  if (!upcomingEpisodesStore.hasUpcoming) {
+    return <EmptyState />
+  }
 
+  const upcoming = upcomingEpisodesStore.upcoming
   return (
     <Wrapper>
       <UpcomingWrapper>

@@ -2,6 +2,7 @@ import { useNavigation } from '@vieriksson/the-react-router'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
+import { EmptyHistory } from '../components/empty-state'
 import { BottomTextWrapper } from '../components/episode/bottom-text-wrapper'
 import { EpisodeImage } from '../components/episode/episode-image'
 import { H1, H3, P2 } from '../components/text'
@@ -18,6 +19,10 @@ export const HistoryPage = observer(() => {
 
   if (historyPageStore.loadingState.isLoading()) {
     return <SpinnerPage />
+  }
+
+  if (!historyPageStore.hasHistory) {
+    return <EmptyHistory />
   }
 
   const episodesSections = historyPageStore.groupedHistory.map(([dateString, history]) => (
