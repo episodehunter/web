@@ -10,6 +10,10 @@ import { SpinnerPage } from './spinner.page'
 export const FollowingPage = observer(() => {
   const whatToWatch = useWhatToWatch()
 
+  if (whatToWatch.loadingState.isNotLoaded()) {
+    return null
+  }
+
   if (whatToWatch.loadingState.isLoading()) {
     return <SpinnerPage />
   }

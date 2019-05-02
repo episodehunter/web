@@ -11,6 +11,10 @@ import { SpinnerPage } from './spinner.page'
 export const UpcomingPage = observer(() => {
   const upcomingEpisodesStore = useUpcomingEpisodes()
 
+  if (upcomingEpisodesStore.loadingState.isNotLoaded()) {
+    return null
+  }
+
   if (upcomingEpisodesStore.loadingState.isLoading()) {
     return <SpinnerPage />
   }

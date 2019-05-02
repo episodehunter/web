@@ -27,4 +27,8 @@ export class LoadingState {
   isLoading() {
     return this.loadingState === LoadingStateType.Loading
   }
+
+  isNotLoaded() {
+    return this.loadingState === LoadingStateType.NotLoaded
+  }
 }
