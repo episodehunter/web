@@ -6,7 +6,6 @@ import { firebaseAuthConfig } from './config'
 import { createLoaders, createRouteResolver } from './data-loader'
 import { GlobalContext, GlobalContextProvider } from './global-context'
 import { SpinnerPage } from './pages/spinner.page'
-import { Routes } from './routes'
 import { RootSore } from './store/root.store'
 import { createAuth } from './utils/auth.util'
 
@@ -24,7 +23,7 @@ const globalContext: GlobalContext = {
   auth
 }
 
-routerEvents.addListener((event: { url: Routes }) => rootResolver(event.url))
+routerEvents.addListener(event => rootResolver(event.url))
 
 export function App() {
   const [showSpinner, setShowSpinner] = useState(true)
