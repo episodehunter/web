@@ -3,7 +3,7 @@ import { Auth } from '../utils/auth.util'
 import { Loaders } from './loaders'
 
 export function createRouteResolver(loaders: Loaders, auth: Auth) {
-  return (route: Routes) => {
+  return (route: string) => {
     if (!auth.isSigndInUser()) {
       return
     }

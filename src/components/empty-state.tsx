@@ -11,8 +11,8 @@ export const EmptyState = () => {
       <BoxWrapper>
         <Header>Woops!</Header>
         <Text>
-          It looks like you are not following any shows. The best way to start following shows is
-          bla bla bla....
+          It looks like you are not following any shows. The best way to start is by searching for
+          your favorite show and start follow that one
         </Text>
         <Button color={mountainMeadow} onClick={() => searchStore.openSearchBar()}>
           Search for shows
