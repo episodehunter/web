@@ -55,7 +55,7 @@ function upcoming(
   episodesWithShowIds: PublicTypes.UpcomingEpisodesWithShowId[],
   getShow: (id: string) => Show | undefined,
   today = now()
-) {
+): Upcoming {
   const upcoming: Upcoming = {
     justAired: [],
     today: [],

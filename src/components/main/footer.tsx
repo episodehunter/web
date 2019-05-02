@@ -1,31 +1,22 @@
-import { Navigate, withNavigation } from '@vieriksson/the-react-router'
-import * as React from 'react'
+import { useNavigation } from '@vieriksson/the-react-router'
+import React from 'react'
 import styled from 'styled-components'
 import { Routes } from '../../routes'
 import { media } from '../../styles/media-queries'
 import { manatee } from '../../utils/colors'
 
-type Props = {
-  navigate: Navigate
+export const Footer = () => {
+  const [navigate] = useNavigation()
+  return (
+    <FooterWrapper>
+      <FooterItem onClick={() => navigate(Routes.about)}>©EpisodeHunter 2019</FooterItem>
+      <FooterItem onClick={() => navigate(Routes.privacy)}>Privacy Policy</FooterItem>
+      <FooterItem onClick={() => navigate(Routes.tos)}>Terms of Service</FooterItem>
+      <FooterItem onClick={() => navigate(Routes.kodi)}>Kodi</FooterItem>
+      <FooterItem onClick={() => goToGithub()}>Github</FooterItem>
+    </FooterWrapper>
+  )
 }
-
-const FooterComponent = ({ navigate }: Props) => (
-  <FooterWrapper>
-    <FooterItem onClick={() => navigate(Routes.about)}>
-      ©EpisodeHunter 2019
-    </FooterItem>
-    <FooterItem onClick={() => navigate(Routes.privacy)}>
-      Privacy Policy
-    </FooterItem>
-    <FooterItem onClick={() => navigate(Routes.tos)}>
-      Terms of Service
-    </FooterItem>
-    <FooterItem onClick={() => navigate(Routes.kodi)}>Kodi</FooterItem>
-    <FooterItem onClick={() => goToGithub()}>Github</FooterItem>
-  </FooterWrapper>
-)
-
-export const Footer = withNavigation(FooterComponent)
 
 function goToGithub() {
   window.location.href = 'https://github.com/episodehunter/web'

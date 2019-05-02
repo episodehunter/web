@@ -1,39 +1,29 @@
-import {
-  Navigate,
-  RouterState,
-  withNavigation
-} from '@vieriksson/the-react-router'
+import { useNavigation } from '@vieriksson/the-react-router'
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { media } from '../../styles/media-queries'
 import { Hamburger } from '../hamburger'
 import { NavbarItems } from './navbar-items'
 
-type Props = {
-  navigate: Navigate
-  state: RouterState
-}
-
-function NavbarComponent({ state: { url }, navigate }: Props) {
+export function Navbar() {
   const [isOpen, setOpen] = useState(false)
   const toggle = () => setOpen(!isOpen)
+  const [navigate, routeState] = useNavigation()
 
   return (
     <>
       <Wide>
-        <NavbarItems navigate={navigate} stateUrl={url} />
+        <NavbarItems navigate={navigate} stateUrl={routeState.url} />
       </Wide>
       <Narrow open={isOpen}>
         <NarrowWrapper>
           <Hamburger open={isOpen} onToggle={toggle} />
-          {isOpen && <NavbarItems navigate={navigate} stateUrl={url} />}
+          {isOpen && <NavbarItems navigate={navigate} stateUrl={routeState.url} />}
         </NarrowWrapper>
       </Narrow>
     </>
   )
 }
-
-export const Navbar = withNavigation(NavbarComponent)
 
 const Wide = styled.div`
   justify-content: flex-end;

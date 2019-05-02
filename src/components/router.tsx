@@ -81,16 +81,18 @@ export const routes = {
 
 function RouteLayout(Component: RouteComponent, { allowUnauthed }: RouteOptions = {}) {
   if (allowUnauthed) {
-    return (props: unknown) => (
-      <Wrapper>
-        <Component {...props} />
-        <Footer />
-      </Wrapper>
-    )
+    return function RouteLayout(props: unknown) {
+      return (
+        <Wrapper>
+          <Component {...props} />
+          <Footer />
+        </Wrapper>
+      )
+    }
   }
 
   const RequireLoginComponent = requireLogin<any>(Component)
-  return (props: unknown) => {
+  return function RouteLayout(props: unknown) {
     const user = useUser()
     const [navigate] = useNavigation()
     if (!user.getUser()) {
