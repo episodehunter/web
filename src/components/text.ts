@@ -8,9 +8,13 @@ const headLine = css`
   color: ${alabaster};
 `
 
-const addMargin = ({ margin }: { margin?: number | string }) =>
-  margin != null ? `margin: ${margin}` : ''
-const addCenter = ({ center }: { center?: boolean }) => (center ? `text-align: center` : '')
+type HelperProps = {
+  margin?: number | string
+  center?: boolean
+}
+
+const addMargin = ({ margin }: HelperProps) => (margin != null ? `margin: ${margin}` : '')
+const addCenter = ({ center }: HelperProps) => (center ? `text-align: center` : '')
 
 export const H1 = styled.h1`
   ${headLine};
@@ -36,11 +40,7 @@ export const P = styled.p`
   ${addMargin};
 `
 
-export const P2 = styled<{
-  center?: boolean
-  margin?: number | string
-  style?: any
-}>(P as any)`
+export const P2 = styled(P)`
   font-size: 14px;
   ${addMargin};
   ${addCenter};

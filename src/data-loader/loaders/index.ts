@@ -1,12 +1,14 @@
 import { RootSore } from '../../store/root.store'
 import { createFetcher } from '../fetcher'
+import { createStorage } from '../storage'
 import { createSearchLoader } from './search.loader'
 import { createShowLoader } from './show.loader'
 import { createUpcomingLoader } from './upcoming.loader'
 import { createUserLoader } from './user.loader'
 
 export const createLoaders = (rootStore: RootSore, getToken: () => Promise<string>) => {
-  const fetcher = createFetcher(getToken)
+  const storage = createStorage()
+  const fetcher = createFetcher(getToken, storage)
   const getLoaders = () => loaders
   const loaders: Loaders = {
     userLoader: createUserLoader(rootStore, fetcher),
