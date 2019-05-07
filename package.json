@@ -58,7 +58,7 @@
     "@tjoskar/react-lazyload-img": "^1.2.0",
     "@vieriksson/the-react-router": "^3.0.0",
     "date-fns": "^1.30.1",
-    "firebase": "^5.10.1",
+    "firebase": "^6.0.0",
     "fuse.js": "^3.4.4",
     "graphql-request": "^1.8.2",
     "idb-keyval": "^3.2.0",
