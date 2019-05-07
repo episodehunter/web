@@ -1,6 +1,7 @@
-import { Dragonstone } from '@episodehunter/types';
-import { Storage } from '../storage';
-import { Client } from './client';
+import { Dragonstone } from '@episodehunter/types'
+import { Storage } from '../storage'
+import { StorageObject } from '../storage/idb'
+import { Client } from './client'
 
 function createQuery(id: string, index: number) {
   return `id${index}: show(id: "${id}") {
@@ -29,7 +30,8 @@ const getExistingShows = async (storage: Storage, ids: string[]): Promise<Dragon
   const existingAndNonExistingShows = await Promise.all(
     ids.map(id => storage.showStorage.findShow(id))
   )
-  return existingAndNonExistingShows.filter(Boolean) as Dragonstone.Show[]
+  const shows = existingAndNonExistingShows.filter(Boolean) as StorageObject<Dragonstone.Show>[]
+  return shows.map(so => so.value)
 }
 
 export const createShowFetcher = (client: Client, storage: Storage) => ({
@@ -42,6 +44,8 @@ export const createShowFetcher = (client: Client, storage: Storage) => ({
     if (innerQuery.length > 0) {
       const query = '{' + innerQuery + '}'
       const result = await client<{ [key: string]: Dragonstone.Show | null }>(query)
+      const shows = Object.values(result)
+      shows.forEach(show => show && storage.showStorage.saveShow(show))
       return Object.values(result).concat(...existingShows)
     } else {
       return existingShows

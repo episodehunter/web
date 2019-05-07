@@ -7,7 +7,8 @@ describe('createShowFetcher', () => {
     const client = spy()
     const storage = {
       showStorage: {
-        findShow: spy((id: string) => Promise.resolve({ ids: { id } }))
+        findShow: spy((id: string) => Promise.resolve({ value: { ids: { id } } })),
+        saveShow: spy()
       }
     }
     const ids = ['1', '2', '3']
@@ -18,6 +19,7 @@ describe('createShowFetcher', () => {
     // Assert
     expect(result.length).toBe(3)
     expect(client.callCount).toBe(0)
+    expect(storage.showStorage.saveShow.callCount).toBe(0)
     expect(storage.showStorage.findShow.callCount).toBe(3)
   })
 
@@ -32,7 +34,8 @@ describe('createShowFetcher', () => {
     )
     const storage = {
       showStorage: {
-        findShow: spy(() => undefined)
+        findShow: spy(() => undefined),
+        saveShow: spy()
       }
     }
     const ids = ['1', '2', '3']
@@ -43,6 +46,7 @@ describe('createShowFetcher', () => {
     // Assert
     expect(result.length).toBe(3)
     expect(client.callCount).toBe(1)
+    expect(storage.showStorage.saveShow.callCount).toBe(3)
     expect(storage.showStorage.findShow.callCount).toBe(3)
   })
 
@@ -58,10 +62,11 @@ describe('createShowFetcher', () => {
       showStorage: {
         findShow: spy((id: string) => {
           if (id === '2') {
-            return { ids: { id: '2' } }
+            return { value: { ids: { id: '2' } } }
           }
           return undefined
-        })
+        }),
+        saveShow: spy()
       }
     }
     const ids = ['1', '2', '3']
@@ -74,6 +79,9 @@ describe('createShowFetcher', () => {
     expect(client.callCount).toBe(1)
     expect(client.args[0][0].includes('id0: show(id: "1")')).toBe(true)
     expect(client.args[0][0].includes('id1: show(id: "3")')).toBe(true)
+    expect(storage.showStorage.saveShow.callCount).toBe(2)
+    expect(storage.showStorage.saveShow.args[0][0].ids.id).toBe('1')
+    expect(storage.showStorage.saveShow.args[1][0].ids.id).toBe('3')
     expect(storage.showStorage.findShow.callCount).toBe(3)
   })
 })
