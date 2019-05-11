@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PublicTypes } from '../../../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { isMobile, media } from '../../../styles/media-queries'
 import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util'
 import { EllipsisText } from '../../ellipsis-text'
@@ -11,8 +11,8 @@ import { WatchedButton } from './watched-button'
 import { WatchedEpisodeDate } from './watched-episode-date'
 
 type Props = {
-  episode: PublicTypes.Episode
-  watched?: PublicTypes.WatchedEpisode
+  episode: Dragonstone.Episode
+  watched?: Dragonstone.WatchedEpisode.WatchedEpisode
   showId: string
 }
 

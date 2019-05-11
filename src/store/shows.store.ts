@@ -1,5 +1,5 @@
+import { Dragonstone } from '@episodehunter/types'
 import { observable } from 'mobx'
-import { PublicTypes } from '../data-loader/public-types'
 import { BaseStore } from './base-store'
 import { Show } from './show'
 
@@ -10,7 +10,7 @@ export class Shows extends BaseStore {
     return this.shows.some(show => show.data.ids.id === showId)
   }
 
-  add(show: PublicTypes.Show | null) {
+  add(show: Dragonstone.Show | null) {
     if (!show) {
       return
     }

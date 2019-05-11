@@ -1,13 +1,13 @@
 import { action, observable } from 'mobx'
-import { PublicTypes } from '../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { yyyymmdd } from '../utils/date.utils'
 import { BaseStore } from './base-store'
 
 export class EpisodesStore extends BaseStore {
-  @observable private episodesForShow: Map<string, PublicTypes.Episode[]> = new Map()
+  @observable private episodesForShow: Map<string, Dragonstone.Episode[]> = new Map()
 
   @action
-  setEpisodesForShow(showId: string, episodes: PublicTypes.Episode[]) {
+  setEpisodesForShow(showId: string, episodes: Dragonstone.Episode[]) {
     this.episodesForShow.set(showId, episodes.sort((a, b) => a.episodeNumber - b.episodeNumber))
   }
 
@@ -51,12 +51,12 @@ export class EpisodesStore extends BaseStore {
     return n
   }
 
-  findNextEpisodeToWatch(showId: string): PublicTypes.Episode | null {
+  findNextEpisodeToWatch(showId: string): Dragonstone.Episode | null {
     const highestWatchedEpisodeNumber = this.rootStore.watchedHistory.getHighestEpisodeNumber(
       showId
     )
     const episodes = this.getEpisodes(showId)
-    let nextEpisode: PublicTypes.Episode | null = null
+    let nextEpisode: Dragonstone.Episode | null = null
     for (let episode of episodes) {
       if (episode.episodeNumber > highestWatchedEpisodeNumber) {
         if (!nextEpisode || nextEpisode.episodeNumber > episode.episodeNumber) {

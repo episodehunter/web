@@ -1,7 +1,7 @@
-import { PublicTypes } from '../public-types'
+import { Dragonstone } from '@episodehunter/types'
 
 export const createSearchFetcher = (searchWorker: Worker) => ({
-  subscribe(cb: (result: PublicTypes.Title[]) => void) {
+  subscribe(cb: (result: Dragonstone.Title[]) => void) {
     const onMessage = (event: MessageEvent) => {
       cb(event.data.result)
     }

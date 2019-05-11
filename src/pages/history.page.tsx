@@ -1,7 +1,7 @@
-import { useNavigation } from '@vieriksson/the-react-router'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
+import { useNavigation } from 'the-react-router'
 import { EmptyHistory } from '../components/empty-state'
 import { BottomTextWrapper } from '../components/episode/bottom-text-wrapper'
 import { EpisodeImage } from '../components/episode/episode-image'
@@ -15,7 +15,7 @@ import { SpinnerPage } from './spinner.page'
 
 export const HistoryPage = observer(() => {
   const historyPageStore = useHistoryPage()
-  const [navigate] = useNavigation()
+  const { navigate } = useNavigation()
 
   if (historyPageStore.loadingState.isLoading()) {
     return <SpinnerPage />

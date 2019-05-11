@@ -9,11 +9,10 @@ export const AboutPage = () => (
       <Title>ABOUT EPISODEHUNTER</Title>
     </TitleWrapper>
     <P>
-      Episodehunter keeps automatically a record of what you are watching on
-      your media center and can there by keep a comprehensive history of all TV
-      shows and movies you have watched and can give you tips on what to see
-      next. Episodehunter currently support XBMC. Other clients may be supported
-      in the future.
+      Episodehunter keeps automatically a record of what you are watching on your media center and
+      can there by keep a comprehensive history of all TV shows and movies you have watched and can
+      give you tips on what to see next. Episodehunter currently support XBMC. Other clients may be
+      supported in the future.
     </P>
     <Header>Contacting us</Header>
     <P>If you have any questions about Episodehunter. Contact us at:</P>
@@ -39,7 +38,6 @@ const Header = styled.h1`
 `
 
 const Wrapper = styled.div`
-  height: 100%;
   margin: 5% 20%;
   color: ${alabaster};
   background-color: ${shark};

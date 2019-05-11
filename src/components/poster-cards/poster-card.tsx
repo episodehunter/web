@@ -1,6 +1,6 @@
-import { useNavigation } from '@vieriksson/the-react-router'
 import React from 'react'
 import styled from 'styled-components'
+import { useNavigation } from 'the-react-router'
 import { alabaster, melrose } from '../../utils/colors'
 import { UnstyledLink } from '../unstyled-link'
 
@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const PosterCard = ({ linkUrl, poster, bottomRight, topRight, onClick }: Props) => {
-  const [navigate] = useNavigation()
+  const { navigate } = useNavigation()
   const onWrapperClick = () => {
     onClick && onClick()
     navigate(linkUrl)

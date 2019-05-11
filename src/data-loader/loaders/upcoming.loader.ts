@@ -1,7 +1,7 @@
+import { Dragonstone } from '@episodehunter/types'
 import { Loaders } from '.'
 import { RootSore } from '../../store/root.store'
 import { Fetcher } from '../fetcher'
-import { PublicTypes } from '../public-types'
 
 export const createUpcomingLoader = (
   { upcomingEpisodes, shows }: RootSore,
@@ -15,13 +15,13 @@ export const createUpcomingLoader = (
     upcomingEpisodes.keep(followingList)
 
     const missingIds = followingList.filter(id => !upcomingEpisodes.has(id))
-    let fetchingUpcoming: Promise<PublicTypes.UpcomingEpisodesWithShowId[]> = Promise.resolve([])
+    let fetchingUpcoming: Promise<Dragonstone.UpcomingEpisode[]> = Promise.resolve([])
     if (missingIds.length) {
       fetchingUpcoming = fetcher.upcomingFetcher.fetchUpcomingEpisodes(missingIds)
     }
 
     const missingShowsIds = followingList.filter(id => !shows.has(id))
-    let fetchingMissingShows: Promise<(PublicTypes.Show | null)[]> = Promise.resolve([])
+    let fetchingMissingShows: Promise<(Dragonstone.Show | null)[]> = Promise.resolve([])
     if (missingShowsIds.length) {
       fetchingMissingShows = fetcher.showFetcher.fetchShow(missingShowsIds)
     }

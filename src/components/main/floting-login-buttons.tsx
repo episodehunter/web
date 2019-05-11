@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { AuthFormState } from '../../enum'
-import { LoginButton, RegisterButton } from '../auth/login-buttons'
+import { LoginButton, RegisterButton, ResetPasswordButton } from '../auth/login-buttons'
 
 type Props = {
   changeFormState(newState: AuthFormState): void
@@ -14,6 +14,9 @@ export const FlotingLoginButtons = ({ changeFormState }: Props) => (
     </ButtonWrapper>
     <ButtonWrapper>
       <LoginButton changeFormState={changeFormState} />
+    </ButtonWrapper>
+    <ButtonWrapper>
+      <ResetPasswordButton changeFormState={changeFormState} />
     </ButtonWrapper>
   </Wrapper>
 )

@@ -1,10 +1,12 @@
+import { WhatToWatch } from '@episodehunter/types/dragonstone/what-to-watch'
+import { Show } from '@episodehunter/types/dragonstone/show'
+import { WatchedEpisode } from '@episodehunter/types/dragonstone/watched-episode'
 import { RootSore } from '../../store/root.store'
 import { calculateEpisodeNumber } from '../../utils/episode.util'
 import { Fetcher } from '../fetcher'
-import { PublicTypes, WatchedEnum } from '../public-types'
 
 export const createUserLoader = (
-  { following, whatToWatch, shows, historyPage, watchedHistory }: RootSore,
+  { following, whatToWatch, shows, historyPage, watchedHistory, user }: RootSore,
   { userFetcher, showFetcher, historyFetcher }: Fetcher
 ) => ({
   async loadFolloingShowsIds() {
@@ -23,13 +25,13 @@ export const createUserLoader = (
     whatToWatch.keep(followingList)
 
     const missingIds = followingList.filter(id => !whatToWatch.has(id))
-    let fetchingWhatToWatch: Promise<PublicTypes.WhatToWatch[]> = Promise.resolve([])
+    let fetchingWhatToWatch: Promise<WhatToWatch[]> = Promise.resolve([])
     if (missingIds.length) {
       fetchingWhatToWatch = userFetcher.fetchWhatToWatch(missingIds)
     }
 
     const missingShowsIds = followingList.filter(id => !shows.has(id))
-    let fetchingMissingShows: Promise<(PublicTypes.Show | null)[]> = Promise.resolve([])
+    let fetchingMissingShows: Promise<(Show | null)[]> = Promise.resolve([])
     if (missingShowsIds.length) {
       fetchingMissingShows = showFetcher.fetchShow(missingShowsIds)
     }
@@ -81,7 +83,7 @@ export const createUserLoader = (
       showId,
       time,
       episodeNumber,
-      type: WatchedEnum.checkIn
+      type: 2 /* checkIn */
     })
     try {
       return await historyFetcher.checkInEpisode(showId, season, episode, time)
@@ -90,7 +92,7 @@ export const createUserLoader = (
       throw error
     }
   },
-  async removeCheckInEpisode(showId: string, watchedEpisode: PublicTypes.WatchedEpisode) {
+  async removeCheckInEpisode(showId: string, watchedEpisode: WatchedEpisode) {
     const episodeNumber = calculateEpisodeNumber(watchedEpisode.season, watchedEpisode.episode)
     watchedHistory.removeHistoryForShow(showId, episodeNumber)
     try {
@@ -103,5 +105,14 @@ export const createUserLoader = (
       watchedHistory.addHistoryForShow(showId, watchedEpisode)
       throw error
     }
+  },
+  async getMetadata() {
+    if (user.getMetadata()) {
+      return user.getMetadata()
+    }
+    user.metadataLoadingState.setLoading()
+    const metadata = await userFetcher.fetchMetadata()
+    user.setMetadata(metadata)
+    user.metadataLoadingState.setLoaded()
   }
 })

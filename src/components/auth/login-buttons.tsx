@@ -10,7 +10,7 @@ type Props = {
 export const RegisterButton = ({ changeFormState }: Props) => {
   const onClick = () => {
     changeFormState(AuthFormState.register)
-    window.scrollTo(0, document.body.scrollHeight)
+    window.scrollTo(0, document.body.scrollHeight - document.body.scrollHeight / 2)
   }
   return <Register onClick={onClick}>Register</Register>
 }
@@ -18,9 +18,17 @@ export const RegisterButton = ({ changeFormState }: Props) => {
 export const LoginButton = ({ changeFormState }: Props) => {
   const onClick = () => {
     changeFormState(AuthFormState.login)
-    window.scrollTo(0, document.body.scrollHeight)
+    window.scrollTo(0, document.body.scrollHeight - document.body.scrollHeight / 2)
   }
   return <Login onClick={onClick}>Login</Login>
+}
+
+export const ResetPasswordButton = ({ changeFormState }: Props) => {
+  const onClick = () => {
+    changeFormState(AuthFormState.forgotPassword)
+    window.scrollTo(0, document.body.scrollHeight - document.body.scrollHeight / 2)
+  }
+  return <Reset onClick={onClick}>Reset password</Reset>
 }
 
 const Button = styled.div`
@@ -37,6 +45,13 @@ const Button = styled.div`
 `
 
 const Login = styled(Button)`
+  border-color: ${mountainMeadow};
+  &:hover {
+    background-color: ${mountainMeadow};
+  }
+`
+
+const Reset = styled(Button)`
   border-color: ${mountainMeadow};
   &:hover {
     background-color: ${mountainMeadow};

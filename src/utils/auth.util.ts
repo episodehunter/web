@@ -13,7 +13,7 @@ export const createAuth = (firebase: typeof firebaseApp) => {
     },
 
     register(email: string, password: string) {
-      return firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
+      return firebase.auth().createUserWithEmailAndPassword(email, password)
     },
 
     reauthenticate(password: string) {
@@ -75,11 +75,24 @@ export const createAuth = (firebase: typeof firebaseApp) => {
       }
       return Promise.reject(new Error('User not signed in'))
     },
+
     authStateChange$(
       next: (user: firebase.User | null) => void,
       error: (error: firebase.auth.Error) => void
     ) {
       return firebase.auth().onAuthStateChanged(next, error)
+    },
+
+    sendPasswordResetEmail(email: string) {
+      return firebase.auth().sendPasswordResetEmail(email)
+    },
+
+    resetPassword(code: string, password: string) {
+      return firebase.auth().confirmPasswordReset(code, password)
+    },
+
+    verifyPasswordResetCode(code: string) {
+      return firebase.auth().verifyPasswordResetCode(code)
     }
   }
   return auth

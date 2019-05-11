@@ -1,7 +1,7 @@
 import Fuse, { FuseOptions } from 'fuse.js'
 import { request } from 'graphql-request'
+import { Dragonstone } from '@episodehunter/types'
 import { dragonstoneUrl } from '../config'
-import { PublicTypes } from '../data-loader/public-types'
 
 enum FetchStatus {
   NotStarted,
@@ -24,7 +24,7 @@ const returnData = (data: any) => {
 
 let fetchStatus = FetchStatus.Started
 
-const fetchingFuse = request<{ titles: PublicTypes.Title[] }>(
+const fetchingFuse = request<{ titles: Dragonstone.Title[] }>(
   dragonstoneUrl,
   `{
     titles {
@@ -36,13 +36,13 @@ const fetchingFuse = request<{ titles: PublicTypes.Title[] }>(
   }`
 )
   .then(result => result.titles)
-  .then(titles => new Fuse<{ item: PublicTypes.Title; score: number }>(titles as any, fuseOptions))
+  .then(titles => new Fuse<{ item: Dragonstone.Title; score: number }>(titles as any, fuseOptions))
   .catch(error => {
     console.error(error)
-    return new Fuse<{ item: PublicTypes.Title; score: number }>([], fuseOptions)
+    return new Fuse<{ item: Dragonstone.Title; score: number }>([], fuseOptions)
   })
 
-function search(fuse: Fuse<{ item: PublicTypes.Title; score: number }>, searchWord: string) {
+function search(fuse: Fuse<{ item: Dragonstone.Title; score: number }>, searchWord: string) {
   return fuse
     .search(searchWord)
     .map(searchResult => {

@@ -18,7 +18,7 @@ export const isValid = (date: Date | null): date is Date => Boolean(date && isVa
 export const format = (date: Date | null, dateFormat: string) =>
   isValid(date) ? fromatDate(date, dateFormat) : ''
 
-export const formatFromString = (dateString: string | null, dateFormat: string) => {
+export const formatFromString = (dateString?: string | null, dateFormat?: string) => {
   if (typeof dateString !== 'string') {
     return ''
   }

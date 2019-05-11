@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { PublicTypes } from '../../../data-loader/public-types'
 import { Spinner } from '../../spinner'
 import { Episode } from './episode'
+import { Dragonstone } from '@episodehunter/types'
 
 type Props = {
-  episodes: PublicTypes.Episode[]
-  watchedEpisode: PublicTypes.WatchedEpisode[]
+  episodes: Dragonstone.Episode[]
+  watchedEpisode: Dragonstone.WatchedEpisode.WatchedEpisode[]
   showId: string
 }
 

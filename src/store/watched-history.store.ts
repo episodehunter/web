@@ -1,17 +1,20 @@
 import { action, observable } from 'mobx'
-import { PublicTypes } from '../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { BaseStore } from './base-store'
 
 export class WatchedHistoryStore extends BaseStore {
-  @observable private historyForShow: Map<string, PublicTypes.WatchedEpisode[]> = new Map()
+  @observable private historyForShow: Map<
+    string,
+    Dragonstone.WatchedEpisode.WatchedEpisode[]
+  > = new Map()
 
   @action
-  setHistoryForShow(showId: string, history: PublicTypes.WatchedEpisode[]) {
+  setHistoryForShow(showId: string, history: Dragonstone.WatchedEpisode.WatchedEpisode[]) {
     this.historyForShow.set(showId, history)
   }
 
   @action
-  addHistoryForShow(showId: string, history: PublicTypes.WatchedEpisode) {
+  addHistoryForShow(showId: string, history: Dragonstone.WatchedEpisode.WatchedEpisode) {
     const historyForShow = this.getHistoryForShow(showId)
     historyForShow.push(history)
   }

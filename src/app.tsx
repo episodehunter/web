@@ -1,6 +1,6 @@
-import { createRouter, routerEvents } from '@vieriksson/the-react-router'
 import firebaseApp from 'firebase/app'
 import React, { useEffect, useState } from 'react'
+import { createRouter, routerEvents } from 'the-react-router'
 import { routes } from './components/router'
 import { firebaseAuthConfig } from './config'
 import { createLoaders, createRouteResolver } from './data-loader'
@@ -11,7 +11,7 @@ import { createAuth } from './utils/auth.util'
 
 firebaseApp.initializeApp(firebaseAuthConfig)
 
-const Router = createRouter(routes)
+const [Router, Routes] = createRouter(routes)
 const auth = createAuth(firebaseApp)
 const rootStore = new RootSore()
 const loaders = createLoaders(rootStore, auth.getIdToken)
@@ -44,7 +44,9 @@ export function App() {
   }
   return (
     <GlobalContextProvider value={globalContext}>
-      <Router />
+      <Router>
+        <Routes />
+      </Router>
     </GlobalContextProvider>
   )
 }

@@ -1,12 +1,12 @@
 import { isAfter, isBefore, isSameDay } from 'date-fns'
 import { computed, observable } from 'mobx'
-import { PublicTypes } from '../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { isAfterDaysFrom, isBeforeDaysFrom, isSameDayOrAfter, now } from '../utils/date.utils'
 import { BaseStore } from './base-store'
 import { Show } from './show'
 
 export class UpcomingEpisodes extends BaseStore {
-  @observable upcomingEpisodes: PublicTypes.UpcomingEpisodesWithShowId[] = []
+  @observable upcomingEpisodes: Dragonstone.UpcomingEpisode[] = []
 
   keep(showIds: string[]) {
     this.upcomingEpisodes = this.upcomingEpisodes.filter(upcoming =>
@@ -19,7 +19,7 @@ export class UpcomingEpisodes extends BaseStore {
     return this.upcomingEpisodes.some(upcoming => upcoming.showId === showId)
   }
 
-  add(upcoming: PublicTypes.UpcomingEpisodesWithShowId) {
+  add(upcoming: Dragonstone.UpcomingEpisode) {
     this.upcomingEpisodes.push(upcoming)
   }
 
@@ -39,7 +39,7 @@ export class UpcomingEpisodes extends BaseStore {
 
 export interface ShowAndEpisode {
   show: Show
-  episode?: PublicTypes.UpcomingEpisode
+  episode?: Dragonstone.Episode
 }
 
 interface Upcoming {
@@ -52,7 +52,7 @@ interface Upcoming {
 }
 
 function upcoming(
-  episodesWithShowIds: PublicTypes.UpcomingEpisodesWithShowId[],
+  episodesWithShowIds: Dragonstone.UpcomingEpisode[],
   getShow: (id: string) => Show | undefined,
   today = now()
 ): Upcoming {
@@ -88,9 +88,7 @@ function upcoming(
       upcoming.ended.push({
         show: show
       })
-    }
-
-    if (!nextEpisode) {
+    } else if (!nextEpisode) {
       upcoming.tba.push({
         show: show
       })
@@ -116,8 +114,8 @@ function upcoming(
   return upcoming
 }
 
-function findPrevEpisode(episodes: PublicTypes.UpcomingEpisode[], today: Date) {
-  let bestMatch: PublicTypes.UpcomingEpisode | undefined = undefined
+function findPrevEpisode(episodes: Dragonstone.Episode[], today: Date) {
+  let bestMatch: Dragonstone.Episode | undefined = undefined
 
   const airdEpisodes = episodes.filter(episode => isBefore(episode.aired, today))
 
@@ -131,8 +129,8 @@ function findPrevEpisode(episodes: PublicTypes.UpcomingEpisode[], today: Date) {
   return bestMatch
 }
 
-function findNextEpisode(episodes: PublicTypes.UpcomingEpisode[], today: Date) {
-  let bestMatch: PublicTypes.UpcomingEpisode | undefined = undefined
+function findNextEpisode(episodes: Dragonstone.Episode[], today: Date) {
+  let bestMatch: Dragonstone.Episode | undefined = undefined
 
   const upcomingEpisodes = episodes.filter(episode =>
     isSameDayOrAfter(new Date(episode.aired), today)

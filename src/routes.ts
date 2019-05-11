@@ -6,9 +6,12 @@ export enum Routes {
   search = '/search',
   show = '/show/:id',
   login = '/login',
+  authAction = '/auth-action',
   about = '/about',
   privacy = '/privacy',
   tos = '/tos',
   kodi = '/kodi',
-  plex = '/plex'
+  plex = '/plex',
+  googlehome = '/googlehome',
+  faq = '/faq'
 }

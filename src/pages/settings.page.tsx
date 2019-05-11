@@ -6,6 +6,7 @@ import { Spinner } from '../components/spinner'
 import { useAuth } from '../global-context'
 import { FormButton } from '../styles/form-button'
 import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
+import { media } from '../styles/media-queries'
 
 enum Status {
   none,
@@ -18,7 +19,7 @@ export const SettingsPage = () => {
   const auth = useAuth()
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [status, setStatus] = useState(Status.none)
+  const [status, setStatus] = useState(Status.success)
   const [errorMessage, setErrorMessage] = useState('')
   const [password, setPassword] = useState('')
 
@@ -173,6 +174,9 @@ function hasMismatch(inputOne: string, inputTwo: string) {
 const StatusWrapper = styled.div`
   display: flex;
   width: 20%;
+  ${media.mobile`
+    width: 100%;
+  `}
   height: 70px;
   justify-content: center;
   align-items: center;
@@ -220,6 +224,7 @@ const Text = styled.p`
   font-family: 'Lato', sans-serif;
   color: white;
   font-size: 18px;
+  margin: 10px;
 `
 
 const styles = {

@@ -20,7 +20,7 @@ export const FormStatusMessage = ({ message, success }: Props) => {
 const Wrapper = styled.div`
   width: 100%;
   margin-bottom: 20px;
-  background-color: ${({ success }: { success?: boolean }) =>
-    success ? '#43ba73' : '#af574e'};
+  background-color: ${({ success }: { success?: boolean }) => (success ? '#43ba73' : '#af574e')};
   text-align: center;
+  margin: 10px;
 `

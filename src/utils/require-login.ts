@@ -1,5 +1,5 @@
-import { Navigate, useNavigation } from '@vieriksson/the-react-router'
 import React, { memo } from 'react'
+import { Navigate, useNavigation } from 'the-react-router'
 import { useUser } from '../global-context'
 import { Routes } from '../routes'
 
@@ -8,7 +8,7 @@ type ExtendedProps<P> = P & { navigate: Navigate }
 
 export const requireLogin = <P>(Component: ComponentType<P>) => {
   return memo((props: ExtendedProps<P>) => {
-    const [navigate] = useNavigation()
+    const { navigate } = useNavigation()
     const user = useUser()
     if (!user.getUser()) {
       navigate(Routes.login)

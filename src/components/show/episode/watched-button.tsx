@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import React, { useState } from 'react'
-import { PublicTypes } from '../../../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { useUserLoader } from '../../../global-context'
 import { melrose } from '../../../utils/colors'
 import { TextButton } from '../../button'
 
 type Props = {
-  episode: PublicTypes.Episode
-  watched?: PublicTypes.WatchedEpisode
+  episode: Dragonstone.Episode
+  watched?: Dragonstone.WatchedEpisode.WatchedEpisode
   showId: string
 }
 

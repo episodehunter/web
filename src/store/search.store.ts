@@ -1,10 +1,10 @@
 import { observable } from 'mobx'
-import { PublicTypes } from '../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { BaseStore } from './base-store'
 
 export class SearchStore extends BaseStore {
   @observable isSearchBarOpen: Boolean
-  @observable searchResult: PublicTypes.Title[] = []
+  @observable searchResult: Dragonstone.Title[] = []
 
   openSearchBar() {
     this.isSearchBarOpen = true
@@ -14,7 +14,7 @@ export class SearchStore extends BaseStore {
     this.isSearchBarOpen = false
   }
 
-  setSearchResult(searchResult: PublicTypes.Title[]) {
+  setSearchResult(searchResult: Dragonstone.Title[]) {
     this.searchResult = searchResult
   }
 }

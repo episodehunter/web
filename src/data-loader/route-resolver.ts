@@ -15,6 +15,8 @@ export function createRouteResolver(loaders: Loaders, auth: Auth) {
       loaders.userLoader.loadHistoryPage(0)
     } else if (route.startsWith('/show/') && route.length > 6) {
       loaders.showLoader.loadShowForShowPage(route.split('/show/').pop() || '')
+    } else if (route === Routes.kodi || route === Routes.plex) {
+      loaders.userLoader.getMetadata()
     }
   }
 }

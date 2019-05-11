@@ -1,10 +1,10 @@
 import { computed, observable } from 'mobx'
-import { PublicTypes } from '../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { BaseStore } from './base-store'
 import { Show } from './show'
 
 export class WhatToWatchStore extends BaseStore {
-  @observable following: PublicTypes.WhatToWatch[] = []
+  @observable following: Dragonstone.WhatToWatch[] = []
 
   keep(showIds: string[]) {
     this.following = this.following.filter(whatToWatch => showIds.includes(whatToWatch.showId))
@@ -15,7 +15,7 @@ export class WhatToWatchStore extends BaseStore {
     return this.following.some(upcoming => upcoming.showId === showId)
   }
 
-  add(upcoming: PublicTypes.WhatToWatch) {
+  add(upcoming: Dragonstone.WhatToWatch) {
     this.following.push(upcoming)
   }
 

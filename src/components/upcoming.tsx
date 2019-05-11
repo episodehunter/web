@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PublicTypes } from '../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { ShowAndEpisode } from '../store/upcoming-episodes.store'
 import { media } from '../styles/media-queries'
 import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
@@ -32,7 +32,7 @@ export const Upcoming = ({ title, showsWithEpisode }: Props) => {
   )
 }
 
-export const formatEpisodeAirDate = (ended: boolean, episode?: PublicTypes.UpcomingEpisode) => {
+export const formatEpisodeAirDate = (ended: boolean, episode?: Dragonstone.Episode) => {
   if (episode) {
     return episode.aired
   } else if (ended) {

@@ -1,6 +1,6 @@
-import { useNavigation } from '@vieriksson/the-react-router'
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
+import { useNavigation } from 'the-react-router'
 import { media } from '../../styles/media-queries'
 import { Hamburger } from '../hamburger'
 import { NavbarItems } from './navbar-items'
@@ -8,7 +8,7 @@ import { NavbarItems } from './navbar-items'
 export function Navbar() {
   const [isOpen, setOpen] = useState(false)
   const toggle = () => setOpen(!isOpen)
-  const [navigate, routeState] = useNavigation()
+  const { navigate, state: routeState } = useNavigation()
 
   return (
     <>

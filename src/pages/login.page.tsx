@@ -1,8 +1,9 @@
-import { useNavigation } from '@vieriksson/the-react-router'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useNavigation } from 'the-react-router'
 import { LoginForm } from '../components/auth/login-form'
 import { RegisterForm } from '../components/auth/register-form'
+import { SendResetPasswordEmail } from '../components/auth/send-reset-password-email'
 import { FlotingLoginButtons } from '../components/main/floting-login-buttons'
 import { MainAbout } from '../components/main/main-about'
 import { AuthFormState } from '../enum'
@@ -14,7 +15,7 @@ import { shark } from '../utils/colors'
 export function LoginPage() {
   const [authFormState, setAuthFormState] = useState(AuthFormState.login)
   const auth = useAuth()
-  const [navigate] = useNavigation()
+  const { navigate } = useNavigation()
   useEffect(() => {
     if (auth.isSigndInUser()) {
       navigate(Routes.upcoming)
@@ -22,7 +23,7 @@ export function LoginPage() {
   }, [])
 
   return (
-    <>
+    <div>
       <Wrapper>
         <FlotingLoginButtons changeFormState={state => setAuthFormState(state)} />
         <TopImage>
@@ -34,7 +35,7 @@ export function LoginPage() {
           <AuthForm authFormState={authFormState} />
         </FormWrapper>
       </BottomSection>
-    </>
+    </div>
   )
 }
 
@@ -46,7 +47,7 @@ function AuthForm({ authFormState }: { authFormState: AuthFormState }) {
     case AuthFormState.register:
       return <RegisterForm register={(e, p) => auth.register(e, p)} />
     case AuthFormState.forgotPassword:
-      return null
+      return <SendResetPasswordEmail sendResetEmail={e => auth.sendPasswordResetEmail(e)} />
     default:
       return null
   }
@@ -71,7 +72,7 @@ const FormWrapper = styled.div`
 `
 
 const BottomSection = styled.div`
-  height: 100%;
+  height: 100vh;
   background-color: ${shark};
   display: flex;
   flex-direction: column;
@@ -79,5 +80,5 @@ const BottomSection = styled.div`
 `
 
 const Wrapper = styled.div`
-  height: 100%;
+  height: 100vh;
 `

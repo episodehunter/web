@@ -1,9 +1,9 @@
-import { PublicTypes } from '../public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { Client } from './client'
 
 export const createHistoryFetcher = (client: Client) => ({
-  async fetchHistoryPage(page: number): Promise<PublicTypes.History[]> {
-    return client<{ history: PublicTypes.History[] }>(
+  async fetchHistoryPage(page: number): Promise<Dragonstone.History[]> {
+    return client<{ history: Dragonstone.History[] }>(
       `query getHistory($page: Int!) {
 history(page: $page) {
   watchedEpisode {
@@ -37,7 +37,7 @@ history(page: $page) {
     })
   },
   async fetchWatchedHistory(showId: string) {
-    const result = await client<{ watchedEpisodes: PublicTypes.WatchedEpisode[] }>(`
+    const result = await client<{ watchedEpisodes: Dragonstone.WatchedEpisode.WatchedEpisode[] }>(`
       {
         watchedEpisodes(showId: "${showId}") {
           episodeNumber

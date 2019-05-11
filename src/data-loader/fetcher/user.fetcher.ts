@@ -1,4 +1,4 @@
-import { PublicTypes } from '../public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { Client } from './client'
 
 const createWhatToWatchQuery = (id: string) => {
@@ -10,13 +10,16 @@ const createWhatToWatchQuery = (id: string) => {
 
 export const createUserFetcher = (client: Client) => ({
   async fetchFolloingList() {
-    return client<{ following: PublicTypes.FollowingList }>(`{ following }`).then(
+    return client<{ following: readonly string[] }>(`{ following }`).then(
       result => result.following
     )
   },
+  async fetchMetadata() {
+    return client<{ me: Dragonstone.User }>(`{ me { apikey, username } }`).then(result => result.me)
+  },
   async fetchWhatToWatch(showIds: string[]) {
     const query = '{' + showIds.map(createWhatToWatchQuery).join('\r\n') + '}'
-    const result = await client<{ [key: string]: [PublicTypes.WhatToWatch] }>(query)
+    const result = await client<{ [key: string]: [Dragonstone.WhatToWatch] }>(query)
     return Object.values(result).map(r => r[0])
   },
   async followShow(showId: string) {

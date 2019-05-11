@@ -1,6 +1,6 @@
-import { useNavigation } from '@vieriksson/the-react-router'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useNavigation } from 'the-react-router'
 import { Routes } from '../../routes'
 import { FormButton } from '../../styles/form-button'
 import { mountainMeadow, shark } from '../../utils/colors'
@@ -19,7 +19,7 @@ export const LoginForm = ({ login }: Props) => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [showLoginAnimation, setShowLoginAnimation] = useState(false)
-  const [navigate] = useNavigation()
+  const { navigate } = useNavigation()
 
   const onLogin = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -39,7 +39,7 @@ export const LoginForm = ({ login }: Props) => {
   return (
     <>
       {showLoginAnimation && <LoginAnimation />}
-      <AuthFormWrapper onSubmit={onLogin}>
+      <AuthFormWrapper onSubmit={onLogin as any}>
         <FormStatusMessage message={errorMsg} />
         <FloatingLabel
           styles={floatingLabelStyles}

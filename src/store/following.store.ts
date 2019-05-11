@@ -5,7 +5,7 @@ export class FollowingStore extends BaseStore {
   @observable private folloingShowsIds: Set<string> = new Set()
 
   @action
-  setFollowing(folloingShowsIds: string[]) {
+  setFollowing(folloingShowsIds: readonly string[]) {
     folloingShowsIds.forEach(id => this.folloingShowsIds.add(id))
   }
 

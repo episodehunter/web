@@ -21,12 +21,14 @@ export const ShowPage = observer(() => {
   const episodeStore = useEpisodeStore()
   const watchedHistoryStore = useWatchedHistoryStore()
 
-  if (showPageStore.loadingState.isLoading()) {
+  if (showPageStore.loadingState.isNotLoaded()) {
+    return null
+  } else if (showPageStore.loadingState.isLoading()) {
     return <SpinnerPage />
-  }
-  if (!showPageStore.show) {
+  } else if (!showPageStore.show) {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
+
   const show = showPageStore.show.data
   const episodesForSelectedSeason = episodeStore.getEpisodes(
     show.ids.id,

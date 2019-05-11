@@ -10,10 +10,14 @@ export function createShowStorage(idb: Idb) {
         console.error('Object is not a valid show')
         return Promise.resolve()
       }
-      return idb.set(`${showKey}_${show.ids.id}`, idb.createStorageObject(show))
+      return idb
+        .set(`${showKey}_${show.ids.id}`, idb.createStorageObject(show))
+        .catch(() => undefined)
     },
     findShow(showId: string): Promise<StorageObject<Dragonstone.Show> | undefined> {
-      return idb.get(`${showKey}_${showId}`)
+      return idb
+        .get<StorageObject<Dragonstone.Show> | undefined>(`${showKey}_${showId}`)
+        .catch(() => undefined)
     }
   }
 }

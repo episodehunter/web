@@ -1,5 +1,5 @@
-import { Navigate } from '@vieriksson/the-react-router'
 import React from 'react'
+import { Navigate } from 'the-react-router'
 import { useAuth, useSearch } from '../../global-context'
 import { Routes } from '../../routes'
 import { NavbarItem } from './navbar-item'

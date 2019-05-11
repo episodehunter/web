@@ -16,17 +16,6 @@ type Props = InputHTMLAttributes<HTMLInputElement> &
 
 export const FloatingLabel = (props: Props) => {
   const [focused, setFocused] = useState(false)
-  const [value, setValue] = useState('')
-
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const value = evt.target.value
-
-    if (props.onChange) {
-      props.onChange(evt)
-    }
-
-    setValue(value)
-  }
 
   const handleFocusChange = (evt: React.FocusEvent<HTMLInputElement>) => {
     if (props.onFocus && evt.type === 'focus') {
@@ -39,7 +28,7 @@ export const FloatingLabel = (props: Props) => {
   }
 
   const styles = props.styles || {}
-  const isFloating = (value && value.length) || focused
+  const isFloating = (props.value && props.value.length) || focused
   const floatingStyle = isFloating && Object.assign({}, floatingStyles, styles.floating)
   const focusStyle = focused && Object.assign({}, focusStyles, styles.focus)
   const labelStyle = Object.assign({}, labelStyles, styles.label)
@@ -50,7 +39,7 @@ export const FloatingLabel = (props: Props) => {
     <label htmlFor={props.id} style={labelStyle}>
       <span style={spanStyle}>{props.placeholder}</span>
       <Input
-        value={value}
+        value={props.value}
         autoCapitalize={props.autoCapitalize}
         autoComplete={props.autoComplete}
         autoFocus={props.autoFocus}
@@ -62,7 +51,7 @@ export const FloatingLabel = (props: Props) => {
         minLength={props.minLength}
         name={props.name}
         onBlur={handleFocusChange}
-        onChange={handleChange}
+        onChange={props.onChange}
         onFocus={handleFocusChange}
         pattern={props.pattern}
         readOnly={props.readOnly}

@@ -1,11 +1,11 @@
 import React from 'react'
-import { PublicTypes } from '../../../data-loader/public-types'
+import { Dragonstone } from '@episodehunter/types'
 import { dateReleaseFormat, format } from '../../../utils/date.utils'
 import { BottomTextWrapper } from '../../episode/bottom-text-wrapper'
 import { P } from '../../text'
 
 type Props = {
-  watched: PublicTypes.WatchedEpisode | undefined
+  watched?: Dragonstone.WatchedEpisode.WatchedEpisode
 }
 
 export const WatchedEpisodeDate = ({ watched }: Props) => {

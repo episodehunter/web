@@ -1,11 +1,11 @@
+import { Dragonstone } from '@episodehunter/types'
 import React from 'react'
-import { PublicTypes } from '../../data-loader/public-types'
 import { safeJoin } from '../../utils/array.util'
 import { formatFromString } from '../../utils/date.utils'
 import { safeStringConvertion } from '../../utils/string.util'
 import { HighlightSpan, P2 } from '../text'
 
-export const Facts = ({ show }: { show: PublicTypes.Show }) => (
+export const Facts = ({ show }: { show: Dragonstone.Show }) => (
   <ul style={{ listStyle: 'none', padding: 0 }}>
     <FactLine headline="Airs" info={buildAirsString(show.airs.day, show.airs.time, show.network)} />
     <FactLine headline="Premiered" info={formatFromString(show.airs.first, 'Do MMM -YY')} />
@@ -36,9 +36,9 @@ const dayOfWeekString = [
 ]
 
 const buildAirsString = (
-  dayOfWeek: number | null,
-  airsTime: string | null,
-  network: string | null
+  dayOfWeek?: number | null,
+  airsTime?: string | null,
+  network?: string | null
 ) => {
   if (dayOfWeek && airsTime && network) {
     const airsDayOfWeek = dayOfWeekString[dayOfWeek]

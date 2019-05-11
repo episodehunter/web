@@ -9,7 +9,7 @@ exports[`PosterCard renders correctly 1`] = `
     src="some-image.jpg"
   />
   <div
-    className="sc-ifAKCX jHqQRB"
+    className="sc-ifAKCX bKgJBw"
   >
     <div
       className="sc-bwzfXH uTxCW"
