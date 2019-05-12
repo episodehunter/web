@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/browser'
 import { GraphQLClient } from 'graphql-request'
 import { dragonstoneUrl } from '../../config'
 
@@ -10,7 +11,10 @@ export const createClient = (getIdToken: () => Promise<string>) => {
   return async <T>(query: string, variables?: Variables): Promise<T> => {
     const token = await getIdToken()
     client.setHeader('authorization', `Bearer ${token}`)
-    return client.request<T>(query, variables)
+    return client.request<T>(query, variables).catch(error => {
+      captureException(error)
+      return Promise.reject(error)
+    })
   }
 }
 
