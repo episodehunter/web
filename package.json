@@ -44,7 +44,7 @@
     "babel-loader": "^8.0.5",
     "jest": "^24.7.1",
     "react-test-renderer": "^16.8.6",
-    "simple-spy": "^2.2.1",
+    "simple-spy": "^3.0.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.5",
     "webpack": "^4.30.0",
