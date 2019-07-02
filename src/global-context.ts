@@ -2,11 +2,13 @@ import { createContext, useContext } from 'react'
 import { Loaders } from './data-loader/loaders'
 import { RootSore } from './store/root.store'
 import { Auth } from './utils/auth.util'
+import { PgClient } from './utils/gq-client'
 
 export interface GlobalContext {
   rootStore: RootSore
   loaders: Loaders
   auth: Auth
+  pgClient: PgClient
 }
 
 export const globalContext = createContext<GlobalContext>({} as GlobalContext)
@@ -32,3 +34,5 @@ export const useUserLoader = hookCreator(g => g.loaders.userLoader)
 export const useEpisodeStore = hookCreator(g => g.rootStore.episodes)
 export const useWatchedHistoryStore = hookCreator(g => g.rootStore.watchedHistory)
 export const useAuth = hookCreator(g => g.auth)
+
+export const usePgClient = hookCreator(g => g.pgClient)

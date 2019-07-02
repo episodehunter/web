@@ -5,7 +5,7 @@ import { PosterCard } from '../poster-cards/poster-card'
 import { SmallShowPoster } from '../poster/small-show-poster'
 
 type Props = {
-  showId: string
+  showId: number
   tvdbId: number
   topRight?: JSX.Element | string
   bottomRight?: JSX.Element | string

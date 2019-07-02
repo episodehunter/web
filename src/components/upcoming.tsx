@@ -1,30 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Dragonstone } from '@episodehunter/types'
-import { ShowAndEpisode } from '../store/upcoming-episodes.store'
 import { media } from '../styles/media-queries'
 import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
+import { UpcomingShow } from '../types/upcoming'
 
 type Props = {
   title: string
-  showsWithEpisode: ShowAndEpisode[]
+  shows: UpcomingShow[]
+  episodeKey: 'upcomingEpisode' | 'justAirdEpisode'
 }
 
-export const Upcoming = ({ title, showsWithEpisode }: Props) => {
-  if (!showsWithEpisode.length) {
+export const Upcoming = ({ title, shows, episodeKey }: Props) => {
+  if (!shows.length) {
     return null
   }
   return (
     <UpcomingWrapper>
       <Timespan>{title}</Timespan>
       <ShowsWrapper>
-        {showsWithEpisode.map(({ show, episode }) => (
+        {shows.map(show => (
           <UpcomingEpisodeCard
-            key={show.data.ids.id}
-            episodeAirDate={formatEpisodeAirDate(show.data.ended, episode)}
-            showId={show.data.ids.id}
-            tvdbId={show.data.ids.tvdb}
-            showName={show.data.name}
+            key={show.ids.id}
+            episodeAirDate={formatEpisodeAirDate(show.ended, show[episodeKey])}
+            showId={show.ids.id}
+            tvdbId={show.ids.tvdb}
+            showName={show.name}
           />
         ))}
       </ShowsWrapper>
@@ -32,7 +33,10 @@ export const Upcoming = ({ title, showsWithEpisode }: Props) => {
   )
 }
 
-export const formatEpisodeAirDate = (ended: boolean, episode?: Dragonstone.Episode) => {
+export const formatEpisodeAirDate = (
+  ended: boolean,
+  episode: Pick<Dragonstone.Episode, 'aired'> | null
+) => {
   if (episode) {
     return episode.aired
   } else if (ended) {

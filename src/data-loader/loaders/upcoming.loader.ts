@@ -10,14 +10,19 @@ export const createUpcomingLoader = (
 ) => ({
   async loadUpcoming() {
     upcomingEpisodes.loadingState.setLoading()
-    const { userLoader } = getLoaders()
+    try {
+      const upcoming = await fetcher.upcomingFetcher.fetchUpcoming()
+      upcomingEpisodes.add
+      upcomingEpisodes.loadingState.setLoaded()
+    } catch (error) {}
+
     const followingList = await userLoader.loadFolloingShowsIds()
     upcomingEpisodes.keep(followingList)
 
     const missingIds = followingList.filter(id => !upcomingEpisodes.has(id))
     let fetchingUpcoming: Promise<Dragonstone.UpcomingEpisode[]> = Promise.resolve([])
     if (missingIds.length) {
-      fetchingUpcoming = fetcher.upcomingFetcher.fetchUpcomingEpisodes(missingIds)
+      fetchingUpcoming = fetcher.upcomingFetcher.fetchUpcoming(missingIds)
     }
 
     const missingShowsIds = followingList.filter(id => !shows.has(id))
