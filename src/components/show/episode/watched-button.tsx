@@ -1,38 +1,37 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
-import { Dragonstone } from '@episodehunter/types'
-import { useUserLoader } from '../../../global-context'
+import React, { useCallback, useState } from 'react'
+import { useEpisodeMutaion } from '../../../mutate/use-episode-mutation'
+import { SeasonEpisode } from '../../../types/episode'
 import { melrose } from '../../../utils/colors'
 import { TextButton } from '../../button'
 
 type Props = {
-  episode: Dragonstone.Episode
-  watched?: Dragonstone.WatchedEpisode.WatchedEpisode
-  showId: string
+  episode: SeasonEpisode
 }
 
-export const WatchedButton = observer(({ episode, showId, watched }: Props) => {
+export const WatchedButton = observer(({ episode }: Props) => {
   const [disabled, setDisabled] = useState(false)
-  const userLoader = useUserLoader()
+  const { checkInEpisode, removeCheckedInEpisode } = useEpisodeMutaion(episode)
 
-  const guard = () => {
+  const checkIn = useCallback(() => {
     if (disabled) {
-      return false
+      return
     }
     setDisabled(true)
-    setTimeout(setDisabled, 2000, false)
-    return true
-  }
+    checkInEpisode()
+  }, [disabled])
 
-  if (watched) {
-    const removeCheckInEpisode = () => {
-      if (!guard()) {
-        return
-      }
-      userLoader.removeCheckInEpisode(showId, watched)
+  const removeCheckIn = useCallback(() => {
+    if (disabled) {
+      return
     }
+    setDisabled(true)
+    removeCheckedInEpisode()
+  }, [disabled])
+
+  if (episode.watched.length > 0) {
     return (
-      <TextButton onClick={removeCheckInEpisode}>
+      <TextButton onClick={removeCheckIn}>
         Mark as unwatched{' '}
         <i className="material-icons" style={iconStyle}>
           remove_circle_outline
@@ -40,14 +39,8 @@ export const WatchedButton = observer(({ episode, showId, watched }: Props) => {
       </TextButton>
     )
   } else {
-    const checkInEpisode = () => {
-      if (!guard()) {
-        return
-      }
-      userLoader.checkInEpisode(showId, episode.season, episode.episode, new Date())
-    }
     return (
-      <TextButton onClick={checkInEpisode}>
+      <TextButton onClick={checkIn}>
         Mark as watched{' '}
         <i className="material-icons" style={iconStyle}>
           tv

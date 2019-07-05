@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Dragonstone } from '@episodehunter/types'
 import { isMobile, media } from '../../../styles/media-queries'
-import { composeSeasonAndEpisodeNumber } from '../../../utils/episode.util'
+import { SeasonEpisode } from '../../../types/episode'
+import { episodeNumberToString } from '../../../utils/episode.util'
 import { EllipsisText } from '../../ellipsis-text'
 import { EpisodeImage } from '../../episode/episode-image'
 import { H4, HighlightSpan } from '../../text'
@@ -10,27 +10,23 @@ import { AirDate } from './air-date'
 import { WatchedButton } from './watched-button'
 import { WatchedEpisodeDate } from './watched-episode-date'
 
-type Props = {
-  episode: Dragonstone.Episode
-  watched?: Dragonstone.WatchedEpisode.WatchedEpisode
-  showId: string
+interface Props {
+  episode: SeasonEpisode
 }
 
-export const Episode = ({ episode, watched, showId }: Props) => (
+export const Episode = ({ episode }: Props) => (
   <EpisodeWrapper>
-    <EpisodeImage {...episodeImageProps(episode.tvdbId)}>
-      <WatchedEpisodeDate watched={watched} />
+    <EpisodeImage {...episodeImageProps(episode.ids.tvdb)}>
+      <WatchedEpisodeDate watched={episode.watched} />
     </EpisodeImage>
 
     <DescriptionWrapper>
       <HeadlineWrapper>
         <H4 margin={0}>
-          <HighlightSpan>
-            {composeSeasonAndEpisodeNumber(episode.season, episode.episode)}
-          </HighlightSpan>{' '}
+          <HighlightSpan>{episodeNumberToString(episode.episodenumber)}</HighlightSpan>{' '}
           {episode.name}
         </H4>
-        <WatchedButton showId={showId} watched={watched} episode={episode} />
+        <WatchedButton episode={episode} />
       </HeadlineWrapper>
       <AirDate firstAired={episode.aired} />
       <EllipsisText length={350} style={{ margin: '7.5px 0 0 0' }}>

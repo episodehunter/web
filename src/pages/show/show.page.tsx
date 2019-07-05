@@ -1,43 +1,35 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
-import { Button } from '../components/button'
-import { EllipsisText } from '../components/ellipsis-text'
-import { ShowFanart } from '../components/fanart/show-fanart'
-import { SmallShowPoster } from '../components/poster/small-show-poster'
-import { Episodes } from '../components/show/episode/episodes'
-import { Facts } from '../components/show/facts'
-import { FollowingButton } from '../components/show/following-button'
-import { NextEpisode } from '../components/show/next-episode'
-import { Progress } from '../components/show/progress'
-import { H1, H3 } from '../components/text'
-import { useEpisodeStore, useShowPage, useWatchedHistoryStore } from '../global-context'
-import { images } from '../images.config'
-import { HideOnMobile, isMobile, media } from '../styles/media-queries'
-import { SpinnerPage } from './spinner.page'
+import { useNavigation } from 'the-react-router'
+import { Button } from '../../components/button'
+import { EllipsisText } from '../../components/ellipsis-text'
+import { ShowFanart } from '../../components/fanart/show-fanart'
+import { SmallShowPoster } from '../../components/poster/small-show-poster'
+import { Episodes } from '../../components/show/episode/episodes'
+import { Facts } from '../../components/show/facts'
+import { FollowingButton } from '../../components/show/following-button'
+import { NextEpisode } from '../../components/show/next-episode'
+import { Progress } from '../../components/show/progress'
+import { H1, H3 } from '../../components/text'
+import { images } from '../../images.config'
+import { HideOnMobile, isMobile, media } from '../../styles/media-queries'
+import { SpinnerPage } from '../spinner.page'
+import { useShow } from './use-show'
 
 export const ShowPage = observer(() => {
-  const showPageStore = useShowPage()
-  const episodeStore = useEpisodeStore()
-  const watchedHistoryStore = useWatchedHistoryStore()
+  const { params } = useNavigation<{ id: number }>()
+  const [show, selectedSeason, setSelectedSeason, isLoading, hasError] = useShow(params.id)
 
-  if (showPageStore.loadingState.isNotLoaded()) {
-    return null
-  } else if (showPageStore.loadingState.isLoading()) {
+  if (isLoading) {
     return <SpinnerPage />
-  } else if (!showPageStore.show) {
+  } else if (hasError) {
+    // TODO: report and show something
+    return <p>Error</p>
+  } else if (!show) {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
 
-  const show = showPageStore.show.data
-  const episodesForSelectedSeason = episodeStore.getEpisodes(
-    show.ids.id,
-    showPageStore.selectedSeason
-  )
-  const watchedHistory = watchedHistoryStore.getHistoryForSeason(
-    show.ids.id,
-    showPageStore.selectedSeason
-  )
   return (
     <PageWrapper tvdbId={show.ids.tvdb}>
       <HideOnMobile>
@@ -58,7 +50,7 @@ export const ShowPage = observer(() => {
               {show.name}
             </H1>
             <EllipsisText length={500}>{show.overview}</EllipsisText>
-            <FollowingButton isFollowing={showPageStore.isFollowing} showId={show.ids.id} />
+            <FollowingButton show={show} />
           </ShowTitleAndOverview>
         </PosterAndTitleWrapper>
         <Content>
@@ -68,31 +60,31 @@ export const ShowPage = observer(() => {
               <Facts show={show} />
             </FactWarpper>
           </HideOnMobile>
-          <Progress showId={show.ids.id} episodeRuntime={show.runtime} />
+          <Progress
+            episodeRuntime={show.runtime}
+            numberOfAiredEpisodes={show.numberOfAiredEpisodes}
+            numberOfEpisodesToWatch={show.nextToWatch.numberOfEpisodesToWatch}
+          />
           <NextEpisodeWarpper>
-            <NextEpisode showId={show.ids.id} />
+            <NextEpisode episode={show.nextToWatch.episode} />
           </NextEpisodeWarpper>
         </Content>
       </Wrapper>
 
       <Wrapper>
         <SeasonButtonsWrapper>
-          {showPageStore.seasons.map(season => (
+          {show.seasons.map(season => (
             <Button
               key={season}
-              onClick={() => showPageStore.setSelectedSeason(season)}
-              active={season === showPageStore.selectedSeason}
+              onClick={() => setSelectedSeason(season)}
+              active={season === selectedSeason}
             >
               Season {season}
             </Button>
           ))}
         </SeasonButtonsWrapper>
         <EpisodesWrapper>
-          <Episodes
-            showId={show.ids.id}
-            episodes={episodesForSelectedSeason}
-            watchedEpisode={watchedHistory}
-          />
+          <Episodes showId={show.ids.id} season={selectedSeason} />
         </EpisodesWrapper>
       </Wrapper>
     </PageWrapper>

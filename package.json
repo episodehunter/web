@@ -63,6 +63,7 @@
     "idb-keyval": "^3.2.0",
     "mobx": "^5.9.4",
     "mobx-react-lite": "^1.3.0",
+    "mobx-react": "^6.1.1",
     "rc-progress": "^2.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

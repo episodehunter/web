@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchUpcoming } from './fetch-upcoming'
-import { usePgClient } from '../../global-context'
+import { useGqClient } from '../../global-context'
 import { UpcomingShow } from '../../types/upcoming'
 import { now, isBeforeDaysFrom } from '../../utils/date.utils'
 import { isSameDay } from 'date-fns'
@@ -15,7 +15,7 @@ interface UpcomingCollection {
 }
 
 export function useUpcoming() {
-  const client = usePgClient()
+  const client = useGqClient()
   const [upcomingCollection, setUpcomingCollection] = useState<UpcomingCollection>()
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)

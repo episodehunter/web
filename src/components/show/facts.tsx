@@ -1,11 +1,11 @@
-import { Dragonstone } from '@episodehunter/types'
 import React from 'react'
 import { safeJoin } from '../../utils/array.util'
 import { formatFromString } from '../../utils/date.utils'
 import { safeStringConvertion } from '../../utils/string.util'
 import { HighlightSpan, P2 } from '../text'
+import { Show } from '../../types/show'
 
-export const Facts = ({ show }: { show: Dragonstone.Show }) => (
+export const Facts = ({ show }: { show: Show }) => (
   <ul style={{ listStyle: 'none', padding: 0 }}>
     <FactLine headline="Airs" info={buildAirsString(show.airs.day, show.airs.time, show.network)} />
     <FactLine headline="Premiered" info={formatFromString(show.airs.first, 'Do MMM -YY')} />
@@ -13,7 +13,7 @@ export const Facts = ({ show }: { show: Dragonstone.Show }) => (
     <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
     <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
     <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
-    <FactLine headline="Followers" info={safeStringConvertion(show.numberOfFollowers)} />
+    <FactLine headline="Followers" info={safeStringConvertion(show.followers)} />
   </ul>
 )
 

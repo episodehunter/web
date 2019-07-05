@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { P } from './text'
 
-type Props = { children?: string; length: number; style?: any }
+type Props = { children?: string | null; length: number; style?: any }
 
 export const EllipsisText = ({ children, length, style }: Props) => {
   const [showAllText, setShowAllText] = useState(false)

@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
-import { useEpisodeStore, useWatchedHistoryStore } from '../../global-context'
 import {
   numberOfEpisodesToWatchPercent,
   numberOfUnwatchedHoursLeft
@@ -9,27 +8,26 @@ import {
 import { GapProgress } from '../progress/gap-progress'
 import { H3, HighlightSpan, P2 } from '../text'
 
+interface Props {
+  episodeRuntime: number
+  numberOfAiredEpisodes: number
+  numberOfEpisodesToWatch: number
+}
+
 export const Progress = observer(
-  ({ showId, episodeRuntime }: { showId: string; episodeRuntime: number }) => {
-    const episodes = useEpisodeStore()
-    const watchedHistoryStore = useWatchedHistoryStore()
-    const numberOfWatchableEpisodes = episodes.getPossibleEpisodesToWatch(showId).length
-    const numberOfWatchedEpisodes = watchedHistoryStore.getNumberOfWatchedEpisodes(showId)
-    const numberOfEpisodesToWatch = numberOfWatchableEpisodes - numberOfWatchedEpisodes
+  ({ numberOfAiredEpisodes, numberOfEpisodesToWatch, episodeRuntime }: Props) => {
+    const numberOfWatchedEpisodes = numberOfAiredEpisodes - numberOfEpisodesToWatch
     return (
       <ProgressWarpper>
         <H3>Your progress</H3>
         <GapProgress
-          percent={numberOfEpisodesToWatchPercent(
-            numberOfWatchableEpisodes,
-            numberOfWatchedEpisodes
-          )}
+          percent={numberOfEpisodesToWatchPercent(numberOfAiredEpisodes, numberOfWatchedEpisodes)}
           height="100px"
           width="100px"
         />
         <P2 center={true}>
           You've seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan> out of{' '}
-          <HighlightSpan>{numberOfWatchableEpisodes}</HighlightSpan> episodes. <br />
+          <HighlightSpan>{numberOfAiredEpisodes}</HighlightSpan> episodes. <br />
           <HoursLeftText
             numberOfHoursLeft={numberOfUnwatchedHoursLeft(numberOfEpisodesToWatch, episodeRuntime)}
           />

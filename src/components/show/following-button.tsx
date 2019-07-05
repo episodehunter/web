@@ -1,42 +1,43 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
-import { IsFollowing } from '../../enum/is-following'
-import { useUserLoader } from '../../global-context'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useShowMutaion } from '../../mutate/use-show-mutaion'
+import { Show } from '../../types/show'
 import { Button } from '../button'
-import { Spinner } from '../spinner'
 
 interface Props {
-  isFollowing: IsFollowing
-  showId: string
+  show: Show
 }
 
-export const FollowingButton = observer(({ isFollowing, showId }: Props) => {
+export const FollowingButton = observer(({ show }: Props) => {
   const [disabled, setDisabled] = useState(false)
-  const userLoader = useUserLoader()
+  const { followShow, unfollowShow } = useShowMutaion(show)
 
-  const guard = (cb: (showId: string) => void) => () => {
-    if (disabled) {
-      return
-    }
+  const follow = useCallback(() => {
     setDisabled(true)
-    setTimeout(setDisabled, 2000, false)
-    cb(showId)
-  }
+    followShow()
+  }, [])
 
-  switch (isFollowing) {
-    case IsFollowing.yes:
-      return (
-        <Button disabled={disabled} onClick={guard(userLoader.unfollowShow)}>
-          Unfollow
-        </Button>
-      )
-    case IsFollowing.no:
-      return (
-        <Button disabled={disabled} onClick={guard(userLoader.followShow)}>
-          Follow
-        </Button>
-      )
-    default:
-      return <Spinner />
+  const unfollow = useCallback(() => {
+    setDisabled(true)
+    unfollowShow()
+  }, [])
+
+  useEffect(() => {
+    const timeoutId = setTimeout(setDisabled, 2000, false)
+    return () => clearTimeout(timeoutId)
+  }, [disabled])
+
+  if (show.isFollowing) {
+    return (
+      <Button disabled={disabled} onClick={unfollow}>
+        Unfollow
+      </Button>
+    )
+  } else {
+    return (
+      <Button disabled={disabled} onClick={follow}>
+        Follow
+      </Button>
+    )
   }
 })

@@ -35,4 +35,4 @@ export const useEpisodeStore = hookCreator(g => g.rootStore.episodes)
 export const useWatchedHistoryStore = hookCreator(g => g.rootStore.watchedHistory)
 export const useAuth = hookCreator(g => g.auth)
 
-export const usePgClient = hookCreator(g => g.pgClient)
+export const useGqClient = hookCreator(g => g.pgClient)

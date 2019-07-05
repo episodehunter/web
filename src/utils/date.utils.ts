@@ -30,6 +30,7 @@ export const ddmmm = (date: Date): string => format(date, 'D MMMM').toUpperCase(
 
 export const now = () => new Date()
 export type Now = typeof now
+export const unixtimestamp = () => (Date.now() / 1000) | 0
 
 export const today = () => startOfToday()
 export type Today = typeof today
