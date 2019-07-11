@@ -27,7 +27,10 @@ export const EmptyHistory = () => {
     <Wrapper>
       <BoxWrapper>
         <Header>Woops!</Header>
-        <Text>It looks like you haven't watched anything!</Text>
+        <Text>
+          It looks like you haven't watched anything! Go and watch an episode of your favorite tv
+          show
+        </Text>
       </BoxWrapper>
     </Wrapper>
   )

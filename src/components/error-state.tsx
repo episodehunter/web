@@ -9,7 +9,7 @@ export const ErrorState = () => {
         <Header>Woops!</Header>
         <Text>
           Something went wrong. The error is reported and we will fix it as soon as possible. In the
-          meantime; watch an episode of your favoritetv show
+          meantime; watch an episode of your favorite tv show
         </Text>
       </BoxWrapper>
     </Wrapper>

@@ -40,32 +40,3 @@ export async function fetchShow(client: GqClient, showId: number): Promise<Show 
     `
   ).then(result => result.show)
 }
-
-// export async function fetchNextEpisodeToWatch(
-//   client: GqClient,
-//   showId: number
-// ): Promise<NextEpisodeToWatch | null> {
-//   return client<{ show: Show | null }>(
-//     `
-//     query nextToWatch($showId: Int!) {
-//       show(id: $showId) {
-//         nextToWatch {
-//           episode {
-//             ids {
-//               tvdb
-//             }
-//             name
-//             episodenumber
-//           }
-//         }
-//       }
-//     }
-//     `.trim(),
-//     { showId }
-//   ).then(result => {
-//     if (!result.show) {
-//       return null
-//     }
-//     return result.show.nextToWatch.episode
-//   })
-// }
