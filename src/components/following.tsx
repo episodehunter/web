@@ -1,25 +1,25 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Show } from '../store/show'
 import { media } from '../styles/media-queries'
 import { ShowCard } from './show-card/show-card'
 import { H1 } from './text'
+import { Show } from '../types/show'
 
-type Props = {
-  following: { show: Show; numberOfEpisodesToWatch: number }[]
+interface Props {
+  shows: Show[]
 }
 
-export const Following = ({ following }: Props) => (
+export const Following = ({ shows }: Props) => (
   <Wrapper>
     <H1>Following</H1>
     <FollowingWrapper>
-      {following.map(({ show, numberOfEpisodesToWatch }) => (
+      {shows.map(show => (
         <ShowCard
-          key={show.data.ids.id}
-          showId={show.data.ids.id}
-          tvdbId={show.data.ids.tvdb}
-          topRight={show.data.name}
-          bottomRight={episodeLeftText(numberOfEpisodesToWatch)}
+          key={show.ids.id}
+          showId={show.ids.id}
+          tvdbId={show.ids.tvdb}
+          topRight={show.name}
+          bottomRight={episodeLeftText(show.nextToWatch.numberOfEpisodesToWatch)}
         />
       ))}
     </FollowingWrapper>

@@ -1,8 +1,8 @@
-import { Dragonstone } from '@episodehunter/types'
+import { WatchedEnum } from '@episodehunter/types/dragonstone/watched-episode'
 
 export interface WatchedEpisode {
   time: number
-  type: Dragonstone.WatchedEpisode.WatchedEnum
+  type: WatchedEnum
 }
 
 export interface SeasonEpisode {

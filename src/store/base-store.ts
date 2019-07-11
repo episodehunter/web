@@ -8,8 +8,4 @@ export class BaseStore {
   constructor(rootStore: RootSore) {
     this.rootStore = rootStore
   }
-
-  protected get showsStore() {
-    return this.rootStore.shows
-  }
 }

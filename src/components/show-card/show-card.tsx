@@ -15,7 +15,7 @@ export const ShowCard = ({ showId, tvdbId, bottomRight, topRight }: Props) => {
   const ImageContainer = getImageContainer()
   return (
     <PosterCard
-      linkUrl={`/show/${showId}`}
+      linkUrl={`/show/${showId}/${tvdbId}`}
       poster={<ImageContainer tvdbId={tvdbId} />}
       topRight={topRight}
       bottomRight={bottomRight}

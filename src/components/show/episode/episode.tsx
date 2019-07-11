@@ -9,12 +9,13 @@ import { H4, HighlightSpan } from '../../text'
 import { AirDate } from './air-date'
 import { WatchedButton } from './watched-button'
 import { WatchedEpisodeDate } from './watched-episode-date'
+import { observer } from 'mobx-react-lite'
 
 interface Props {
   episode: SeasonEpisode
 }
 
-export const Episode = ({ episode }: Props) => (
+export const Episode = observer(({ episode }: Props) => (
   <EpisodeWrapper>
     <EpisodeImage {...episodeImageProps(episode.ids.tvdb)}>
       <WatchedEpisodeDate watched={episode.watched} />
@@ -34,7 +35,7 @@ export const Episode = ({ episode }: Props) => (
       </EllipsisText>
     </DescriptionWrapper>
   </EpisodeWrapper>
-)
+))
 
 const episodeImageProps = (tvdbId: number) =>
   isMobile()

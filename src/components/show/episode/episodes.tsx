@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useGqClient } from '../../../global-context'
-import { PgClient } from '../../../utils/gq-client'
+import { GqClient } from '../../../utils/gq-client'
 import { Spinner } from '../../spinner'
 import { Episode } from './episode'
 import { SeasonEpisode } from '../../../types/episode'
@@ -16,7 +16,7 @@ interface Props {
 
 const seasonQuery = `
 query season($showId: Int!, $season: Int!) {
-  season(showId: $showId, season, $season) {
+  season(showId: $showId, season: $season) {
     ids {
       showId
       tvdb
@@ -24,7 +24,7 @@ query season($showId: Int!, $season: Int!) {
     aired
     name
     episodenumber
-    watched	{
+    watched {
       time
       type
     }
@@ -35,7 +35,7 @@ query season($showId: Int!, $season: Int!) {
 const showSeasons = new Map<string, Promise<SeasonEpisode[]>>()
 
 const getSeasonEpisodes = (
-  client: PgClient,
+  client: GqClient,
   showId: number,
   season: number
 ): Promise<SeasonEpisode[]> => {

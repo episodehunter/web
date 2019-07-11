@@ -1,37 +1,38 @@
-import { observer } from 'mobx-react-lite'
-import React from 'react'
-import styled from 'styled-components'
-import { EmptyState } from '../components/empty-state'
-import { Following } from '../components/following'
-import { useWhatToWatch } from '../global-context'
-import { shark } from '../utils/colors'
-import { SpinnerPage } from './spinner.page'
+export const FollowingPage = () => null
 
-export const FollowingPage = observer(() => {
-  const whatToWatch = useWhatToWatch()
+// import { observer } from 'mobx-react-lite'
+// import React from 'react'
+// import styled from 'styled-components'
+// import { EmptyState } from '../components/empty-state'
+// import { Following } from '../components/following'
+// import { shark } from '../utils/colors'
+// import { SpinnerPage } from './spinner.page'
 
-  if (whatToWatch.loadingState.isNotLoaded()) {
-    return null
-  }
+// export const FollowingPage = observer(() => {
+//   const whatToWatch = useWhatToWatch()
 
-  if (whatToWatch.loadingState.isLoading()) {
-    return <SpinnerPage />
-  }
+//   if (whatToWatch.loadingState.isNotLoaded()) {
+//     return null
+//   }
 
-  if (!whatToWatch.hasSomethingToWatch) {
-    return <EmptyState />
-  }
+//   if (whatToWatch.loadingState.isLoading()) {
+//     return <SpinnerPage />
+//   }
 
-  return (
-    <Wrapper>
-      <Following following={whatToWatch.whatToWatch} />
-    </Wrapper>
-  )
-})
+//   if (!whatToWatch.hasSomethingToWatch) {
+//     return <EmptyState />
+//   }
 
-const Wrapper = styled.div`
-  background-color: ${shark};
-  display: flex;
-  justify-content: center;
-  padding-top: 70px;
-`
+//   return (
+//     <Wrapper>
+//       <Following following={whatToWatch.whatToWatch} />
+//     </Wrapper>
+//   )
+// })
+
+// const Wrapper = styled.div`
+//   background-color: ${shark};
+//   display: flex;
+//   justify-content: center;
+//   padding-top: 70px;
+// `

@@ -1,6 +1,6 @@
 import { action, runInAction } from 'mobx'
 import { Show } from '../types/show'
-import { PgClient } from '../utils/gq-client'
+import { GqClient } from '../utils/gq-client'
 import { useCallback } from 'react'
 import { useGqClient } from '../global-context'
 
@@ -42,7 +42,7 @@ export function useShowMutaion(show: Show): ShowMutation {
   }
 }
 
-async function followShowReq(client: PgClient, showId: number): Promise<boolean> {
+async function followShowReq(client: GqClient, showId: number): Promise<boolean> {
   return client<{ followShow: boolean }>(
     `mutation {
       followShow(showId: ${showId})
@@ -50,7 +50,7 @@ async function followShowReq(client: PgClient, showId: number): Promise<boolean>
   ).then(result => result.followShow)
 }
 
-async function unfollowShowReq(client: PgClient, showId: number): Promise<boolean> {
+async function unfollowShowReq(client: GqClient, showId: number): Promise<boolean> {
   return client<{ followShow: boolean }>(
     `mutation {
       unfollowShow(showId: ${showId})

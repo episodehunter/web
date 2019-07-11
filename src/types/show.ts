@@ -31,9 +31,9 @@ export interface Show {
   network: string | null
   overview: string | null
   runtime: number
-  seasons: number[] // TODO
-  numberOfAiredEpisodes: number // TODO
+  seasons: number[] // TEST
+  numberOfAiredEpisodes: number // TEST
   nextToWatch: NextToWatchShow
   followers: number
-  isFollowing: boolean // TODO
+  isFollowing: boolean // TEST
 }

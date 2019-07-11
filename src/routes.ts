@@ -4,7 +4,7 @@ export enum Routes {
   history = '/history',
   settings = '/settings',
   search = '/search',
-  show = '/show/:id',
+  show = '/show/:id/:tvdb?',
   login = '/login',
   authAction = '/auth-action',
   about = '/about',

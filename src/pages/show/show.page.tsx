@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
 import { Button } from '../../components/button'
 import { EllipsisText } from '../../components/ellipsis-text'
+import { ErrorState } from '../../components/error-state'
 import { ShowFanart } from '../../components/fanart/show-fanart'
 import { SmallShowPoster } from '../../components/poster/small-show-poster'
 import { Episodes } from '../../components/show/episode/episodes'
@@ -14,18 +15,28 @@ import { Progress } from '../../components/show/progress'
 import { H1, H3 } from '../../components/text'
 import { images } from '../../images.config'
 import { HideOnMobile, isMobile, media } from '../../styles/media-queries'
-import { SpinnerPage } from '../spinner.page'
+import { SpinnerPage, AbsoluteSpinnerPage } from '../spinner.page'
 import { useShow } from './use-show'
 
 export const ShowPage = observer(() => {
-  const { params } = useNavigation<{ id: number }>()
-  const [show, selectedSeason, setSelectedSeason, isLoading, hasError] = useShow(params.id)
+  const { params } = useNavigation<{ id: string; tvdb?: string }>()
+  const [show, selectedSeason, setSelectedSeason, isLoading, hasError] = useShow(Number(params.id))
 
   if (isLoading) {
-    return <SpinnerPage />
+    if (params.tvdb) {
+      return (
+        <PageWrapper tvdbId={params.tvdb}>
+          <HideOnMobile>
+            <ShowFanart tvdbId={params.tvdb} />
+          </HideOnMobile>
+          <AbsoluteSpinnerPage />
+        </PageWrapper>
+      )
+    } else {
+      return <SpinnerPage />
+    }
   } else if (hasError) {
-    // TODO: report and show something
-    return <p>Error</p>
+    return <ErrorState />
   } else if (!show) {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
@@ -91,9 +102,9 @@ export const ShowPage = observer(() => {
   )
 })
 
-const PageWrapperTabletAndUp = styled.div<{ tvdbId: number }>``
+const PageWrapperTabletAndUp = styled.div<{ tvdbId: number | string }>``
 
-const PageWrapperMobile = styled.div<{ tvdbId: number }>`
+const PageWrapperMobile = styled.div<{ tvdbId: number | string }>`
   position: relative;
   z-index: 2;
   &::before {

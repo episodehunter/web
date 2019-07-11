@@ -15,3 +15,9 @@ export const SpinnerPage = () => (
     <Spinner />
   </Content>
 )
+
+export const AbsoluteSpinnerPage = () => (
+  <Content style={{ position: 'absolute', top: 0 }}>
+    <Spinner />
+  </Content>
+)

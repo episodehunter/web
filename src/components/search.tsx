@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useSearch, useSearchLoader } from '../global-context'
+import { useSearch } from '../global-context'
 import { media } from '../styles/media-queries'
 import { alabaster, shark } from '../utils/colors'
 import { SmallShowFanart } from './fanart/small-show-fanart'
@@ -9,7 +9,6 @@ import { PosterCard } from './poster-cards/poster-card'
 
 export const Search = observer(() => {
   const searchStore = useSearch()
-  const searchLoader = useSearchLoader()
   const [searchTerm, setSearchTerm] = useState('')
   useEffect(() => {
     const onKeyPress = (event: KeyboardEvent) => {
@@ -31,7 +30,7 @@ export const Search = observer(() => {
 
   const updateSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
-    searchLoader.searchDebounce(event.target.value)
+    // searchLoader.searchDebounce(event.target.value)
   }
 
   return (

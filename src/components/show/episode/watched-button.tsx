@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { useEpisodeMutaion } from '../../../mutate/use-episode-mutation'
 import { SeasonEpisode } from '../../../types/episode'
 import { melrose } from '../../../utils/colors'
@@ -27,6 +27,12 @@ export const WatchedButton = observer(({ episode }: Props) => {
     }
     setDisabled(true)
     removeCheckedInEpisode()
+  }, [disabled])
+
+  useEffect(() => {
+    if (disabled) {
+      setTimeout(setDisabled, 1000, false)
+    }
   }, [disabled])
 
   if (episode.watched.length > 0) {

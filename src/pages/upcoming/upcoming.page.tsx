@@ -1,12 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import styled from 'styled-components'
+import { captureException } from '@sentry/browser'
 import { EmptyState } from '../../components/empty-state'
 import { Upcoming } from '../../components/upcoming'
 import { media } from '../../styles/media-queries'
 import { shark } from '../../utils/colors'
 import { SpinnerPage } from '../spinner.page'
 import { useUpcoming } from './use-upcoming'
+import { ErrorState } from '../../components/error-state'
 
 export const UpcomingPage = observer(() => {
   const [upcoming, hasUpcoming, isLoading, hasError] = useUpcoming()
@@ -16,8 +18,8 @@ export const UpcomingPage = observer(() => {
   }
 
   if (hasError || !upcoming) {
-    // TODO: report and show something
-    return <p>Error</p>
+    captureException(new Error('Could not fetch upcoming'))
+    return <ErrorState />
   }
 
   if (!hasUpcoming) {

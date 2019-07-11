@@ -1,40 +1,49 @@
 import { Dragonstone } from '@episodehunter/types'
 import { action, runInAction } from 'mobx'
 import { useCallback } from 'react'
-import { useGqClient } from '../global-context'
+import { useGqClient, useEmitter } from '../global-context'
 import { SeasonEpisode } from '../types/episode'
 import { unixtimestamp } from '../utils/date.utils'
-import { PgClient } from '../utils/gq-client'
+import { GqClient } from '../utils/gq-client'
+import { NextEpisodeToWatch, NextToWatchShow } from '../types/show'
 
 interface EpisodeMutation {
-  checkInEpisode(): Promise<boolean>
-  removeCheckedInEpisode(): Promise<boolean>
+  checkInEpisode(): Promise<NextEpisodeToWatch | null>
+  removeCheckedInEpisode(): Promise<NextEpisodeToWatch | null>
 }
 
 export function useEpisodeMutaion(episode: SeasonEpisode): EpisodeMutation {
   const gqClient = useGqClient()
+  const emitter = useEmitter()
 
   const checkInEpisode = useCallback(() => {
     const checkin = {
       time: unixtimestamp(),
-      type: Dragonstone.WatchedEpisode.WatchedEnum.checkIn
+      type: 2 // Check in
     }
     const input: Dragonstone.WatchedEpisode.WatchedEpisodeInput = {
       episodenumber: episode.episodenumber,
       showId: episode.ids.showId,
       time: checkin.time,
-      type: checkin.type
+      type: 'checkIn' as const
     }
 
     runInAction(() => {
       episode.watched.push(checkin)
     })
-    return checkinEpisodeReq(gqClient, input).catch(
-      action(() => {
-        episode.watched = [] // Naive solution
-        return false
+    emitter.emit('checkin-episode-change', episode)
+    return checkInEpisodeReq(gqClient, input)
+      .then(nextEpisodeToWatch => {
+        emitter.emit('next-episode-to-watch', nextEpisodeToWatch)
+        return nextEpisodeToWatch
       })
-    )
+      .catch(
+        action(() => {
+          episode.watched = [] // Naive solution
+          emitter.emit('checkin-episode-change', episode)
+          return null
+        })
+      )
   }, [episode])
 
   const removeCheckedInEpisode = useCallback(() => {
@@ -48,12 +57,19 @@ export function useEpisodeMutaion(episode: SeasonEpisode): EpisodeMutation {
     runInAction(() => {
       episode.watched = []
     })
-    return removeCheckedInEpisodeReq(gqClient, input).catch(
-      action(() => {
-        episode.watched = backup
-        return false
+    emitter.emit('checkin-episode-change', episode)
+    return removeCheckedInEpisodeReq(gqClient, input)
+      .then(nextEpisodeToWatch => {
+        emitter.emit('next-episode-to-watch', nextEpisodeToWatch)
+        return nextEpisodeToWatch
       })
-    )
+      .catch(
+        action(() => {
+          episode.watched = backup
+          emitter.emit('checkin-episode-change', episode)
+          return null
+        })
+      )
   }, [episode])
 
   return {
@@ -63,30 +79,51 @@ export function useEpisodeMutaion(episode: SeasonEpisode): EpisodeMutation {
 }
 
 const checkInEpisodeQuery = `
-mutation checkInEpisode($episode: WatchedEpisodeInput) {
-  checkInEpisode(episode: $episode)
+mutation checkInEpisode($episode: WatchedEpisodeInput!) {
+  checkInEpisode(episode: $episode) {
+    episode {
+      ids {
+        tvdb
+      }
+      name
+      aired
+      episodenumber
+    }
+  }
 }
 `
 const removeCheckInEpisodeQuery = `
-mutation removeCheckedInEpisode($episode: UnwatchedEpisodeInput) {
-  removeCheckedInEpisode(episode: $episode)
+mutation removeCheckedInEpisode($episode: UnwatchedEpisodeInput!) {
+  removeCheckedInEpisode(episode: $episode) {
+    episode {
+      ids {
+        tvdb
+      }
+      name
+      aired
+      episodenumber
+    }
+  }
 }
 `
 
-async function checkinEpisodeReq(
-  client: PgClient,
+async function checkInEpisodeReq(
+  client: GqClient,
   episode: Dragonstone.WatchedEpisode.WatchedEpisodeInput
-): Promise<boolean> {
-  return client<{ checkInEpisode: boolean }>(checkInEpisodeQuery, episode).then(
-    result => result.checkInEpisode
-  )
+): Promise<NextEpisodeToWatch | null> {
+  return client<{ checkInEpisode: Pick<NextToWatchShow, 'episode'> }>(checkInEpisodeQuery, {
+    episode
+  }).then(result => result.checkInEpisode.episode)
 }
 
 async function removeCheckedInEpisodeReq(
-  client: PgClient,
+  client: GqClient,
   episode: Dragonstone.WatchedEpisode.UnwatchedEpisodeInput
-): Promise<boolean> {
-  return client<{ removeCheckedInEpisode: boolean }>(removeCheckInEpisodeQuery, episode).then(
-    result => result.removeCheckedInEpisode
-  )
+): Promise<NextEpisodeToWatch | null> {
+  return client<{ removeCheckedInEpisode: Pick<NextToWatchShow, 'episode'> }>(
+    removeCheckInEpisodeQuery,
+    {
+      episode
+    }
+  ).then(result => result.removeCheckedInEpisode.episode)
 }

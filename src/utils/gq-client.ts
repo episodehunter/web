@@ -18,4 +18,4 @@ export const createGqClient = (getIdToken: () => Promise<string>) => {
   }
 }
 
-export type PgClient = ReturnType<typeof createGqClient>
+export type GqClient = ReturnType<typeof createGqClient>

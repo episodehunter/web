@@ -1,7 +1,7 @@
-import { PgClient } from '../../utils/gq-client'
+import { GqClient } from '../../utils/gq-client'
 import { Upcoming, UpcomingShow } from '../../types/upcoming'
 
-export async function fetchUpcoming(client: PgClient): Promise<UpcomingShow[]> {
+export async function fetchUpcoming(client: GqClient): Promise<UpcomingShow[]> {
   return client<{ following: Upcoming[] }>(
     `{
         following {
