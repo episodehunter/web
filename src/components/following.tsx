@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { media } from '../styles/media-queries'
 import { ShowCard } from './show-card/show-card'
 import { H1 } from './text'
-import { Show } from '../types/show'
+import { FollowingShow } from '../types/following'
 
 interface Props {
-  shows: Show[]
+  shows: FollowingShow[]
 }
 
 export const Following = ({ shows }: Props) => (
