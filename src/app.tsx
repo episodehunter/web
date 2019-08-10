@@ -14,8 +14,8 @@ firebaseApp.initializeApp(firebaseAuthConfig)
 
 const [Router, Routes] = createRouter(routes)
 const auth = createAuth(firebaseApp)
-const rootStore = new RootSore()
 const gqClient = createGqClient(auth.getIdToken)
+const rootStore = new RootSore(gqClient)
 
 const globalContext: GlobalContext = {
   rootStore,

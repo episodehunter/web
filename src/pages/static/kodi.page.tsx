@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Spinner } from '../../components/spinner'
 import { P } from '../../components/text'
@@ -7,7 +7,15 @@ import { useUser } from '../../global-context'
 import { alabaster, shark } from '../../utils/colors'
 
 export const KodiPage = observer(() => {
-  const metadata = useUser().getMetadata()
+  const user = useUser()
+  const [username, setUsername] = useState('')
+  const [apiKey, setApiKey] = useState('')
+  useEffect(() => {
+    user.getMetadata().then(metadata => {
+      setUsername(metadata.username)
+      setApiKey(metadata.apikey)
+    })
+  }, [])
   return (
     <Wrapper>
       <TitleWrapper>
@@ -16,19 +24,15 @@ export const KodiPage = observer(() => {
       <P>Install EpisodeHunter's KODI add-on to release the full power of EpisodeHunter.</P>
       <P style={{ margin: 0 }}>
         Your username:{' '}
-        {metadata ? (
-          <code>{metadata.username}</code>
+        {username ? (
+          <code>{username}</code>
         ) : (
           <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
         )}
       </P>
       <P style={{ margin: 0 }}>
         Your api key:{' '}
-        {metadata ? (
-          <code>{metadata.apikey}</code>
-        ) : (
-          <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
-        )}
+        {apiKey ? <code>{apiKey}</code> : <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />}
       </P>
       <P>Option 1 (recommended):</P>
       <ul>
@@ -37,18 +41,14 @@ export const KodiPage = observer(() => {
         <Li>3. Install</Li>
         <Li>
           4. Then fill in "
-          {metadata ? (
-            <code>{metadata.username}</code>
+          {username ? (
+            <code>{username}</code>
           ) : (
             <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
           )}
           " as your username and "
-          {metadata ? (
-            <code>{metadata.apikey}</code>
-          ) : (
-            <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
-          )}
-          " as your api key
+          {apiKey ? <code>{apiKey}</code> : <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />}"
+          as your api key
         </Li>
         <Li>5. Done and done!</Li>
       </ul>

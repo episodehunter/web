@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Spinner } from '../../components/spinner'
 import { P } from '../../components/text'
@@ -7,7 +7,15 @@ import { useUser } from '../../global-context'
 import { alabaster, shark } from '../../utils/colors'
 
 export const PlexPage = observer(() => {
-  const metadata = useUser().getMetadata()
+  const user = useUser()
+  const [username, setUsername] = useState('')
+  const [apiKey, setApiKey] = useState('')
+  useEffect(() => {
+    user.getMetadata().then(metadata => {
+      setUsername(metadata.username)
+      setApiKey(metadata.apikey)
+    })
+  }, [])
   return (
     <Wrapper>
       <TitleWrapper>
@@ -23,10 +31,10 @@ export const PlexPage = observer(() => {
         </a>
       </P>
       <P>
-        {metadata ? (
+        {username && apiKey ? (
           <code>
-            https://scrobble.episodehunter.tv/plex?username={metadata.username}&key=
-            {metadata.apikey}
+            https://scrobble.episodehunter.tv/plex?username={username}&key=
+            {apiKey}
           </code>
         ) : (
           <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Navigate } from 'the-react-router'
-import { useAuth, useSearch } from '../../global-context'
+import { useAuth, useSearch, useUser } from '../../global-context'
 import { Routes } from '../../routes'
 import { NavbarItem } from './navbar-item'
 import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
@@ -14,6 +14,12 @@ type Props = {
 export const NavbarItems = ({ navigate, stateUrl }: Props) => {
   const searchStore = useSearch()
   const auth = useAuth()
+  const user = useUser()
+  const [username, setUsername] = useState('')
+  useEffect(() => {
+    user.getMetadata().then(metadata => setUsername(metadata.username))
+  }, [])
+
   return (
     <>
       <NavbarItem
@@ -37,7 +43,7 @@ export const NavbarItems = ({ navigate, stateUrl }: Props) => {
         onClick={() => searchStore.openSearchBar()}
       />
       <NavbarItemWithSubItems
-        header={auth.getUsername()}
+        header={username}
         subItems={[
           <NavbarSubItem
             key={'settings'}
