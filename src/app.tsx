@@ -15,7 +15,6 @@ firebaseApp.initializeApp(firebaseAuthConfig)
 const [Router, Routes] = createRouter(routes)
 const auth = createAuth(firebaseApp)
 const rootStore = new RootSore()
-// const rootResolver = createRouteResolver(loaders, auth)
 const gqClient = createGqClient(auth.getIdToken)
 
 const globalContext: GlobalContext = {
@@ -25,20 +24,13 @@ const globalContext: GlobalContext = {
   emitter: new mitt()
 }
 
-// routerEvents.addListener(event => rootResolver(event.url))
-
 export function App() {
   const [showSpinner, setShowSpinner] = useState(true)
   useEffect(() => {
-    // const searchDispose = loaders.searchLoader.subscribe()
-    const authDispose = auth.authStateChange$(currentUser => {
+    return auth.authStateChange$(currentUser => {
       globalContext.rootStore.user.setUser(currentUser)
       setShowSpinner(false)
     }, console.error)
-    return () => {
-      authDispose()
-      // searchDispose()
-    }
   }, [])
 
   if (showSpinner) {

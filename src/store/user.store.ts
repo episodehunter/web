@@ -1,10 +1,8 @@
 import { Dragonstone } from '@episodehunter/types'
 import firebase from 'firebase'
 import { action, observable } from 'mobx'
-import { LoadingState } from './loading-state'
 
 export class User {
-  metadataLoadingState = new LoadingState()
   @observable.ref private currentUser: firebase.User | null = null
   @observable.ref private matadata: Dragonstone.User | null = null
 

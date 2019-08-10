@@ -6,6 +6,7 @@ import { media } from '../styles/media-queries'
 import { alabaster, shark } from '../utils/colors'
 import { SmallShowFanart } from './fanart/small-show-fanart'
 import { PosterCard } from './poster-cards/poster-card'
+import { useDebounce } from '../utils/use-debounce'
 
 export const Search = observer(() => {
   const searchStore = useSearch()
@@ -19,6 +20,17 @@ export const Search = observer(() => {
     document.addEventListener('keydown', onKeyPress)
     return () => document.removeEventListener('keydown', onKeyPress)
   }, [])
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      searchStore.search(debouncedSearchTerm)
+    } else {
+      searchStore.setSearchResult([])
+    }
+  }, [debouncedSearchTerm])
+
   if (!searchStore.isSearchBarOpen) {
     return null
   }
@@ -30,7 +42,6 @@ export const Search = observer(() => {
 
   const updateSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
-    // searchLoader.searchDebounce(event.target.value)
   }
 
   return (
@@ -44,7 +55,7 @@ export const Search = observer(() => {
             <ResultItem key={title.id}>
               <PosterCard
                 onClick={() => searchStore.closeSearchBar()}
-                linkUrl={`/show/${title.id}`}
+                linkUrl={`/show/${title.id}/${title.tvdbId}`}
                 poster={<SmallShowFanart tvdbId={title.tvdbId} />}
                 bottomRight={title.name}
               />
@@ -56,7 +67,7 @@ export const Search = observer(() => {
   )
 })
 
-const keyIsEscape = key => key && key.toLowerCase() === 'escape'
+const keyIsEscape = (key: string) => key && key.toLowerCase() === 'escape'
 
 const ResultWrapper = styled.div`
   display: grid;

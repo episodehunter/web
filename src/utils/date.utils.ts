@@ -3,14 +3,13 @@ import {
   differenceInCalendarDays,
   distanceInWords,
   format as fromatDate,
-  isAfter,
   isBefore,
   isValid as isValidDate,
   parse,
   startOfToday
 } from 'date-fns'
 
-export const yyyymmdd = (date: Date) => date.toISOString().slice(0, 10)
+// export const yyyymmdd = (date: Date) => date.toISOString().slice(0, 10)
 export const time = (date: Date) => format(date, 'HH:mm')
 
 export const isValid = (date: Date | null): date is Date => Boolean(date && isValidDate(date))
@@ -26,7 +25,7 @@ export const formatFromString = (dateString?: string | null, dateFormat?: string
   return isValid(date) ? fromatDate(date, dateFormat) : ''
 }
 
-export const ddmmm = (date: Date): string => format(date, 'D MMMM').toUpperCase()
+// export const ddmmm = (date: Date): string => format(date, 'D MMMM').toUpperCase()
 
 export const now = () => new Date()
 export type Now = typeof now
@@ -37,17 +36,17 @@ export type Today = typeof today
 
 export const daysFrom = (days: number, from: Date) => addDays(from, days)
 
-export const isSameDayOrAfter = (date: Date, dateToCompare: Date) =>
-  isAfter(date, addDays(dateToCompare, -1))
+// export const isSameDayOrAfter = (date: Date, dateToCompare: Date) =>
+// isAfter(date, addDays(dateToCompare, -1))
 
 export const isBeforeDaysFrom = (days: number, from: Date) => {
   const daysFromNow = daysFrom(days, from)
   return (date: Date) => isBefore(date, daysFromNow)
 }
-export const isAfterDaysFrom = (days: number, from: Date) => {
-  const daysFromNow = daysFrom(days, from)
-  return (date: Date) => isAfter(date, daysFromNow)
-}
+// export const isAfterDaysFrom = (days: number, from: Date) => {
+//   const daysFromNow = daysFrom(days, from)
+//   return (date: Date) => isAfter(date, daysFromNow)
+// }
 
 export const dateReleaseFormat = (
   dateString: string | Date | null,

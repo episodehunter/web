@@ -3,12 +3,6 @@ import { request } from 'graphql-request'
 import { Dragonstone } from '@episodehunter/types'
 import { dragonstoneUrl } from '../config'
 
-enum FetchStatus {
-  NotStarted,
-  Started,
-  Completed
-}
-
 const fuseOptions: FuseOptions<any> = {
   keys: ['name'],
   maxPatternLength: 32,
@@ -21,8 +15,6 @@ const fuseOptions: FuseOptions<any> = {
 const returnData = (data: any) => {
   ;(self.postMessage as any)(data)
 }
-
-let fetchStatus = FetchStatus.Started
 
 const fetchingFuse = request<{ titles: Dragonstone.Title[] }>(
   dragonstoneUrl,
@@ -58,20 +50,13 @@ function search(fuse: Fuse<{ item: Dragonstone.Title; score: number }>, searchWo
 let currectSearchWord = ''
 
 self.addEventListener('message', async event => {
-  if (fetchStatus === FetchStatus.Started) {
-    returnData({
-      fetchStatus: FetchStatus[fetchStatus],
-      result: []
-    })
-  }
-
   currectSearchWord = event.data
 
   const fuse = await fetchingFuse
   if (currectSearchWord) {
     const result = search(fuse, currectSearchWord)
     returnData({
-      fetchStatus: FetchStatus[fetchStatus],
+      fetchStatus: null,
       result: result
     })
     currectSearchWord = ''

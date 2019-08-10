@@ -4,10 +4,3 @@ export function safeStringConvertion(obj: any) {
   }
   return String(obj)
 }
-
-export function safeUpperCase(str?: string) {
-  if (str && str.toUpperCase) {
-    return str.toUpperCase()
-  }
-  return ''
-}

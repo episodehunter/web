@@ -1,7 +1,7 @@
-export const memorize = fn => {
+export const memorize = <T extends any[], R>(fn: (...args: T) => R) => {
   let beenCalled = false
-  let result
-  return (...args) => {
+  let result: R
+  return (...args: T) => {
     if (beenCalled) {
       return result
     }

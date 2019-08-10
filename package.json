@@ -8,7 +8,7 @@
     "test": "jest --watch",
     "test:ci": "jest --coverage",
     "build": "webpack --config webpack.prod.js && cp src/index.html build/index.html",
-    "start": "webpack-dev-server --hot --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js",
     "deploy": "npm run build && firebase deploy"
   },
   "repository": {
@@ -68,7 +68,6 @@
     "rc-progress": "^2.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-hot-loader": "^4.8.4",
     "styled-components": "^4.2.0",
     "the-react-router": "^0.1.0"
   },

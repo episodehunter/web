@@ -1,10 +1,21 @@
 import { observable } from 'mobx'
 import { Dragonstone } from '@episodehunter/types'
-import { BaseStore } from './base-store'
 
-export class SearchStore extends BaseStore {
+export class SearchStore {
   @observable isSearchBarOpen: Boolean
   @observable searchResult: Dragonstone.Title[] = []
+  private searchWorker: Worker
+
+  constructor(searchWorker: Worker) {
+    this.searchWorker = searchWorker
+    searchWorker.addEventListener('message', (event: MessageEvent) => {
+      this.setSearchResult(event.data.result)
+    })
+  }
+
+  search(searchString: string) {
+    this.searchWorker.postMessage(searchString)
+  }
 
   openSearchBar() {
     this.isSearchBarOpen = true

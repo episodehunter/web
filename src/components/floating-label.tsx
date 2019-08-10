@@ -97,7 +97,7 @@ export const spanStyles = {
 }
 
 export const floatingStyles = {
-  fontSize: '0.625rem',
+  fontSize: '1rem',
   padding: 0
 }
 

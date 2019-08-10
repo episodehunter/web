@@ -20,8 +20,9 @@ export const floatingLabelStyles = {
   input: {
     fontSize: '2rem',
     borderWidth: '2px',
-    color: mountainMeadow,
-    borderColor: silver
+    borderColor: silver,
+    color: 'rgb(255, 255, 255)',
+    fontWeight: 'lighter'
   },
   focus: {
     borderColor: mountainMeadow

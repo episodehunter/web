@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { ResetPassword } from '../components/auth/reset-password'
 import { useAuth } from '../global-context'
 import { shark } from '../utils/colors'
+import { media } from '../styles/media-queries'
 
 export function AuthAction() {
   const [mode, setMode] = useState('')
@@ -18,7 +19,6 @@ export function AuthAction() {
   }, [document.location.href])
 
   if (mode === 'resetPassword') {
-    console.log(mode, oobCode)
     return (
       <Wrapper>
         <FormWrapper>
@@ -39,6 +39,9 @@ const FormWrapper = styled.div`
   display: flex;
   flex: 1;
   width: 80%;
+  ${media.tabletAndUp`
+    width: 40%;
+  `}
 `
 
 const Wrapper = styled.div`

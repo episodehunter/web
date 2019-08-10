@@ -4,13 +4,14 @@ import { useNavigation } from 'the-react-router'
 import { LoginForm } from '../components/auth/login-form'
 import { RegisterForm } from '../components/auth/register-form'
 import { SendResetPasswordEmail } from '../components/auth/send-reset-password-email'
-import { FlotingLoginButtons } from '../components/main/floting-login-buttons'
-import { MainAbout } from '../components/main/main-about'
+import { FlotingLoginButtons } from '../components/auth/floting-login-buttons'
+import { MainAbout } from '../components/auth/main-about'
 import { AuthFormState } from '../enum'
 import { useAuth } from '../global-context'
 import { images } from '../images.config'
 import { Routes } from '../routes'
 import { shark } from '../utils/colors'
+import { media } from '../styles/media-queries'
 
 export function LoginPage() {
   const [authFormState, setAuthFormState] = useState(AuthFormState.login)
@@ -69,6 +70,9 @@ const FormWrapper = styled.div`
   display: flex;
   flex: 1;
   width: 80%;
+  ${media.tabletAndUp`
+    width: 40%;
+  `}
 `
 
 const BottomSection = styled.div`
