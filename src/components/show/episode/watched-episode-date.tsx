@@ -17,7 +17,7 @@ export const WatchedEpisodeDate = observer(({ watched }: Props) => {
   const time = new Date(latestWatched.time * 1000)
   return (
     <BottomTextWrapper>
-      <P margin={0} title={`You wached this episode at ${format(time, 'Do MMM YYYY')}`}>
+      <P margin={0} title={`You wached this episode at ${format(time, 'do MMM yyyy')}`}>
         <i style={textStyle} className="material-icons">
           check_circle_outline
         </i>{' '}

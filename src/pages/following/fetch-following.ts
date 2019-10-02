@@ -1,22 +1,26 @@
+import { gql } from '@episodehunter/utils'
 import { GqClient } from '../../utils/gq-client'
-import { Following, FollowingShow } from '../../types/following'
+import { FollowingShow } from '../../types/following'
+import { GetFollowingShowsQuery } from '../../dragonstone'
 
-export async function fetchFollowing(client: GqClient): Promise<FollowingShow[]> {
-  return client<{ following: Following[] }>(
-    `{
-      following {
-        show {
-          ids {
-            tvdb
-            id
-          }
-          name
-          nextToWatch {
-            numberOfEpisodesToWatch
-          }
+const followingShowsQuery = gql`
+  query GetFollowingShows {
+    following {
+      show {
+        ids {
+          tvdb
+          id
+        }
+        name
+        nextToWatch {
+          numberOfEpisodesToWatch
         }
       }
     }
-    `
-  ).then(result => result.following.map(f => f.show))
+  }
+`
+
+export async function fetchFollowing(client: GqClient): Promise<FollowingShow[]> {
+  const result = await client<GetFollowingShowsQuery>(followingShowsQuery)
+  return result.following.map(f => f.show)
 }

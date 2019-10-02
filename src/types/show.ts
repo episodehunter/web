@@ -1,39 +1,5 @@
-import { ShowId } from '@episodehunter/types'
+import { GetShowQuery } from '../dragonstone'
 
-export interface NextEpisodeToWatch {
-  ids: {
-    tvdb: number
-  }
-  name: string
-  aired: string
-  episodenumber: number
-}
-
-export interface NextToWatchShow {
-  numberOfEpisodesToWatch: number
-  episode: NextEpisodeToWatch | null
-}
-
-export interface Show {
-  name: string
-  airs: {
-    first: string | null
-    time: string | null
-    day: number | null
-  }
-  ended: boolean
-  genre: string[]
-  ids: {
-    id: ShowId
-    tvdb: number
-  }
-  language: string | null
-  network: string | null
-  overview: string | null
-  runtime: number
-  seasons: number[]
-  numberOfAiredEpisodes: number
-  nextToWatch: NextToWatchShow
-  followers: number
-  isFollowing: boolean
-}
+export type Show = NonNullable<GetShowQuery['show']>
+export type NextToWatch = NonNullable<Show['nextToWatch']>
+export type NextEpisodeToWatch = NonNullable<NextToWatch['episode']>

@@ -7,7 +7,7 @@ import { SendResetPasswordEmail } from '../components/auth/send-reset-password-e
 import { FlotingLoginButtons } from '../components/auth/floting-login-buttons'
 import { MainAbout } from '../components/auth/main-about'
 import { AuthFormState } from '../enum'
-import { useAuth } from '../global-context'
+import { useAuth } from '../contexts/global-context'
 import { images } from '../images.config'
 import { Routes } from '../routes'
 import { shark } from '../utils/colors'

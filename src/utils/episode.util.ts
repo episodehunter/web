@@ -1,3 +1,5 @@
+import { extractSeasonNumber } from '@episodehunter/utils'
+
 export function numberOfUnwatchedHoursLeft(episodesToWatch: number, runtime: number) {
   return Math.round((episodesToWatch * runtime) / 60)
 }
@@ -10,10 +12,6 @@ export function numberOfEpisodesToWatchPercent(
     return 0
   }
   return Math.round((numberOfWatchedEpisodes * 100) / totalNumberOfEpisodes)
-}
-
-export function extractSeasonNumber(episodenumber: number) {
-  return (episodenumber / 10000) | 0
 }
 
 export function episodeNumberToString(episodeNumber: number) {

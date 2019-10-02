@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Navigate } from 'the-react-router'
-import { useAuth, useSearch, useUser } from '../../global-context'
+import { useAuth } from '../../contexts/global-context'
+import { useSearch } from '../../contexts/search-context'
+import { useUser } from '../../contexts/user-context'
 import { Routes } from '../../routes'
 import { NavbarItem } from './navbar-item'
 import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
@@ -15,10 +17,11 @@ export const NavbarItems = ({ navigate, stateUrl }: Props) => {
   const searchStore = useSearch()
   const auth = useAuth()
   const user = useUser()
-  const [username, setUsername] = useState('')
   useEffect(() => {
-    user.getMetadata().then(metadata => setUsername(metadata.username))
+    user.loadMetadata()
   }, [])
+
+  const username = user.metadata.loaded ? user.metadata.data.username : ''
 
   return (
     <>

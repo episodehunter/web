@@ -34,22 +34,29 @@ export const HistoryPage = observer(() => {
     <React.Fragment key={dateString}>
       <H3>{dateString}</H3>
       <EpisodeGrid>
-        {history.map((h, index) => (
-          <ImageWarpper
-            key={index}
-            onClick={() => navigate(`/show/${h.show.ids.id}/${h.show.ids.tvdb}`)}
-          >
-            <EpisodeImage tvdbId={h.episode.ids.tvdb} width={isMobile() ? '100%' : undefined}>
-              <BottomTextWrapper>
-                <P2 margin={0}>{h.show.name}</P2>
-                <P2 margin={0}>
-                  {episodeNumberToString(h.episode.episodenumber)} {h.episode.name}
-                </P2>
-                <P2 margin={0}>{time(new Date(h.watchedEpisode.time * 1000))}</P2>
-              </BottomTextWrapper>
-            </EpisodeImage>
-          </ImageWarpper>
-        ))}
+        {history.map((h, index) => {
+          const show = h.show
+          const episode = h.episode
+          if (!show || !episode) {
+            return null
+          }
+          return (
+            <ImageWarpper
+              key={index}
+              onClick={() => navigate(`/show/${show.ids.id}/${show.ids.tvdb}`)}
+            >
+              <EpisodeImage tvdbId={episode.ids.tvdb} width={isMobile() ? '100%' : undefined}>
+                <BottomTextWrapper>
+                  <P2 margin={0}>{show.name}</P2>
+                  <P2 margin={0}>
+                    {episodeNumberToString(episode.episodenumber)} {episode.name}
+                  </P2>
+                  <P2 margin={0}>{time(new Date(h.watchedEpisode.time * 1000))}</P2>
+                </BottomTextWrapper>
+              </EpisodeImage>
+            </ImageWarpper>
+          )
+        })}
       </EpisodeGrid>
     </React.Fragment>
   ))

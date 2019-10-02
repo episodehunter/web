@@ -1,8 +1,15 @@
 import { action, runInAction } from 'mobx'
+import { gql } from '@episodehunter/utils'
 import { Show } from '../types/show'
 import { GqClient } from '../utils/gq-client'
 import { useCallback } from 'react'
-import { useGqClient } from '../global-context'
+import { useGqClient } from '../contexts/global-context'
+import {
+  FollowShowMutation,
+  FollowShowMutationVariables,
+  UnfollowShowMutationVariables,
+  UnfollowShowMutation
+} from '../dragonstone'
 
 interface ShowMutation {
   followShow(): Promise<boolean>
@@ -42,18 +49,26 @@ export function useShowMutaion(show: Show): ShowMutation {
   }
 }
 
+const followShowMutation = gql`
+  mutation FollowShow($showId: Int!) {
+    followShow(showId: $showId)
+  }
+`
+
+const unfollowShowMutation = gql`
+  mutation UnfollowShow($showId: Int!) {
+    unfollowShow(showId: $showId)
+  }
+`
+
 async function followShowReq(client: GqClient, showId: number): Promise<boolean> {
-  return client<{ followShow: boolean }>(
-    `mutation {
-      followShow(showId: ${showId})
-    }`
-  ).then(result => result.followShow)
+  return client<FollowShowMutation, FollowShowMutationVariables>(followShowMutation, {
+    showId
+  }).then(result => result.followShow)
 }
 
 async function unfollowShowReq(client: GqClient, showId: number): Promise<boolean> {
-  return client<{ followShow: boolean }>(
-    `mutation {
-      unfollowShow(showId: ${showId})
-    }`
-  ).then(result => result.followShow)
+  return client<UnfollowShowMutation, UnfollowShowMutationVariables>(unfollowShowMutation, {
+    showId
+  }).then(result => result.unfollowShow)
 }

@@ -1,16 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import { useUser } from '../../global-context'
+import { useUser } from '../../contexts/user-context'
 import { Routes } from '../../routes'
 import { media } from '../../styles/media-queries'
 import { manatee } from '../../utils/colors'
 
 export const Footer = () => {
-  const user = useUser()
+  const { currentUser } = useUser()
   const { navigate } = useNavigation()
   let unauthedComponents: JSX.Element | null = null
-  if (!user.getUser()) {
+  if (!currentUser) {
     unauthedComponents = (
       <>
         <FooterItem onClick={() => navigate(Routes.login)}>Login</FooterItem>

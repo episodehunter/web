@@ -16,8 +16,7 @@ export const FormButton = styled.button`
   text-transform: uppercase;
   line-height: 2.5rem;
   font-size: 1rem;
-  box-shadow: 0 2px 5px 0 rgba(255, 255, 255, 0.16),
-    0 2px 10px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 5px 0 rgba(255, 255, 255, 0.16), 0 2px 10px 0 rgba(255, 255, 255, 0.12);
   background-color: ${({ color }: { color: string }) => color};
   &:hover {
     outline: none;

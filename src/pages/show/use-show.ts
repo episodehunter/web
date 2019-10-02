@@ -1,9 +1,9 @@
 import { captureException } from '@sentry/browser'
 import { observable, action } from 'mobx'
 import { useEffect, useState } from 'react'
-import { useGqClient, useEmitter } from '../../global-context'
+import { extractSeasonNumber } from '@episodehunter/utils'
+import { useGqClient, useEmitter } from '../../contexts/global-context'
 import { Show, NextEpisodeToWatch } from '../../types/show'
-import { extractSeasonNumber } from '../../utils/episode.util'
 import { fetchShow } from './fetch-show'
 import { SeasonEpisode } from '../../types/episode'
 

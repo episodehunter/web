@@ -1,6 +1,6 @@
 import { captureException } from '@sentry/browser'
 import { useEffect, useState } from 'react'
-import { useGqClient } from '../../global-context'
+import { useGqClient } from '../../contexts/global-context'
 import { History } from '../../types/history'
 import { fetchHistory } from './fetch-history'
 import { format } from '../../utils/date.utils'
@@ -16,6 +16,7 @@ export function useHistory() {
     fetchHistory(client, 0)
       .then(result => setHistory(groupedHistory(result)))
       .catch(err => {
+        console.error(err)
         captureException(err)
         setHasError(true)
       })
@@ -27,8 +28,8 @@ export function useHistory() {
 
 function groupedHistory(historyList: History[]) {
   const historyGroup = new Map<string, History[]>()
-  for (let history of historyList) {
-    const dateString = format(new Date(history.watchedEpisode.time * 1000), 'dddd, MMM D YYYY')
+  for (const history of historyList) {
+    const dateString = format(new Date(history.watchedEpisode.time * 1000), 'eeee, do MMM yyyy')
     const existingGroup = historyGroup.get(dateString)
     if (!existingGroup) {
       historyGroup.set(dateString, [history])

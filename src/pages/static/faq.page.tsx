@@ -78,7 +78,7 @@ export const FaqPage = () => (
     <P>
       <b>A:</b> OMG! Yes! You won’t regret this. As you may have seen; I’m not a designer and there
       is some work to be done when to comes to the UX. Do you want to do a completely new design
-      from scratch? Or do you think we need to make small changes? I does not matter. Let's get
+      from scratch? Or do you think we need to make small changes? I does not matter. Let’s get
       together and make something awesome. See above how you can contact me.
     </P>
     <Header>
@@ -95,7 +95,7 @@ export const FaqPage = () => (
       I will add it.
     </P>
     <Header>
-      <b>Q:</b> I'm using Plex/Kodi. How do I set up the plugin?
+      <b>Q:</b> I’m using Plex/Kodi. How do I set up the plugin?
     </Header>
     <P>
       <b>A:</b> You can find instructions for <a href="/kodi">Kodi</a> here and{' '}

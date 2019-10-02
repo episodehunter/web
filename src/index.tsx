@@ -1,7 +1,17 @@
-import { captureException, init, showReportDialog, withScope } from '@sentry/browser'
-import React, { Component } from 'react'
+import { init } from '@sentry/browser'
 import ReactDOM from 'react-dom'
+import SearchWorker from 'worker-loader!./web-worker/search'
+import firebaseApp from 'firebase/app'
+import React from 'react'
+import mitt from 'mitt'
 import { App } from './app'
+import { firebaseAuthConfig } from './config'
+import { GlobalContext, GlobalContextProvider } from './contexts/global-context'
+import { UserProvider } from './contexts/user-context'
+import { createAuth } from './utils/auth.util'
+import { createGqClient } from './utils/gq-client'
+import { ErrorBoundary } from './components/error-boundary'
+import { SearchProvider } from './contexts/search-context'
 
 init({
   dsn: 'https://3e0fa9a3f331416fbeb4058e3447e90b@sentry.io/1429500',
@@ -9,34 +19,31 @@ init({
   enabled: process.env.NODE_ENV !== 'development'
 })
 
-class ErrorBoundary extends Component<{}, { error: Error | null }> {
-  state = {
-    error: null
-  }
+firebaseApp.initializeApp(firebaseAuthConfig)
 
-  componentDidCatch(error: Error, errorInfo: any) {
-    this.setState({ error })
-    withScope(scope => {
-      Object.keys(errorInfo).forEach(key => {
-        scope.setExtra(key, errorInfo[key])
-      })
-      captureException(error)
-    })
-    showReportDialog()
-  }
+const auth = createAuth(firebaseApp)
+const gqClient = createGqClient(auth.getIdToken)
 
-  render() {
-    if (this.state.error) {
-      return null
-    } else {
-      return this.props.children
-    }
-  }
+const globalContext: GlobalContext = {
+  auth,
+  gqClient,
+  emitter: new mitt()
 }
 
-ReactDOM.render(
-  <ErrorBoundary>
-    <App />
-  </ErrorBoundary>,
-  document.getElementById('root')
-)
+const searchWorker = new SearchWorker()
+
+function RootApp() {
+  return (
+    <ErrorBoundary>
+      <GlobalContextProvider value={globalContext}>
+        <UserProvider>
+          <SearchProvider searchWorker={searchWorker}>
+            <App />
+          </SearchProvider>
+        </UserProvider>
+      </GlobalContextProvider>
+    </ErrorBoundary>
+  )
+}
+
+ReactDOM.render(<RootApp />, document.getElementById('root'))

@@ -18,5 +18,5 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*", "node_modules/@episodehunter/types/**/*"]
+  "include": ["src"]
 }

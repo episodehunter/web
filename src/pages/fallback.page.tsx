@@ -7,7 +7,7 @@ export const Fallback = () => {
     <Wrapper>
       <Headline>#404</Headline>
       <Link href="https://youtu.be/PDZcqBgCS74?t=83">
-        I'm sorry but I could not found what you were looking for
+        I&apos;m sorry but I could not found what you were looking for
       </Link>
       <Link href="/">Do you want to go back to the start page?</Link>
     </Wrapper>

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { FloatingLabel } from '../components/floating-label'
 import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
-import { useAuth } from '../global-context'
+import { useAuth } from '../contexts/global-context'
 import { FormButton } from '../styles/form-button'
 import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 import { media } from '../styles/media-queries'
@@ -19,7 +19,7 @@ export const SettingsPage = () => {
   const auth = useAuth()
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [status, setStatus] = useState(Status.success)
+  const [status, setStatus] = useState(Status.none)
   const [errorMessage, setErrorMessage] = useState('')
   const [password, setPassword] = useState('')
 

@@ -6,7 +6,7 @@ import { FormStatusMessage } from '../form-status-message'
 import { H1, P } from '../text'
 import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
-import { useAuth } from '../../global-context'
+import { useAuth } from '../../contexts/global-context'
 import { Spinner } from '../spinner'
 
 type Props = {

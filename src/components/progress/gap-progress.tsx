@@ -14,7 +14,7 @@ export const GapProgress = ({ percent, height, width }: Props) => (
       percent={percent}
       gapDegree={70}
       gapPosition="bottom"
-      strokeWidth="6"
+      strokeWidth={6}
       strokeLinecap="square"
       strokeColor={melrose}
     />

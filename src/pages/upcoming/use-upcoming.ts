@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { fetchUpcoming } from './fetch-upcoming'
-import { useGqClient } from '../../global-context'
+import { useGqClient } from '../../contexts/global-context'
 import { UpcomingShow } from '../../types/upcoming'
-import { now, isBeforeDaysFrom } from '../../utils/date.utils'
+import { now, isBeforeDaysFrom, parse } from '../../utils/date.utils'
 import { isSameDay } from 'date-fns'
 
 interface UpcomingCollection {
@@ -50,7 +50,7 @@ function calculateUpcoming(upcomingShows: UpcomingShow[], today = now()): Upcomi
     ended: []
   }
   const isBeforeAWeekFromNow = isBeforeDaysFrom(7, today)
-  for (let show of upcomingShows) {
+  for (const show of upcomingShows) {
     const prevEpisode = show.justAirdEpisode
     const nextEpisode = show.upcomingEpisode
 
@@ -63,7 +63,7 @@ function calculateUpcoming(upcomingShows: UpcomingShow[], today = now()): Upcomi
     } else if (!nextEpisode) {
       upcoming.tba.push(show)
     } else {
-      if (isSameDay(today, nextEpisode.aired)) {
+      if (isSameDay(today, parse(nextEpisode.aired))) {
         upcoming.today.push(show)
       } else if (isBeforeAWeekFromNow(new Date(nextEpisode.aired))) {
         upcoming.weekAhead.push(show)

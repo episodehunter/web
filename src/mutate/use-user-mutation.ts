@@ -1,4 +1,6 @@
-import { useGqClient } from '../global-context'
+import { gql } from '@episodehunter/utils'
+import { useGqClient } from '../contexts/global-context'
+import { CreateUserMutation, CreateUserMutationVariables } from '../dragonstone'
 import { GqClient } from '../utils/gq-client'
 
 interface ShowMutation {
@@ -17,10 +19,14 @@ export function useUserMutaion(): ShowMutation {
   }
 }
 
+const createUserMutation = gql`
+  mutation CreateUser($username: String!) {
+    createUser(metadata: { username: $username })
+  }
+`
+
 async function createUserReq(client: GqClient, username: string): Promise<boolean> {
-  return client<{ createUser: boolean }>(
-    `mutation {
-      createUser(metadata: {username: "${username}"})
-    }`
-  ).then(result => result.createUser)
+  return client<CreateUserMutation, CreateUserMutationVariables>(createUserMutation, {
+    username
+  }).then(result => result.createUser)
 }

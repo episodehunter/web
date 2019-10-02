@@ -1,6 +1,6 @@
 import { captureException } from '@sentry/browser'
 import { useEffect, useState } from 'react'
-import { useGqClient } from '../../global-context'
+import { useGqClient } from '../../contexts/global-context'
 import { FollowingShow } from '../../types/following'
 import { fetchFollowing } from './fetch-following'
 

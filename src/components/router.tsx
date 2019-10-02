@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import { useUser } from '../global-context'
+import { useUser } from '../contexts/user-context'
 import { Fallback } from '../pages/fallback.page'
 import { FollowingPage } from '../pages/following'
 import { HistoryPage } from '../pages/history'
@@ -109,11 +109,11 @@ export const routes = {
 function RouteLayout(Component: RouteComponent, { allowUnauthed }: RouteOptions = {}) {
   if (allowUnauthed) {
     return function RouteLayout(props: unknown) {
-      const user = useUser()
+      const { currentUser } = useUser()
 
       return (
         <Wrapper>
-          {user.getUser() && (
+          {currentUser && (
             <>
               <Search />
               <Navbar />
@@ -128,9 +128,9 @@ function RouteLayout(Component: RouteComponent, { allowUnauthed }: RouteOptions 
 
   const RequireLoginComponent = requireLogin<any>(Component)
   return function RouteLayout(props: unknown) {
-    const user = useUser()
+    const { currentUser } = useUser()
     const { navigate } = useNavigation()
-    if (!user.getUser()) {
+    if (!currentUser) {
       navigate(Routes.login)
       return null
     }

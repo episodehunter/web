@@ -1,11 +1,17 @@
 import { Dragonstone } from '@episodehunter/types'
+import { unixTimestamp, gql } from '@episodehunter/utils'
 import { action, runInAction } from 'mobx'
 import { useCallback } from 'react'
-import { useGqClient, useEmitter } from '../global-context'
-import { SeasonEpisode } from '../types/episode'
-import { unixtimestamp } from '../utils/date.utils'
+import { useGqClient, useEmitter } from '../contexts/global-context'
+import { SeasonEpisode, WatchedEpisode } from '../types/episode'
 import { GqClient } from '../utils/gq-client'
-import { NextEpisodeToWatch, NextToWatchShow } from '../types/show'
+import { NextEpisodeToWatch } from '../types/show'
+import {
+  CheckInEpisodeMutation,
+  CheckInEpisodeMutationVariables,
+  RemoveCheckedInEpisodeMutation,
+  RemoveCheckedInEpisodeMutationVariables
+} from '../dragonstone'
 
 interface EpisodeMutation {
   checkInEpisode(): Promise<NextEpisodeToWatch | null>
@@ -17,11 +23,11 @@ export function useEpisodeMutaion(episode: SeasonEpisode): EpisodeMutation {
   const emitter = useEmitter()
 
   const checkInEpisode = useCallback(() => {
-    const checkin = {
-      time: unixtimestamp(),
-      type: 2 // Check in
+    const checkin: WatchedEpisode = {
+      time: unixTimestamp(),
+      type: 'checkIn'
     }
-    const input: Dragonstone.WatchedEpisode.WatchedEpisodeInput = {
+    const input: Dragonstone.WatchedEpisodeInput = {
       episodenumber: episode.episodenumber,
       showId: episode.ids.showId,
       time: checkin.time,
@@ -47,7 +53,7 @@ export function useEpisodeMutaion(episode: SeasonEpisode): EpisodeMutation {
   }, [episode])
 
   const removeCheckedInEpisode = useCallback(() => {
-    const input: Dragonstone.WatchedEpisode.UnwatchedEpisodeInput = {
+    const input: Dragonstone.UnwatchedEpisodeInput = {
       episodenumber: episode.episodenumber,
       showId: episode.ids.showId
     }
@@ -78,52 +84,59 @@ export function useEpisodeMutaion(episode: SeasonEpisode): EpisodeMutation {
   }
 }
 
-const checkInEpisodeQuery = `
-mutation checkInEpisode($episode: WatchedEpisodeInput!) {
-  checkInEpisode(episode: $episode) {
-    episode {
-      ids {
-        tvdb
+const checkInEpisodeMutation = gql`
+  mutation checkInEpisode($episode: WatchedEpisodeInput!) {
+    checkInEpisode(episode: $episode) {
+      episode {
+        ids {
+          tvdb
+        }
+        name
+        aired
+        episodenumber
       }
-      name
-      aired
-      episodenumber
     }
   }
-}
 `
-const removeCheckInEpisodeQuery = `
-mutation removeCheckedInEpisode($episode: UnwatchedEpisodeInput!) {
-  removeCheckedInEpisode(episode: $episode) {
-    episode {
-      ids {
-        tvdb
+const removeCheckInEpisodeMutation = gql`
+  mutation removeCheckedInEpisode($episode: UnwatchedEpisodeInput!) {
+    removeCheckedInEpisode(episode: $episode) {
+      episode {
+        ids {
+          tvdb
+        }
+        name
+        aired
+        episodenumber
       }
-      name
-      aired
-      episodenumber
     }
   }
-}
 `
 
 async function checkInEpisodeReq(
   client: GqClient,
-  episode: Dragonstone.WatchedEpisode.WatchedEpisodeInput
-): Promise<NextEpisodeToWatch | null> {
-  return client<{ checkInEpisode: Pick<NextToWatchShow, 'episode'> }>(checkInEpisodeQuery, {
-    episode
-  }).then(result => result.checkInEpisode.episode)
+  episode: Dragonstone.WatchedEpisodeInput
+): Promise<NonNullable<CheckInEpisodeMutation['checkInEpisode']>['episode'] | null> {
+  const result = await client<CheckInEpisodeMutation, CheckInEpisodeMutationVariables>(
+    checkInEpisodeMutation,
+    {
+      episode
+    }
+  )
+  return result.checkInEpisode && result.checkInEpisode.episode
 }
 
 async function removeCheckedInEpisodeReq(
   client: GqClient,
-  episode: Dragonstone.WatchedEpisode.UnwatchedEpisodeInput
-): Promise<NextEpisodeToWatch | null> {
-  return client<{ removeCheckedInEpisode: Pick<NextToWatchShow, 'episode'> }>(
-    removeCheckInEpisodeQuery,
-    {
-      episode
-    }
-  ).then(result => result.removeCheckedInEpisode.episode)
+  episode: Dragonstone.UnwatchedEpisodeInput
+): Promise<
+  NonNullable<RemoveCheckedInEpisodeMutation['removeCheckedInEpisode']>['episode'] | null
+> {
+  const result = await client<
+    RemoveCheckedInEpisodeMutation,
+    RemoveCheckedInEpisodeMutationVariables
+  >(removeCheckInEpisodeMutation, {
+    episode
+  })
+  return result.removeCheckedInEpisode && result.removeCheckedInEpisode.episode
 }

@@ -1,21 +1,20 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Spinner } from '../../components/spinner'
 import { P } from '../../components/text'
-import { useUser } from '../../global-context'
+import { useUser } from '../../contexts/user-context'
 import { alabaster, shark } from '../../utils/colors'
 
 export const PlexPage = observer(() => {
-  const user = useUser()
-  const [username, setUsername] = useState('')
-  const [apiKey, setApiKey] = useState('')
+  const { loadMetadata, metadata } = useUser()
   useEffect(() => {
-    user.getMetadata().then(metadata => {
-      setUsername(metadata.username)
-      setApiKey(metadata.apikey)
-    })
+    loadMetadata()
   }, [])
+
+  const username = metadata.loaded ? metadata.data.username : ''
+  const apiKey = metadata.loaded ? metadata.data.apikey : ''
+
   return (
     <Wrapper>
       <TitleWrapper>
@@ -26,7 +25,11 @@ export const PlexPage = observer(() => {
         Subscription.
         <br />
         Just copy the following url and enter it as a{' '}
-        <a href="https://support.plex.tv/articles/115002267687-webhooks/" target="_blank">
+        <a
+          href="https://support.plex.tv/articles/115002267687-webhooks/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           webhook in plex
         </a>
       </P>

@@ -1,21 +1,27 @@
 import React from 'react'
-import { safeJoin } from '../../utils/array.util'
-import { formatFromString } from '../../utils/date.utils'
+import { safeJoin } from '@episodehunter/utils'
+import { format, parse } from '../../utils/date.utils'
 import { safeStringConvertion } from '../../utils/string.util'
 import { HighlightSpan, P2 } from '../text'
 import { Show } from '../../types/show'
 
-export const Facts = ({ show }: { show: Show }) => (
-  <ul style={{ listStyle: 'none', padding: 0 }}>
-    <FactLine headline="Airs" info={buildAirsString(show.airs.day, show.airs.time, show.network)} />
-    <FactLine headline="Premiered" info={formatFromString(show.airs.first, 'Do MMM -YY')} />
-    <FactLine headline="Language" info={safeStringConvertion(show.language)} />
-    <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
-    <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
-    <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
-    <FactLine headline="Followers" info={safeStringConvertion(show.followers)} />
-  </ul>
-)
+export const Facts = ({ show }: { show: Show }) => {
+  const premiere = show.airs.first ? format(parse(show.airs.first), 'do MMM -yy') : '-'
+  return (
+    <ul style={{ listStyle: 'none', padding: 0 }}>
+      <FactLine
+        headline="Airs"
+        info={buildAirsString(show.airs.day, show.airs.time, show.network)}
+      />
+      <FactLine headline="Premiered" info={premiere} />
+      <FactLine headline="Language" info={safeStringConvertion(show.language)} />
+      <FactLine headline="Runtime" info={safeStringConvertion(show.runtime)} />
+      <FactLine headline="Genres" info={safeJoin(show.genre, ', ')} />
+      <FactLine headline="Status" info={show.ended ? 'Ended' : 'Running'} />
+      <FactLine headline="Followers" info={safeStringConvertion(show.followers)} />
+    </ul>
+  )
+}
 
 const FactLine = ({ headline, info }: { headline: string; info: string }) => (
   <li>

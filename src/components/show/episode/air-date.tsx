@@ -1,22 +1,17 @@
 import React from 'react'
 import { melrose } from '../../../utils/colors'
-import { dateReleaseFormat, Today, today } from '../../../utils/date.utils'
+import { dateReleaseFormat, parse } from '../../../utils/date.utils'
 import { SmallText } from '../../text'
 
 type Props = {
   firstAired: string
-  _today?: Today
 }
 
-export const AirDate = ({ firstAired, _today = today }: Props) => {
-  const releaseText = dateReleaseFormat(
-    firstAired,
-    {
-      future: date => `  Airs ${date}`,
-      past: date => `  Aired ${date}`
-    },
-    _today()
-  )
+export const AirDate = ({ firstAired }: Props) => {
+  const releaseText = dateReleaseFormat(parse(firstAired), {
+    future: date => `  Airs ${date}`,
+    past: date => `  Aired ${date}`
+  })
   if (!releaseText) {
     return null
   }

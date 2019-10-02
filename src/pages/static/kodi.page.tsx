@@ -1,27 +1,26 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Spinner } from '../../components/spinner'
 import { P } from '../../components/text'
-import { useUser } from '../../global-context'
+import { useUser } from '../../contexts/user-context'
 import { alabaster, shark } from '../../utils/colors'
 
 export const KodiPage = observer(() => {
-  const user = useUser()
-  const [username, setUsername] = useState('')
-  const [apiKey, setApiKey] = useState('')
+  const { metadata, loadMetadata } = useUser()
   useEffect(() => {
-    user.getMetadata().then(metadata => {
-      setUsername(metadata.username)
-      setApiKey(metadata.apikey)
-    })
+    loadMetadata()
   }, [])
+
+  const username = metadata.loaded ? metadata.data.username : ''
+  const apiKey = metadata.loaded ? metadata.data.apikey : ''
+
   return (
     <Wrapper>
       <TitleWrapper>
         <Title>KODI</Title>
       </TitleWrapper>
-      <P>Install EpisodeHunter's KODI add-on to release the full power of EpisodeHunter.</P>
+      <P>Install EpisodeHunter&apos;s KODI add-on to release the full power of EpisodeHunter.</P>
       <P style={{ margin: 0 }}>
         Your username:{' '}
         {username ? (
@@ -36,19 +35,19 @@ export const KodiPage = observer(() => {
       </P>
       <P>Option 1 (recommended):</P>
       <ul>
-        <Li>1. Go to "Videos -> Add-ons -> Get more..."</Li>
+        <Li>1. Go to &quot;Videos → Add-ons → Get more...&quot;</Li>
         <Li>2. Search for EpisodeHunter</Li>
         <Li>3. Install</Li>
         <Li>
-          4. Then fill in "
+          4. Then fill in &quot;
           {username ? (
             <code>{username}</code>
           ) : (
             <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
           )}
-          " as your username and "
-          {apiKey ? <code>{apiKey}</code> : <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />}"
-          as your api key
+          &quot; as your username and &quot;
+          {apiKey ? <code>{apiKey}</code> : <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />}
+          &quot; as your api key
         </Li>
         <Li>5. Done and done!</Li>
       </ul>

@@ -1,0 +1,24 @@
+name: Node CI
+
+on: ['push']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: ⬇️ Install
+        run: npm ci
+        env:
+          CI: true
+      - name: 🏗 Build
+        run: npm run build
+      - name: ✅ Test
+        run: npm run test:ci
+      - uses: codecov/codecov-action@v1.0.2
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}

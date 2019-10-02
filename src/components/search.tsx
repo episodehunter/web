@@ -1,37 +1,26 @@
 import { observer } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useSearch } from '../global-context'
+import { useSearch } from '../contexts/search-context'
 import { media } from '../styles/media-queries'
 import { alabaster, shark } from '../utils/colors'
 import { SmallShowFanart } from './fanart/small-show-fanart'
 import { PosterCard } from './poster-cards/poster-card'
-import { useDebounce } from '../utils/use-debounce'
 
 export const Search = observer(() => {
-  const searchStore = useSearch()
-  const [searchTerm, setSearchTerm] = useState('')
+  const search = useSearch()
   useEffect(() => {
+    search.init()
     const onKeyPress = (event: KeyboardEvent) => {
       if (keyIsEscape(event.key)) {
-        searchStore.closeSearchBar()
+        search.closeSearchBar()
       }
     }
     document.addEventListener('keydown', onKeyPress)
     return () => document.removeEventListener('keydown', onKeyPress)
   }, [])
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
-
-  useEffect(() => {
-    if (debouncedSearchTerm) {
-      searchStore.search(debouncedSearchTerm)
-    } else {
-      searchStore.setSearchResult([])
-    }
-  }, [debouncedSearchTerm])
-
-  if (!searchStore.isSearchBarOpen) {
+  if (!search.isSearchBarOpen) {
     return null
   }
 
@@ -41,20 +30,20 @@ export const Search = observer(() => {
   }
 
   const updateSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
+    search.search(event.target.value)
   }
 
   return (
-    <OverlayWrapper onClick={() => searchStore.closeSearchBar()}>
+    <OverlayWrapper onClick={() => search.closeSearchBar()}>
       <Wrapper onClick={preventEvent}>
         <SearchWrapper>
-          <SearchBox autoFocus value={searchTerm} onChange={updateSearchTerm} />
+          <SearchBox autoFocus value={search.searchTerm} onChange={updateSearchTerm} />
         </SearchWrapper>
         <ResultWrapper>
-          {searchStore.searchResult.map(title => (
+          {search.searchResult.map(title => (
             <ResultItem key={title.id}>
               <PosterCard
-                onClick={() => searchStore.closeSearchBar()}
+                onClick={() => search.closeSearchBar()}
                 linkUrl={`/show/${title.id}/${title.tvdbId}`}
                 poster={<SmallShowFanart tvdbId={title.tvdbId} />}
                 bottomRight={title.name}

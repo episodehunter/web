@@ -1,35 +1,38 @@
 import { ShowId } from '@episodehunter/types'
+import { gql } from '@episodehunter/utils'
 import { observable } from 'mobx'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useGqClient } from '../../../global-context'
+import { useGqClient } from '../../../contexts/global-context'
+import { GetEpisodesForSeasonQuery, GetEpisodesForSeasonQueryVariables } from '../../../dragonstone'
+import { SeasonEpisode } from '../../../types/episode'
 import { GqClient } from '../../../utils/gq-client'
 import { Spinner } from '../../spinner'
 import { Episode } from './episode'
-import { SeasonEpisode } from '../../../types/episode'
 
 interface Props {
   showId: ShowId
   season: number
 }
 
-const seasonQuery = `
-query season($showId: Int!, $season: Int!) {
-  season(showId: $showId, season: $season) {
-    ids {
-      showId
-      tvdb
-    }
-    aired
-    name
-    episodenumber
-    watched {
-      time
-      type
+const seasonQuery = gql`
+  query GetEpisodesForSeason($showId: Int!, $season: Int!) {
+    season(showId: $showId, season: $season) {
+      ids {
+        showId
+        tvdb
+      }
+      aired
+      name
+      overview
+      episodenumber
+      watched {
+        time
+        type
+      }
     }
   }
-}
 `
 
 const showSeasons = new Map<string, Promise<SeasonEpisode[]>>()
@@ -45,11 +48,13 @@ const getSeasonEpisodes = (
     return cachedShowSeasons
   }
 
-  const fetching = client<{ season: SeasonEpisode[] }>(seasonQuery, { showId, season })
+  const fetching = client<GetEpisodesForSeasonQuery, GetEpisodesForSeasonQueryVariables>(
+    seasonQuery,
+    { showId, season }
+  )
     .then(r => r.season)
     .catch(() => {
-      // Do extra report here
-      return []
+      return [] as SeasonEpisode[]
     })
   showSeasons.set(key, fetching)
   return fetching

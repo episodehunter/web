@@ -26,7 +26,7 @@ export const Progress = observer(
           width="100px"
         />
         <P2 center={true}>
-          You've seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan> out of{' '}
+          You&apos;ve seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan> out of{' '}
           <HighlightSpan>{numberOfAiredEpisodes}</HighlightSpan> episodes. <br />
           <HoursLeftText
             numberOfHoursLeft={numberOfUnwatchedHoursLeft(numberOfEpisodesToWatch, episodeRuntime)}

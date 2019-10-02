@@ -30,7 +30,7 @@ const Wide = styled.div`
   ${media.giant`display: flex;`};
   ${media.desktop`display: flex;`};
   ${media.tablet`display: flex;`};
-  background: linear-gradient(rgba(26, 28, 33, 0.3), rgba(0, 0, 0, 0));
+  background: linear-gradient(rgba(26, 28, 33, 0.7), rgba(0, 0, 0, 0));
   transition: background 1000ms linear;
   display: none;
   position: absolute;

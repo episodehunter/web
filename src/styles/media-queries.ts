@@ -20,8 +20,7 @@ const giant = (strings: TemplateStringsArray, ...args: string[]) => {
 
 const desktop = (strings: TemplateStringsArray, ...args: string[]) => {
   return css`
-    @media (min-width: ${sizes.desktop}px) and (max-width: ${sizes.giant -
-        1}px) {
+    @media (min-width: ${sizes.desktop}px) and (max-width: ${sizes.giant - 1}px) {
       ${css(strings, ...args)};
     }
   `
@@ -29,8 +28,7 @@ const desktop = (strings: TemplateStringsArray, ...args: string[]) => {
 
 const tablet = (strings: TemplateStringsArray, ...args: string[]) => {
   return css`
-    @media (min-width: ${sizes.tablet}px) and (max-width: ${sizes.desktop -
-        1}px) {
+    @media (min-width: ${sizes.tablet}px) and (max-width: ${sizes.desktop - 1}px) {
       ${css(strings, ...args)};
     }
   `
@@ -52,8 +50,7 @@ const mobile = (strings: TemplateStringsArray, ...args: string[]) => {
   `
 }
 
-export const isMobile = (windowWidth = getWindowWidth()) =>
-  windowWidth <= sizes.phone
+export const isMobile = (windowWidth = getWindowWidth()) => windowWidth <= sizes.phone
 
 export const HideOnMobile = ({ children, windowWidth = getWindowWidth() }) => {
   if (isMobile(windowWidth)) {

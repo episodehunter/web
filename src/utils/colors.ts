@@ -1,5 +1,4 @@
 export const capeCod = '#3E4444'
-
 export const alabaster = '#E7E7E7'
 export const shark = '#1a1c21'
 export const mountainMeadow = '#26A69A'

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSearch } from '../global-context'
+import { useSearch } from '../contexts/search-context'
 import { alabaster, mountainMeadow, shark } from '../utils/colors'
 import { Button } from './button'
 
@@ -28,8 +28,8 @@ export const EmptyHistory = () => {
       <BoxWrapper>
         <Header>Woops!</Header>
         <Text>
-          It looks like you haven't watched anything! Go and watch an episode of your favorite tv
-          show
+          It looks like you haven&apos;t watched anything! Go and watch an episode of your favorite
+          tv show
         </Text>
       </BoxWrapper>
     </Wrapper>

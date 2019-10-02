@@ -1,25 +1,3 @@
-export interface HistoryWatchedEpisode {
-  time: number
-}
+import { GetHistoryPageQuery } from '../dragonstone'
 
-export interface HistoryShow {
-  ids: {
-    tvdb: number
-    id: number
-  }
-  name: string
-}
-
-export interface HistoryEpisode {
-  ids: {
-    tvdb: number
-  }
-  name: string
-  episodenumber: number
-}
-
-export interface History {
-  watchedEpisode: HistoryWatchedEpisode
-  show: HistoryShow
-  episode: HistoryEpisode
-}
+export type History = GetHistoryPageQuery['history'][0]

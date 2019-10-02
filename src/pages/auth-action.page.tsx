@@ -2,7 +2,7 @@ import { captureException } from '@sentry/browser'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ResetPassword } from '../components/auth/reset-password'
-import { useAuth } from '../global-context'
+import { useAuth } from '../contexts/global-context'
 import { shark } from '../utils/colors'
 import { media } from '../styles/media-queries'
 

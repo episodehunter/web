@@ -1,18 +1,4 @@
-import { WatchedEnum } from '@episodehunter/types/dragonstone/watched-episode'
+import { GetEpisodesForSeasonQuery } from '../dragonstone'
 
-export interface WatchedEpisode {
-  time: number
-  type: WatchedEnum
-}
-
-export interface SeasonEpisode {
-  name: string
-  ids: {
-    showId: number
-    tvdb: number
-  }
-  aired: string
-  overview: string | null
-  episodenumber: number
-  watched: WatchedEpisode[]
-}
+export type WatchedEpisode = SeasonEpisode['watched'][0]
+export type SeasonEpisode = GetEpisodesForSeasonQuery['season'][0]

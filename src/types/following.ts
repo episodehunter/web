@@ -1,16 +1,3 @@
-export interface FollowingShowIds {
-  tvdb: number
-  id: number
-}
+import { GetFollowingShowsQuery } from '../dragonstone'
 
-export interface FollowingShow {
-  ids: FollowingShowIds
-  name: string
-  nextToWatch: {
-    numberOfEpisodesToWatch: number
-  }
-}
-
-export interface Following {
-  show: FollowingShow
-}
+export type FollowingShow = GetFollowingShowsQuery['following'][0]['show']
