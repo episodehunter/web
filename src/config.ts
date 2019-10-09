@@ -1,5 +1,5 @@
-// export const dragonstoneUrl = 'https://zwh4jtrdh0.execute-api.us-east-1.amazonaws.com/prod/graphql'
-export const dragonstoneUrl = 'http://localhost:8080'
+export const dragonstoneUrl = 'https://zwh4jtrdh0.execute-api.us-east-1.amazonaws.com/prod/graphql'
+// export const dragonstoneUrl = 'http://localhost:8080'
 
 export const firebaseAuthConfig = {
   apiKey: 'AIzaSyB01Rediz1OxOlIRBr5t2WxQpDrxaxEcVU',
