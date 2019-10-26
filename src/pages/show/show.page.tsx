@@ -41,6 +41,8 @@ export const ShowPage = observer(() => {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
 
+  const seasons = show.seasons.sort((a, b) => a - b)
+
   return (
     <PageWrapper tvdbId={show.ids.tvdb}>
       <HideOnMobile>
@@ -84,7 +86,7 @@ export const ShowPage = observer(() => {
 
       <Wrapper>
         <SeasonButtonsWrapper>
-          {show.seasons.map(season => (
+          {seasons.map(season => (
             <Button
               key={season}
               onClick={() => setSelectedSeason(season)}
