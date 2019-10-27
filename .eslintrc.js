@@ -20,6 +20,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     'react/display-name': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
     'graphql/template-strings': [
       'error',
       {

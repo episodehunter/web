@@ -8,9 +8,9 @@ export const MainAbout = () => (
     <TextWrapper>
       <Header>Episodehunter</Header>
       <Description>
-        Automatically track what you are watching on your media center and build
-        a completely history record of every TV show and movie you are watching
-        and be notified about what to see next.
+        Automatically track what you are watching on your media center and build a completely
+        history record of every TV show and movie you are watching and be notified about what to see
+        next.
       </Description>
       <Description>Register and meet pure awesomeness.</Description>
     </TextWrapper>

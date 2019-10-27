@@ -50,7 +50,10 @@ export const SearchProvider = memo(
 
     const search = (msg: string) => setSearchTerm(msg)
     const openSearchBar = () => setIsSearchBarOpen(true)
-    const closeSearchBar = () => setIsSearchBarOpen(false)
+    const closeSearchBar = () => {
+      setSearchTerm('')
+      setIsSearchBarOpen(false)
+    }
 
     return createElement(
       SearchContextProvider,

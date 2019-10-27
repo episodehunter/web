@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { NextEpisodeToWatch } from '../../types/show'
 import { dateReleaseFormat, parse } from '../../utils/date.utils'
@@ -7,7 +6,7 @@ import { BottomTextWrapper } from '../episode/bottom-text-wrapper'
 import { EpisodeImage } from '../episode/episode-image'
 import { H3, P2 } from '../text'
 
-export const NextEpisode = observer(({ episode }: { episode: NextEpisodeToWatch | null }) => {
+export const NextEpisode = ({ episode }: { episode: NextEpisodeToWatch | null }) => {
   if (!episode) {
     return null
   }
@@ -29,4 +28,4 @@ export const NextEpisode = observer(({ episode }: { episode: NextEpisodeToWatch 
       </EpisodeImage>
     </>
   )
-})
+}

@@ -2,8 +2,7 @@ import styled from 'styled-components'
 import { media } from '../styles/media-queries'
 import { alabaster, capeCod, melrose } from '../utils/colors'
 
-const backgroundColor = ({ active }: { active?: boolean }) =>
-  active ? melrose : capeCod
+const backgroundColor = ({ active }: { active?: boolean }) => (active ? melrose : capeCod)
 
 export const Button = styled.button`
   -webkit-appearance: none;

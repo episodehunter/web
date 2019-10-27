@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Navigate } from 'the-react-router'
-import { useAuth } from '../../contexts/global-context'
 import { useSearch } from '../../contexts/search-context'
 import { useUser } from '../../contexts/user-context'
+import { useGetUserQuery } from '../../dragonstone'
 import { Routes } from '../../routes'
 import { NavbarItem } from './navbar-item'
 import { NavbarItemWithSubItems } from './navbar-item-with-sub-items'
@@ -14,14 +14,11 @@ type Props = {
 }
 
 export const NavbarItems = ({ navigate, stateUrl }: Props) => {
+  const { data, loading } = useGetUserQuery()
   const searchStore = useSearch()
-  const auth = useAuth()
-  const user = useUser()
-  useEffect(() => {
-    user.loadMetadata()
-  }, [])
+  const { auth } = useUser()
 
-  const username = user.metadata.loaded ? user.metadata.data.username : ''
+  const username = !loading && data ? data.me.username : ''
 
   return (
     <>

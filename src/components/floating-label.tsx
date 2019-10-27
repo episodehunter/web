@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 type Styles = {
   styles?: {
-    floating?: Object
-    focus?: Object
-    label?: Object
-    span?: Object
-    input?: Object
+    floating?: object
+    focus?: object
+    label?: object
+    span?: object
+    input?: object
   }
 }
 type Props = InputHTMLAttributes<HTMLInputElement> &

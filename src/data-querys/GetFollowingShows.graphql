@@ -1,0 +1,14 @@
+query GetFollowingShows {
+  following {
+    show {
+      ids {
+        tvdb
+        id
+      }
+      name
+      nextToWatch {
+        numberOfEpisodesToWatch
+      }
+    }
+  }
+}

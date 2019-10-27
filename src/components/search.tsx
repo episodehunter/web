@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useSearch } from '../contexts/search-context'
@@ -7,7 +6,7 @@ import { alabaster, shark } from '../utils/colors'
 import { SmallShowFanart } from './fanart/small-show-fanart'
 import { PosterCard } from './poster-cards/poster-card'
 
-export const Search = observer(() => {
+export const Search = () => {
   const search = useSearch()
   useEffect(() => {
     search.init()
@@ -54,7 +53,7 @@ export const Search = observer(() => {
       </Wrapper>
     </OverlayWrapper>
   )
-})
+}
 
 const keyIsEscape = (key: string) => key && key.toLowerCase() === 'escape'
 

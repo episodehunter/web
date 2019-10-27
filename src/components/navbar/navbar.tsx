@@ -5,7 +5,7 @@ import { media } from '../../styles/media-queries'
 import { Hamburger } from '../hamburger'
 import { NavbarItems } from './navbar-items'
 
-export function Navbar() {
+export const Navbar = () => {
   const [isOpen, setOpen] = useState(false)
   const toggle = () => setOpen(!isOpen)
   const { navigate, state: routeState } = useNavigation()

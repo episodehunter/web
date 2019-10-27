@@ -32,8 +32,5 @@ export const Fanart = ({ imagePath }: Props) => (
 const BottomGradient = styled.div`
   padding: 20px;
   flex-grow: 1;
-  background: linear-gradient(
-    rgba(0, 0, 0, 0),
-    rgba(${hexToRgb(shark).join(',')}, 1)
-  );
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(${hexToRgb(shark).join(',')}, 1));
 `

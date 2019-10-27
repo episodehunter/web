@@ -1,47 +1,36 @@
 import { init } from '@sentry/browser'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import SearchWorker from 'worker-loader!./web-worker/search'
-import firebaseApp from 'firebase/app'
-import React from 'react'
-import mitt from 'mitt'
+import { ApolloProvider } from '@apollo/react-hooks'
+import OfflinePluginRuntime from 'offline-plugin/runtime'
 import { App } from './app'
-import { firebaseAuthConfig } from './config'
-import { GlobalContext, GlobalContextProvider } from './contexts/global-context'
-import { UserProvider } from './contexts/user-context'
-import { createAuth } from './utils/auth.util'
-import { createGqClient } from './utils/gq-client'
 import { ErrorBoundary } from './components/error-boundary'
+import { config } from './config'
 import { SearchProvider } from './contexts/search-context'
+import { UserProvider } from './contexts/user-context'
+import { client } from './apollo-client'
 
 init({
-  dsn: 'https://3e0fa9a3f331416fbeb4058e3447e90b@sentry.io/1429500',
-  environment: process.env.NODE_ENV,
-  enabled: process.env.NODE_ENV !== 'development'
+  dsn: config.sentryDsn,
+  environment: config.environment,
+  enabled: config.environment !== 'development'
 })
 
-firebaseApp.initializeApp(firebaseAuthConfig)
-
-const auth = createAuth(firebaseApp)
-const gqClient = createGqClient(auth.getIdToken)
-
-const globalContext: GlobalContext = {
-  auth,
-  gqClient,
-  emitter: new mitt()
-}
+OfflinePluginRuntime.install()
 
 const searchWorker = new SearchWorker()
 
 function RootApp() {
   return (
     <ErrorBoundary>
-      <GlobalContextProvider value={globalContext}>
+      <ApolloProvider client={client}>
         <UserProvider>
           <SearchProvider searchWorker={searchWorker}>
             <App />
           </SearchProvider>
         </UserProvider>
-      </GlobalContextProvider>
+      </ApolloProvider>
     </ErrorBoundary>
   )
 }

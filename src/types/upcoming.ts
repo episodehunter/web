@@ -1,3 +1,3 @@
-import { GetFollowingQuery } from '../dragonstone'
+import { GetUpcomingShowQuery } from '../dragonstone'
 
-export type UpcomingShow = GetFollowingQuery['following'][0]['show']
+export type UpcomingShow = NonNullable<GetUpcomingShowQuery['show']>

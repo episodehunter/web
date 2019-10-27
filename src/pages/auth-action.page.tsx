@@ -2,14 +2,14 @@ import { captureException } from '@sentry/browser'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ResetPassword } from '../components/auth/reset-password'
-import { useAuth } from '../contexts/global-context'
-import { shark } from '../utils/colors'
+import { useUser } from '../contexts/user-context'
 import { media } from '../styles/media-queries'
+import { shark } from '../utils/colors'
 
 export function AuthAction() {
   const [mode, setMode] = useState('')
   const [oobCode, setOobCode] = useState('')
-  const auth = useAuth()
+  const { auth } = useUser()
 
   useEffect(() => {
     const currentUrl = new URL(document.location.href)

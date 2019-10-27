@@ -12,6 +12,7 @@ export const SmallShowPoster = ({ tvdbId, scale }: Props) => {
   const height = 273 * (scale || 1)
   return Boolean(tvdbId) ? (
     <Poster
+      style={{ flexShrink: 0 }}
       width={width}
       height={height}
       imagePath={images.poster.small(tvdbId)}
