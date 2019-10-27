@@ -18,7 +18,7 @@ The app is automatically deployd for every push to `master` (given that test, li
 
 ### FE Stack 🥞
 
-We are jusing:
+We are using:
 
 - Webpack for building and local development
 - React as view layer
