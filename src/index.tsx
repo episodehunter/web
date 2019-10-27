@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import SearchWorker from 'worker-loader!./web-worker/search'
 import { ApolloProvider } from '@apollo/react-hooks'
+import OfflinePluginRuntime from 'offline-plugin/runtime'
 import { App } from './app'
 import { ErrorBoundary } from './components/error-boundary'
 import { config } from './config'
@@ -15,6 +16,8 @@ init({
   environment: config.environment,
   enabled: config.environment !== 'development'
 })
+
+OfflinePluginRuntime.install()
 
 const searchWorker = new SearchWorker()
 
