@@ -11,7 +11,8 @@
     "start": "webpack-dev-server --config webpack.dev.js",
     "deploy": "npm run build && firebase deploy",
     "generate": "graphql-codegen",
-    "lint": "eslint --ext .ts,.tsx src"
+    "lint": "eslint --ext .ts,.tsx src",
+    "postinstall": "npm run generate"
   },
   "repository": {
     "type": "git",
