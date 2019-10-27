@@ -1,14 +1,19 @@
 schema: ./node_modules/@episodehunter/types/dragonstone-schema.json
-documents: 'src/**/*.{ts,tsx}'
+documents:
+  - 'src/web-worker/search.ts'
+  - 'src/data-querys/*.graphql'
 pluckConfig:
   modules:
     - name: '@episodehunter/utils'
       identifier: 'gql'
 generates:
-  ./src/dragonstone.ts:
+  ./src/dragonstone.tsx:
     plugins:
       - typescript
       - typescript-operations
+      - typescript-react-apollo
     config:
-      skipTypename: true
       enumsAsTypes: true
+      withHooks: true
+      withHOC: false
+      withComponent: false

@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { FloatingLabel } from '../components/floating-label'
 import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
-import { useAuth } from '../contexts/global-context'
+import { useUser } from '../contexts/user-context'
 import { FormButton } from '../styles/form-button'
-import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 import { media } from '../styles/media-queries'
+import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 
 enum Status {
   none,
@@ -16,7 +16,7 @@ enum Status {
 }
 
 export const SettingsPage = () => {
-  const auth = useAuth()
+  const { auth } = useUser()
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [status, setStatus] = useState(Status.none)

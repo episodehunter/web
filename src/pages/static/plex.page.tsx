@@ -1,19 +1,15 @@
-import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Spinner } from '../../components/spinner'
 import { P } from '../../components/text'
-import { useUser } from '../../contexts/user-context'
+import { useGetUserQuery } from '../../dragonstone'
 import { alabaster, shark } from '../../utils/colors'
 
-export const PlexPage = observer(() => {
-  const { loadMetadata, metadata } = useUser()
-  useEffect(() => {
-    loadMetadata()
-  }, [])
+export const PlexPage = () => {
+  const { data, loading } = useGetUserQuery()
 
-  const username = metadata.loaded ? metadata.data.username : ''
-  const apiKey = metadata.loaded ? metadata.data.apikey : ''
+  const username = !loading && data ? data.me.username : ''
+  const apiKey = !loading && data ? data.me.apikey : ''
 
   return (
     <Wrapper>
@@ -45,7 +41,7 @@ export const PlexPage = observer(() => {
       </P>
     </Wrapper>
   )
-})
+}
 
 const Wrapper = styled.div`
   flex: 1;

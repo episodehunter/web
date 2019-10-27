@@ -21,7 +21,7 @@ export const EpisodeImage = ({ tvdbId, width = 250, height = 140, children, styl
         alignItems: 'flex-end',
         ...style
       }}
-      defaultImage={`https://www.placecage.com/g/${250}/${140}`}
+      defaultImage="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
       image={images.episode.small(tvdbId)}
     >
       {children}

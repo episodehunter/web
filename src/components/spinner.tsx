@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { gossamer } from '../utils/colors';
+import React from 'react'
+import styled from 'styled-components'
+import { gossamer } from '../utils/colors'
 
 type Props = {
   size?: number
@@ -9,14 +9,7 @@ type Props = {
 
 export const Spinner = ({ size = 50, style }: Props) => (
   <StyledSpinner size={size} viewBox={`0 0 50 50`} style={style}>
-    <circle
-      className="path"
-      cx="25"
-      cy="25"
-      r="20"
-      fill="none"
-      strokeWidth="4"
-    />
+    <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="4" />
   </StyledSpinner>
 )
 

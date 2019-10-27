@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useUser } from '../../contexts/user-context'
 import { FormButton } from '../../styles/form-button'
 import { mountainMeadow } from '../../utils/colors'
 import { FloatingLabel } from '../floating-label'
 import { FormStatusMessage } from '../form-status-message'
+import { Spinner } from '../spinner'
 import { H1, P } from '../text'
 import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
-import { useAuth } from '../../contexts/global-context'
-import { Spinner } from '../spinner'
 
 type Props = {
   code: string
@@ -26,7 +26,7 @@ export const ResetPassword = ({ resetPassword, code }: Props) => {
   const [errorMsg, setErrorMsg] = useState('')
   const [resetState, setResetState] = useState(ResetState.validatingCode)
   const [newPassword, setNewPassword] = useState()
-  const auth = useAuth()
+  const { auth } = useUser()
 
   useEffect(() => {
     setResetState(ResetState.validatingCode)

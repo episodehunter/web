@@ -1,0 +1,16 @@
+query GetEpisodesForSeason($showId: Int!, $season: Int!) {
+  season(showId: $showId, season: $season) {
+    ids {
+      showId
+      tvdb
+    }
+    aired
+    name
+    overview
+    episodenumber
+    watched {
+      time
+      type
+    }
+  }
+}

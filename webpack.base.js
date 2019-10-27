@@ -10,7 +10,7 @@ module.exports = {
         use: ['babel-loader'],
         include: [
           path.resolve(__dirname, 'src'),
-          path.resolve(__dirname, 'node_modules/@episodehunter/types')
+          path.resolve(__dirname, 'node_modules/@episodehunter/types') // TODO: Do we need this?
         ]
       }
     ]

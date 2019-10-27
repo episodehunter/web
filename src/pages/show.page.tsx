@@ -1,28 +1,40 @@
-import { observer } from 'mobx-react-lite'
-import React from 'react'
+import { extractSeasonNumber } from '@episodehunter/utils'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import { Button } from '../../components/button'
-import { EllipsisText } from '../../components/ellipsis-text'
-import { ErrorState } from '../../components/error-state'
-import { ShowFanart } from '../../components/fanart/show-fanart'
-import { SmallShowPoster } from '../../components/poster/small-show-poster'
-import { Episodes } from '../../components/show/episode/episodes'
-import { Facts } from '../../components/show/facts'
-import { FollowingButton } from '../../components/show/following-button'
-import { NextEpisode } from '../../components/show/next-episode'
-import { Progress } from '../../components/show/progress'
-import { H1, H3 } from '../../components/text'
-import { images } from '../../images.config'
-import { HideOnMobile, isMobile, media } from '../../styles/media-queries'
-import { SpinnerPage, AbsoluteSpinnerPage } from '../spinner.page'
-import { useShow } from './use-show'
+import { Button } from '../components/button'
+import { EllipsisText } from '../components/ellipsis-text'
+import { ErrorState } from '../components/error-state'
+import { ShowFanart } from '../components/fanart/show-fanart'
+import { SmallShowPoster } from '../components/poster/small-show-poster'
+import { Episodes } from '../components/show/episode/episodes'
+import { Facts } from '../components/show/facts'
+import { FollowingButton } from '../components/show/following-button'
+import { NextEpisode } from '../components/show/next-episode'
+import { Progress } from '../components/show/progress'
+import { H1, H3 } from '../components/text'
+import { useGetShowQuery } from '../dragonstone'
+import { images } from '../images.config'
+import { HideOnMobile, isMobile, media } from '../styles/media-queries'
+import { AbsoluteSpinnerPage, SpinnerPage } from './spinner.page'
 
-export const ShowPage = observer(() => {
+export const ShowPage = () => {
   const { params } = useNavigation<{ id: string; tvdb?: string }>()
-  const [show, selectedSeason, setSelectedSeason, isLoading, hasError] = useShow(Number(params.id))
+  const showId = Number(params.id)
+  const [selectedSeason, setSelectedSeason] = useState(1)
+  const { data, error, loading } = useGetShowQuery({
+    skip: !showId,
+    variables: { id: showId },
+    onCompleted(d) {
+      if (d.show && d.show.nextToWatch.episode && d.show.nextToWatch.episode.episodenumber) {
+        setSelectedSeason(extractSeasonNumber(d.show.nextToWatch.episode.episodenumber))
+      }
+    }
+  })
 
-  if (isLoading) {
+  if (error) {
+    return <ErrorState />
+  } else if (loading || !data) {
     if (params.tvdb) {
       return (
         <PageWrapper tvdbId={params.tvdb}>
@@ -35,12 +47,11 @@ export const ShowPage = observer(() => {
     } else {
       return <SpinnerPage />
     }
-  } else if (hasError) {
-    return <ErrorState />
-  } else if (!show) {
+  } else if (!data.show) {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
 
+  const show = data.show
   const seasons = show.seasons.sort((a, b) => a - b)
 
   return (
@@ -102,7 +113,7 @@ export const ShowPage = observer(() => {
       </Wrapper>
     </PageWrapper>
   )
-})
+}
 
 const PageWrapperTabletAndUp = styled.div<{ tvdbId: number | string }>``
 

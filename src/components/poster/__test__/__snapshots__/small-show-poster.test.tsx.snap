@@ -2,9 +2,14 @@
 
 exports[`SmallShowPoster renders correctly 1`] = `
 <img
-  defaultImage="https://www.placecage.com/g/185/273"
+  defaultImage="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
   height={273}
   image="https://d1lolx4ilifvdr.cloudfront.net/poster/185x273/123.jpg"
+  style={
+    Object {
+      "flexShrink": 0,
+    }
+  }
   width={185}
 />
 `;

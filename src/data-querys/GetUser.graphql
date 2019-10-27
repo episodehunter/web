@@ -1,0 +1,6 @@
+query GetUser {
+  me {
+    username
+    apikey
+  }
+}

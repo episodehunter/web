@@ -1,0 +1,7 @@
+mutation FollowShow($showId: Int!) {
+  followShow(showId: $showId)
+}
+
+mutation UnfollowShow($showId: Int!) {
+  unfollowShow(showId: $showId)
+}

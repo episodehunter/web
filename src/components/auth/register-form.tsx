@@ -1,6 +1,7 @@
+import { captureException } from '@sentry/browser'
 import React, { useState } from 'react'
 import { useNavigation } from 'the-react-router'
-import { captureException } from '@sentry/browser'
+import { useCreateUserMutation } from '../../dragonstone'
 import { Routes } from '../../routes'
 import { FormButton } from '../../styles/form-button'
 import { melrose } from '../../utils/colors'
@@ -8,7 +9,6 @@ import { FloatingLabel } from '../floating-label'
 import { FormStatusMessage } from '../form-status-message'
 import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
-import { useUserMutaion } from '../../mutate/use-user-mutation'
 
 export const RegisterForm = ({
   register
@@ -16,7 +16,7 @@ export const RegisterForm = ({
   register: (email: string, password: string) => Promise<firebase.auth.UserCredential>
 }) => {
   const { navigate } = useNavigation()
-  const { createUser } = useUserMutaion()
+  const [createUser] = useCreateUserMutation()
   const [errorMsg, setErrorMsg] = useState('')
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
@@ -28,7 +28,9 @@ export const RegisterForm = ({
     event.stopPropagation()
     setLoading(true)
     register(email, password)
-      .then(() => createUser(displayName || slugify(email.split('@')[0])))
+      .then(() =>
+        createUser({ variables: { username: displayName || slugify(email.split('@')[0]) } })
+      )
       .then(() => navigate(Routes.upcoming))
       .catch(error => {
         captureException(error)

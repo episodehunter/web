@@ -1,0 +1,25 @@
+mutation CheckInEpisode($episode: WatchedEpisodeInput!) {
+  checkInEpisode(episode: $episode) {
+    episode {
+      ids {
+        tvdb
+      }
+      name
+      aired
+      episodenumber
+    }
+  }
+}
+
+mutation RemoveCheckedInEpisode($episode: UnwatchedEpisodeInput!) {
+  removeCheckedInEpisode(episode: $episode) {
+    episode {
+      ids {
+        tvdb
+      }
+      name
+      aired
+      episodenumber
+    }
+  }
+}

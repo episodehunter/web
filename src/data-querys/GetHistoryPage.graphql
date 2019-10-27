@@ -1,0 +1,21 @@
+query GetHistoryPage($page: Int!) {
+  history(page: $page) {
+    watchedEpisode {
+      time
+    }
+    show {
+      ids {
+        tvdb
+        id
+      }
+      name
+    }
+    episode {
+      ids {
+        tvdb
+      }
+      name
+      episodenumber
+    }
+  }
+}

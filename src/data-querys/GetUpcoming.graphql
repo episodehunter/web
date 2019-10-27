@@ -1,0 +1,32 @@
+fragment UpcomingShowParts on Show {
+  ids {
+    tvdb
+    id
+  }
+  name
+  ended
+  upcomingEpisode {
+    aired
+    name
+    episodenumber
+  }
+  justAirdEpisode {
+    aired
+    name
+    episodenumber
+  }
+}
+
+query GetUpcoming {
+  following {
+    show {
+      ...UpcomingShowParts
+    }
+  }
+}
+
+query GetUpcomingShow($id: Int!) {
+  show(id: $id) {
+    ...UpcomingShowParts
+  }
+}

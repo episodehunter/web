@@ -1,0 +1,3 @@
+mutation CreateUser($username: String!) {
+  createUser(metadata: { username: $username })
+}

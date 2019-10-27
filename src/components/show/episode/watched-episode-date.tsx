@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { WatchedEpisode } from '../../../types/episode'
 import { dateReleaseFormat, format } from '../../../utils/date.utils'
@@ -9,7 +8,7 @@ interface Props {
   watched: WatchedEpisode[]
 }
 
-export const WatchedEpisodeDate = observer(({ watched }: Props) => {
+export const WatchedEpisodeDate = ({ watched }: Props) => {
   const latestWatched = getLatestWatchInfo(watched)
   if (!latestWatched) {
     return null
@@ -25,7 +24,7 @@ export const WatchedEpisodeDate = observer(({ watched }: Props) => {
       </P>
     </BottomTextWrapper>
   )
-})
+}
 
 function getLatestWatchInfo(watched: WatchedEpisode[]): WatchedEpisode | null {
   if (watched.length === 0) {

@@ -2,7 +2,7 @@
 
 exports[`Poster renders correctly 1`] = `
 <img
-  defaultImage="https://www.placecage.com/g/100/200"
+  defaultImage="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
   height={200}
   image="some-path"
   width={100}

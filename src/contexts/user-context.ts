@@ -1,32 +1,25 @@
-import { createContext, useContext, useState, createElement, useEffect, memo } from 'react'
-import { useGqClient, useAuth } from './global-context'
-import { getMetadata } from '../dataloader/user'
+import firebaseApp from 'firebase/app'
+import { createContext, createElement, memo, useContext, useEffect, useState } from 'react'
+import { config } from '../config'
+import { client } from '../apollo-client'
+import { createAuth } from '../utils/auth.util'
 
 export interface UserContext {
   currentUser?: firebase.User | null
   loadingCurrentUser: boolean
-  metadata: LoadedMetadata | LoadingMetadata
-  loadMetadata(): Promise<void>
+  auth: typeof auth
 }
+
+firebaseApp.initializeApp(config.firebaseAuth)
+
+export const auth = createAuth(firebaseApp, client)
 
 export const userContext = createContext<UserContext>({} as UserContext)
 export const UserContextProvider = userContext.Provider
 
-type LoadedMetadata = {
-  loaded: true
-  data: { username: string; apikey: string }
-}
-
-type LoadingMetadata = {
-  loaded: false
-}
-
 export const UserProvider = memo(({ children }: { children: JSX.Element }) => {
   const [loadingCurrentUser, setLoadingCurrentUser] = useState(true)
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
-  const [metadata, setMetadata] = useState<LoadedMetadata | LoadingMetadata>({ loaded: false })
-  const auth = useAuth()
-  const gqClient = useGqClient()
   useEffect(() => {
     return auth.authStateChange$(currentUser => {
       setCurrentUser(currentUser)
@@ -34,21 +27,10 @@ export const UserProvider = memo(({ children }: { children: JSX.Element }) => {
     }, console.error)
   }, [])
 
-  const loadMetadata = async () => {
-    if (metadata.loaded) {
-      return undefined
-    }
-    const result = await getMetadata(gqClient)
-    setMetadata({
-      loaded: true,
-      data: result
-    })
-  }
-
   return createElement(
     UserContextProvider,
     {
-      value: { currentUser, loadingCurrentUser, metadata, loadMetadata }
+      value: { currentUser, loadingCurrentUser, auth }
     },
     children
   )

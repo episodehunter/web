@@ -1,19 +1,15 @@
-import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Spinner } from '../../components/spinner'
 import { P } from '../../components/text'
-import { useUser } from '../../contexts/user-context'
+import { useGetUserQuery } from '../../dragonstone'
 import { alabaster, shark } from '../../utils/colors'
 
-export const KodiPage = observer(() => {
-  const { metadata, loadMetadata } = useUser()
-  useEffect(() => {
-    loadMetadata()
-  }, [])
+export const KodiPage = () => {
+  const { data, loading } = useGetUserQuery()
 
-  const username = metadata.loaded ? metadata.data.username : ''
-  const apiKey = metadata.loaded ? metadata.data.apikey : ''
+  const username = !loading && data ? data.me.username : ''
+  const apiKey = !loading && data ? data.me.apikey : ''
 
   return (
     <Wrapper>
@@ -63,7 +59,7 @@ export const KodiPage = observer(() => {
       </ul>
     </Wrapper>
   )
-})
+}
 
 const Li = styled.li`
   font-family: 'Lato', sans-serif;

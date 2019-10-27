@@ -1,0 +1,35 @@
+query GetShow($id: Int!) {
+  show(id: $id) {
+    name
+    airs {
+      first
+      time
+      day
+    }
+    ended
+    genre
+    ids {
+      id
+      tvdb
+    }
+    language
+    network
+    overview
+    runtime
+    numberOfAiredEpisodes
+    seasons
+    nextToWatch {
+      numberOfEpisodesToWatch
+      episode {
+        ids {
+          tvdb
+        }
+        aired
+        name
+        episodenumber
+      }
+    }
+    followers
+    isFollowing
+  }
+}

@@ -2,7 +2,7 @@ import { Dragonstone } from '@episodehunter/types'
 import { gql } from '@episodehunter/utils'
 import Fuse, { FuseOptions } from 'fuse.js'
 import { request } from 'graphql-request'
-import { dragonstoneUrl } from '../config'
+import { config } from '../config'
 import { GetTitlesQuery } from '../dragonstone'
 
 const fuseOptions: FuseOptions<any> = {
@@ -35,7 +35,7 @@ function getFuse() {
   if (fetchingFuse) {
     return fetchingFuse
   }
-  fetchingFuse = request<GetTitlesQuery>(dragonstoneUrl, titlesQuery)
+  fetchingFuse = request<GetTitlesQuery>(config.dragonstoneUrl, titlesQuery)
     .then(result => result.titles)
     .then(
       titles => new Fuse<{ item: Dragonstone.Title; score: number }>(titles as any, fuseOptions)
