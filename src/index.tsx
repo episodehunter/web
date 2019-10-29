@@ -17,7 +17,9 @@ init({
   enabled: config.environment !== 'development'
 })
 
-OfflinePluginRuntime.install()
+if (config.environment !== 'development') {
+  OfflinePluginRuntime.install()
+}
 
 const searchWorker = new SearchWorker()
 

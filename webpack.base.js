@@ -1,5 +1,6 @@
 const path = require('path')
 const OfflinePlugin = require('offline-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: ['./src/index.tsx'],
@@ -25,13 +26,16 @@ module.exports = {
         'https://fonts.googleapis.com/icon?family=Material+Icons'
       ],
       AppCache: false
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
     })
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[hash].bundle.js',
     path: path.join(__dirname, 'build'),
     publicPath: '/',
     globalObject: 'this'
