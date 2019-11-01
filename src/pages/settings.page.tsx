@@ -213,7 +213,6 @@ const Wrapper = styled.div`
 `
 
 const Header = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;
@@ -221,7 +220,6 @@ const Header = styled.h1`
 `
 
 const Text = styled.p`
-  font-family: 'Lato', sans-serif;
   color: white;
   font-size: 18px;
   margin: 10px;

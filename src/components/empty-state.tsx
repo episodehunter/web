@@ -53,12 +53,10 @@ const BoxWrapper = styled.div`
 `
 
 const Header = styled.div`
-  font-family: 'Lato', sans-serif;
   font-size: 24px;
   margin-bottom: 10px;
 `
 const Text = styled.div`
-  font-family: 'Lato', sans-serif;
   font-size: 14px;
   margin-bottom: 15px;
 `

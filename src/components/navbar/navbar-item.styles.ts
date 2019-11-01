@@ -5,7 +5,6 @@ import { alabaster, gossamer, melrose } from '../../utils/colors'
 export const Item = styled.a`
   display: flex;
   color: ${alabaster};
-  font-family: 'Lato', sans-serif;
   text-transform: uppercase;
   text-decoration: none;
   height: 30px;
