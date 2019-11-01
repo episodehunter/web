@@ -1,3 +1,4 @@
+const path = require('path')
 const common = require('./webpack.base.js')
 const { InjectManifest } = require('workbox-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
