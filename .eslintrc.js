@@ -24,9 +24,8 @@ module.exports = {
     'graphql/template-strings': [
       'error',
       {
-        env: 'apollo',
-        schemaJson: require('@episodehunter/types/dragonstone-schema.json'),
-        tagName: 'gql'
+        env: 'literal',
+        schemaJson: require('@episodehunter/types/dragonstone-schema.json')
       }
     ]
   },
