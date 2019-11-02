@@ -1,11 +1,19 @@
 const path = require('path')
-const OfflinePlugin = require('offline-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: ['./src/index.tsx'],
   devtool: 'source-map',
   module: {
     rules: [
+      {
+        test: /\.(ico|png)$/i,
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
+      },
       {
         test: /\.tsx?$/,
         use: ['babel-loader'],
@@ -17,21 +25,16 @@ module.exports = {
     ]
   },
   plugins: [
-    new OfflinePlugin({
-      responseStrategy: 'cache-first',
-      externals: [
-        'https://polyfill.io/v3/polyfill.min.js?flags=gated&features=IntersectionObserver%2CIntersectionObserverEntry',
-        'https://fonts.googleapis.com/css?family=Lato:100,400,700',
-        'https://fonts.googleapis.com/icon?family=Material+Icons'
-      ],
-      AppCache: false
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+      alwaysWriteToDisk: true
     })
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[hash].bundle.js',
     path: path.join(__dirname, 'build'),
     publicPath: '/',
     globalObject: 'this'

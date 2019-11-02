@@ -37,7 +37,6 @@ const Header = styled.h1`
 const Wrapper = styled.div`
   color: ${alabaster};
   align-self: flex-end;
-  font-family: 'Lato', sans-serif;
 `
 
 const TextWrapper = styled.div`

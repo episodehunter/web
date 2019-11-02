@@ -42,7 +42,6 @@ const Wrapper = styled(UnstyledLink)`
 const InfoWrapper = styled.div`
   color: ${alabaster};
   text-align: center;
-  font-family: 'Lato', sans-serif;
   font-size: 12px;
   margin: 5px 0 10px 0;
   padding-right: 10px;

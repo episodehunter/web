@@ -54,7 +54,6 @@ const FooterWrapper = styled.div`
 `
 
 const FooterItem = styled.div`
-  font-family: 'Lato', sans-serif;
   font-size: 12px;
   color: ${manatee};
   cursor: pointer;

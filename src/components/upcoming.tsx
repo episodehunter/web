@@ -59,7 +59,6 @@ const UpcomingWrapper = styled.div`
 `
 
 const Timespan = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;

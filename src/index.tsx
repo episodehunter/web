@@ -1,9 +1,10 @@
+import './logo.png'
+import './favicon.ico'
 import { init } from '@sentry/browser'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import SearchWorker from 'worker-loader!./web-worker/search'
 import { ApolloProvider } from '@apollo/react-hooks'
-import OfflinePluginRuntime from 'offline-plugin/runtime'
 import { App } from './app'
 import { ErrorBoundary } from './components/error-boundary'
 import { config } from './config'
@@ -17,7 +18,12 @@ init({
   enabled: config.environment !== 'development'
 })
 
-OfflinePluginRuntime.install()
+if (config.environment !== 'development') {
+  // Use the window load event to keep the page load performant
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+  })
+}
 
 const searchWorker = new SearchWorker()
 

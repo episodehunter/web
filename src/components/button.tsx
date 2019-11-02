@@ -9,7 +9,6 @@ export const Button = styled.button`
   border: 0;
   display: inline-block;
   background: ${backgroundColor};
-  font-family: 'Lato', sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: ${alabaster};
@@ -27,7 +26,6 @@ export const Button = styled.button`
 export const TextButton = styled.p`
   color: ${melrose};
   margin: 0;
-  font-family: 'Lato', sans-serif;
   font-weight: 300;
   font-size: 14px;
   align-self: flex-start;

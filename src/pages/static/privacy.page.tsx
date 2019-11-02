@@ -102,7 +102,6 @@ const Contact = styled.a`
   display: block;
   margin: 5px 0;
   color: ${mountainMeadow};
-  font-family: 'Lato', sans-serif;
 `
 const Wrapper = styled.div`
   flex: 1;
@@ -114,21 +113,18 @@ const Wrapper = styled.div`
 `
 const TitleWrapper = styled.div``
 const Title = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;
   font-size: 32px;
 `
 const Header = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;
   font-size: 18px;
 `
 const Ending = styled.p`
-  font-family: 'Lato', sans-serif;
   color: white;
   font-weight: lighter;
   font-size: 12px;

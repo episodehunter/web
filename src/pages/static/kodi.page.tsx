@@ -61,9 +61,7 @@ export const KodiPage = () => {
   )
 }
 
-const Li = styled.li`
-  font-family: 'Lato', sans-serif;
-`
+const Li = styled.li``
 
 const Wrapper = styled.div`
   flex: 1;
@@ -75,7 +73,6 @@ const Wrapper = styled.div`
 `
 const TitleWrapper = styled.div``
 const Title = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;

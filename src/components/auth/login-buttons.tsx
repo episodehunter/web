@@ -32,7 +32,6 @@ export const ResetPasswordButton = ({ changeFormState }: Props) => {
 }
 
 const Button = styled.div`
-  font-family: 'Lato', sans-serif;
   border-width: 2px;
   border-style: solid;
   padding: 10px 15px;

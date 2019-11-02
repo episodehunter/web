@@ -96,14 +96,12 @@ const Wrapper = styled.div`
 `
 const TitleWrapper = styled.div``
 const Title = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;
   font-size: 32px;
 `
 const Header = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;

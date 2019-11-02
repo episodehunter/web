@@ -1,0 +1,16 @@
+{
+  "short_name": "Episodehunter",
+  "name": "Episodehunter",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "108x108",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#1a1c21",
+  "theme_color": "#03A37E",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

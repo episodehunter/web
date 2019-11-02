@@ -105,7 +105,6 @@ export const FaqPage = () => (
 )
 
 const Header = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: ${alabaster};
   text-transform: uppercase;
   font-weight: normal;
@@ -122,7 +121,6 @@ const Wrapper = styled.div`
 `
 const TitleWrapper = styled.div``
 const Title = styled.h1`
-  font-family: 'Lato', sans-serif;
   color: white;
   text-transform: uppercase;
   font-weight: lighter;

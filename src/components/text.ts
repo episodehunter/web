@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components'
 import { alabaster, melrose } from '../utils/colors'
 
 const headLine = css`
-  font-family: 'Lato', sans-serif;
   font-weight: 300;
   text-transform: uppercase;
   color: ${alabaster};
@@ -34,7 +33,6 @@ export const H4 = styled(H3)`
 `
 
 export const P = styled.p`
-  font-family: 'Lato', sans-serif;
   font-size: 16px;
   color: ${alabaster};
   ${addMargin};
