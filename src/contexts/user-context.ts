@@ -12,7 +12,7 @@ export interface UserContext {
 
 firebaseApp.initializeApp(config.firebaseAuth)
 
-export const auth = createAuth(firebaseApp, client)
+export const auth = createAuth(firebaseApp, () => client)
 
 export const userContext = createContext<UserContext>({} as UserContext)
 export const UserContextProvider = userContext.Provider

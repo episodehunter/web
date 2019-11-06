@@ -1,12 +1,15 @@
+import { ApolloClient } from 'apollo-boost'
 import firebaseApp from 'firebase/app'
 import 'firebase/auth'
-import { ApolloClient } from 'apollo-boost'
 
-export const createAuth = (firebase: typeof firebaseApp, client: ApolloClient<unknown>) => {
+export const createAuth = (
+  firebase: typeof firebaseApp,
+  getClient: () => ApolloClient<unknown>
+) => {
   const auth = {
     async signOut() {
       await firebase.auth().signOut()
-      client.resetStore()
+      getClient().resetStore()
       window.location.reload()
     },
 

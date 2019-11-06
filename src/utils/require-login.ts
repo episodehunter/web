@@ -11,7 +11,7 @@ export const requireLogin = <P>(Component: ComponentType<P>) => {
     const { navigate } = useNavigation()
     const { currentUser } = useUser()
     if (!currentUser) {
-      navigate(Routes.login)
+      navigate(Routes.landingPage)
       return null
     }
     return React.createElement(Component, props as any)

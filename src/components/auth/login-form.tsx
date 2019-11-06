@@ -1,12 +1,11 @@
+import { styled as miStyled, TextField } from '@material-ui/core'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
 import { Routes } from '../../routes'
-import { FormButton } from '../../styles/form-button'
-import { mountainMeadow, shark } from '../../utils/colors'
-import { FloatingLabel } from '../floating-label'
+import { shark } from '../../utils/colors'
+import { Button } from '../atoms/button'
 import { FormStatusMessage } from '../form-status-message'
-import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
 
 type Props = {
@@ -39,33 +38,44 @@ export const LoginForm = ({ login }: Props) => {
   return (
     <>
       {showLoginAnimation && <LoginAnimation />}
-      <AuthFormWrapper onSubmit={onLogin as any}>
+      <form onSubmit={onLogin as any}>
         <FormStatusMessage message={errorMsg} />
-        <FloatingLabel
-          styles={floatingLabelStyles}
-          placeholder="email"
+        <TextField
+          onChange={e => setEmail(e.target.value)}
+          fullWidth
           type="email"
-          value={email}
-          onChange={event => setEmail(event.target.value)}
-          required
+          label="Email"
+          margin="normal"
+          variant="outlined"
+          autoFocus={true}
         />
-        <Space />
-        <FloatingLabel
-          styles={floatingLabelStyles}
-          placeholder="password"
+        <TextField
+          onChange={e => setPassword(e.target.value)}
+          fullWidth
           type="password"
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-          required
+          label="Password"
+          margin="normal"
+          variant="outlined"
         />
-        <Space />
-        <FormButton color={mountainMeadow} disabled={loading} onClick={onLogin}>
+        <ActionButton progress={loading} onClick={onLogin}>
           Let me in
-        </FormButton>
-      </AuthFormWrapper>
+        </ActionButton>
+        <ActionButton
+          disabled={loading}
+          type="tertiary"
+          onClick={() => navigate(Routes.forgotPassword)}
+        >
+          Forgot your password?
+        </ActionButton>
+      </form>
     </>
   )
 }
+
+const ActionButton = miStyled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  width: '100% !important'
+}))
 
 const LoginAnimation = styled.div`
   background: ${shark};

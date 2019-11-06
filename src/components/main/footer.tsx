@@ -6,9 +6,19 @@ import { Routes } from '../../routes'
 import { media } from '../../styles/media-queries'
 import { manatee } from '../../utils/colors'
 
-export const Footer = () => {
+interface Props {
+  hideOn?: string
+  style?: React.CSSProperties
+}
+
+export const Footer = (props: Props) => {
   const { currentUser } = useUser()
-  const { navigate } = useNavigation()
+  const { navigate, state } = useNavigation()
+
+  if (props.hideOn && props.hideOn === state.url) {
+    return null
+  }
+
   let unauthedComponents: JSX.Element | null = null
   if (!currentUser) {
     unauthedComponents = (
@@ -18,7 +28,7 @@ export const Footer = () => {
     )
   }
   return (
-    <FooterWrapper>
+    <FooterWrapper style={props.style}>
       {unauthedComponents}
       <FooterItem onClick={() => navigate(Routes.about)}>©EpisodeHunter 2019</FooterItem>
       <FooterItem onClick={() => navigate(Routes.privacy)}>Privacy Policy</FooterItem>

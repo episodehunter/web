@@ -1,13 +1,11 @@
+import { styled as miStyled, TextField } from '@material-ui/core'
 import { captureException } from '@sentry/browser'
 import React, { useState } from 'react'
 import { useNavigation } from 'the-react-router'
 import { useCreateUserMutation } from '../../dragonstone'
 import { Routes } from '../../routes'
-import { FormButton } from '../../styles/form-button'
-import { melrose } from '../../utils/colors'
-import { FloatingLabel } from '../floating-label'
+import { Button } from '../atoms/button'
 import { FormStatusMessage } from '../form-status-message'
-import { AuthFormWrapper, floatingLabelStyles, Space } from './auth-styles'
 import { translateFirebaseError } from './auth.util'
 
 export const RegisterForm = ({
@@ -23,7 +21,7 @@ export const RegisterForm = ({
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const onRegister = (event: React.MouseEvent) => {
+  const onRegister = (event: React.MouseEvent | React.FormEvent) => {
     event.preventDefault()
     event.stopPropagation()
     setLoading(true)
@@ -40,44 +38,46 @@ export const RegisterForm = ({
   }
 
   return (
-    <AuthFormWrapper>
+    <form onSubmit={onRegister}>
       <FormStatusMessage message={errorMsg} />
-      <FloatingLabel
+
+      <TextField
         autoComplete="text"
-        styles={floatingLabelStyles}
-        placeholder="Display name 😃"
+        fullWidth
         type="text"
-        value={displayName}
-        onChange={displayName => setDisplayName(slugify(displayName.target.value))}
-        required
+        label="Username"
+        margin="normal"
+        variant="outlined"
+        autoFocus={true}
+        onChange={e => setDisplayName(e.target.value)}
       />
-      <Space />
-      <FloatingLabel
-        autoComplete="email"
-        styles={floatingLabelStyles}
-        placeholder="Email ✉️"
+      <TextField
+        fullWidth
         type="email"
-        value={email}
-        onChange={email => setEmail(email.target.value)}
-        required
+        label="Email"
+        margin="normal"
+        variant="outlined"
+        onChange={e => setEmail(e.target.value)}
       />
-      <Space />
-      <FloatingLabel
-        autoComplete="password"
-        styles={floatingLabelStyles}
-        placeholder="Password 🙈"
+      <TextField
+        fullWidth
         type="password"
-        value={password}
-        onChange={password => setPassword(password.target.value)}
-        required
+        label="Password"
+        margin="normal"
+        variant="outlined"
+        onChange={e => setPassword(e.target.value)}
       />
-      <Space />
-      <FormButton color={melrose} disabled={loading} onClick={onRegister}>
-        Register ➡️
-      </FormButton>
-    </AuthFormWrapper>
+      <ActionButton progress={loading} onClick={onRegister}>
+        Register
+      </ActionButton>
+    </form>
   )
 }
+
+const ActionButton = miStyled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  width: '100% !important'
+}))
 
 function slugify(str: string): string {
   const a = 'àáäâãåăæçèéëêǵḧìíïîḿńǹñòóöôœøṕŕßśșțùúüûǘẃẍÿź·/_,:;'

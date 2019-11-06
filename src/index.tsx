@@ -1,16 +1,17 @@
-import './logo.png'
-import './favicon.ico'
+import { ApolloProvider } from '@apollo/react-hooks'
 import { init } from '@sentry/browser'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import SearchWorker from 'worker-loader!./web-worker/search'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { Theme } from '../src/components/theme'
+import { client } from './apollo-client'
 import { App } from './app'
 import { ErrorBoundary } from './components/error-boundary'
 import { config } from './config'
 import { SearchProvider } from './contexts/search-context'
 import { UserProvider } from './contexts/user-context'
-import { client } from './apollo-client'
+import './favicon.ico'
+import './logo.png'
 
 init({
   dsn: config.sentryDsn,
@@ -33,7 +34,9 @@ function RootApp() {
       <ApolloProvider client={client}>
         <UserProvider>
           <SearchProvider searchWorker={searchWorker}>
-            <App />
+            <Theme>
+              <App />
+            </Theme>
           </SearchProvider>
         </UserProvider>
       </ApolloProvider>
