@@ -1,7 +1,6 @@
 import React, { ReactNode, FC, useState, useEffect, useRef } from 'react'
 import MaterialButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
-// import { colors } from '../../utils/colors'
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress'
 import { colors } from '../../utils/colors'
 
@@ -69,17 +68,15 @@ export const Button: FC<ButtonProps> = props => {
       }}
       data-testid={props['data-testid']}
     >
-      <>
-        {showSpinner ? (
-          <CircularProgress
-            style={{ position: 'absolute' }}
-            size={getProgressSize(props)}
-            color="inherit"
-          />
-        ) : (
-          props.children
-        )}
-      </>
+      {showSpinner ? (
+        <CircularProgress
+          style={{ position: 'absolute' }}
+          size={getProgressSize(props)}
+          color="inherit"
+        />
+      ) : (
+        props.children
+      )}
     </MaterialButton>
   )
 }
