@@ -13,6 +13,8 @@ import { PlexPage } from '../pages/static/plex.page'
 import { PrivacyPage } from '../pages/static/privacy.page'
 import { TosPage } from '../pages/static/tos.page'
 import { UpcomingPage } from '../pages/upcoming.page'
+import { LandingPage } from '../pages/landing-page'
+import { ForgotPassword } from '../pages/forgot-password.page'
 import { Routes } from '../routes'
 import { requireLogin } from '../utils/require-login'
 
@@ -43,6 +45,14 @@ export const routes = {
     {
       path: Routes.login,
       component: LoginPage
+    },
+    {
+      path: Routes.forgotPassword,
+      component: ForgotPassword
+    },
+    {
+      path: Routes.landingPage,
+      component: LandingPage
     },
     {
       path: Routes.authAction,

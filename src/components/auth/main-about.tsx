@@ -1,7 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { media } from '../../styles/media-queries'
-import { alabaster, gossamer } from '../../utils/colors'
+import { alabaster, mainGreen } from '../../utils/colors'
+import { Button } from '../atoms/button'
 
 export const MainAbout = () => (
   <Wrapper>
@@ -12,7 +13,9 @@ export const MainAbout = () => (
         history record of every TV show and movie you are watching and be notified about what to see
         next.
       </Description>
-      <Description>Register and meet pure awesomeness.</Description>
+      <Button type="outlined" size="big">
+        Register and meet pure awesomeness
+      </Button>
     </TextWrapper>
   </Wrapper>
 )
@@ -29,7 +32,7 @@ const Header = styled.h1`
   ${media.desktop`font-size: 54px;`};
   ${media.tablet`font-size: 48px;`};
   font-size: 20px;
-  color: ${gossamer};
+  color: ${mainGreen};
   text-transform: uppercase;
   word-wrap: break-word;
 `

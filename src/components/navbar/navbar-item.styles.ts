@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { media } from '../../styles/media-queries'
-import { alabaster, gossamer, melrose } from '../../utils/colors'
+import { alabaster, mainGreen, melrose } from '../../utils/colors'
 
 export const Item = styled.a`
   display: flex;
@@ -13,10 +13,10 @@ export const Item = styled.a`
   letter-spacing: 1.5px;
   box-sizing: border-box;
   border-bottom: ${(props: { selected: boolean }) =>
-    !props.selected ? '' : `2px solid ${gossamer}`}};
+    !props.selected ? '' : `2px solid ${mainGreen}`}};
   &:hover {
     border-bottom: ${(props: { selected: boolean }) =>
-      !props.selected ? `2px solid ${melrose}` : `2px solid ${gossamer}`}};
+      !props.selected ? `2px solid ${melrose}` : `2px solid ${mainGreen}`}};
   }
 
   ${media.giant`width: 150px; margin: 10px 10px;`};

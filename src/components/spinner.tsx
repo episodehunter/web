@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { gossamer } from '../utils/colors'
+import { mainGreen } from '../utils/colors'
 
 type Props = {
   size?: number
@@ -20,7 +20,7 @@ const StyledSpinner = styled.svg`
   height: ${({ size }: Props) => size}px;
 
   & .path {
-    stroke: ${gossamer};
+    stroke: ${mainGreen};
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }

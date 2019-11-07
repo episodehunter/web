@@ -5,7 +5,7 @@ export enum Routes {
   settings = '/settings',
   search = '/search',
   show = '/show/:id/:tvdb?',
-  login = '/login',
+  login = '/login/:type?',
   authAction = '/auth-action',
   about = '/about',
   privacy = '/privacy',
@@ -13,5 +13,7 @@ export enum Routes {
   kodi = '/kodi',
   plex = '/plex',
   googlehome = '/googlehome',
-  faq = '/faq'
+  faq = '/faq',
+  landingPage = '/landingpage',
+  forgotPassword = '/forgotpassword'
 }

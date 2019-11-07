@@ -8,6 +8,7 @@ import { shark } from './utils/colors'
 import { Search } from './components/search'
 import { Navbar } from './components/navbar/navbar'
 import { Footer } from './components/main/footer'
+import { Routes as RoutesEnum } from './routes'
 
 const [Router, Routes] = createRouter(routes)
 
@@ -27,7 +28,7 @@ export const App = memo(() => {
           </>
         )}
         <Routes />
-        <Footer />
+        <Footer hideOn={RoutesEnum.landingPage} />
       </Wrapper>
     </Router>
   )
