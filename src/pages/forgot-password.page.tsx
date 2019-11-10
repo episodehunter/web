@@ -36,7 +36,7 @@ export function ForgotPassword() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" style={{ marginBottom: '100px' }}>
       <Logo src={logoPath} />
       <FormWrapper>
         {success ? (

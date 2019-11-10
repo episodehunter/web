@@ -95,7 +95,7 @@ export function AuthAction() {
     resetState === ResetState.updatingPassword
   ) {
     content = (
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} style={{ marginBottom: '100px' }}>
         <FormStatusMessage message={errorMsg} />
         <Body1>Enter your new password that you want to change to</Body1>
         <TextField

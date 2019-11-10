@@ -131,7 +131,7 @@ const useStyles = makeStyles({
     lineHeight: (p: ButtonProps) => (p.size === 'big' ? '20px' : '18px'),
     letterSpacing: '0.5px',
     minWidth: (p: ButtonProps) => (p.size === 'big' ? '266px' : '120px'),
-    height: (p: ButtonProps) => (p.size === 'big' ? '52px' : '42px'),
+    minHeight: (p: ButtonProps) => (p.size === 'big' ? '52px' : '42px'),
     boxShadow: 'none',
     borderRadius: '100px',
     padding: (p: ButtonProps) => (p.size === 'big' ? '16px 32px' : '12px 24px')

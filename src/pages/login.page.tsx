@@ -23,7 +23,7 @@ export function LoginPage() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container style={{ marginBottom: '100px' }} component="main" maxWidth="xs">
       <Logo src={logoPath} />
       <FormWrapper>
         <Tabs
