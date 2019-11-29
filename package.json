@@ -55,7 +55,7 @@
     "eslint-config-prettier": "6.7.0",
     "eslint-plugin-graphql": "3.1.0",
     "eslint-plugin-prettier": "3.1.1",
-    "eslint-plugin-react": "7.16.0",
+    "eslint-plugin-react": "7.17.0",
     "file-loader": "4.3.0",
     "graphql": "14.5.8",
     "html-webpack-harddisk-plugin": "1.0.1",
