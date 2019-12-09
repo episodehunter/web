@@ -14,6 +14,7 @@ import { PrivacyPage } from '../pages/static/privacy.page'
 import { TosPage } from '../pages/static/tos.page'
 import { UpcomingPage } from '../pages/upcoming.page'
 import { LandingPage } from '../pages/landing-page'
+import { SearchPage } from '../pages/search.page'
 import { ForgotPassword } from '../pages/forgot-password.page'
 import { Routes } from '../routes'
 import { requireLogin } from '../utils/require-login'
@@ -41,6 +42,10 @@ export const routes = {
     {
       path: Routes.show,
       component: requireLogin(ShowPage)
+    },
+    {
+      path: Routes.search,
+      component: requireLogin(SearchPage)
     },
     {
       path: Routes.login,

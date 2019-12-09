@@ -1,22 +1,23 @@
-import { unixTimestamp, extractSeasonNumber } from '@episodehunter/utils'
-import React from 'react'
+import { extractSeasonNumber, unixTimestamp } from '@episodehunter/utils'
+import { RemoveCircleOutline, Tv } from '@material-ui/icons'
+import { DataProxy } from 'apollo-cache'
 import produce from 'immer'
+import React from 'react'
 import {
-  useCheckInEpisodeMutation,
-  useRemoveCheckedInEpisodeMutation,
-  GetShowDocument,
-  GetShowQueryVariables,
-  GetShowQuery,
+  CheckInEpisodeMutation,
+  GetEpisodesForSeasonDocument,
   GetEpisodesForSeasonQuery,
   GetEpisodesForSeasonQueryVariables,
-  GetEpisodesForSeasonDocument,
-  CheckInEpisodeMutation,
-  RemoveCheckedInEpisodeMutation
+  GetShowDocument,
+  GetShowQuery,
+  GetShowQueryVariables,
+  RemoveCheckedInEpisodeMutation,
+  useCheckInEpisodeMutation,
+  useRemoveCheckedInEpisodeMutation
 } from '../../../dragonstone'
 import { SeasonEpisode } from '../../../types/episode'
 import { melrose } from '../../../utils/colors'
-import { TextButton } from '../../button'
-import { DataProxy } from 'apollo-cache'
+import { Button } from '../../atoms/button'
 
 type Props = {
   episode: SeasonEpisode
@@ -50,32 +51,29 @@ export const WatchedButton = ({ episode }: Props) => {
     })
   }
 
-  if (loading) {
+  if (hasHistory) {
     return (
-      <TextButton>
-        Updating...{' '}
-        <i className="material-icons" style={iconStyle}>
-          loop
-        </i>
-      </TextButton>
-    )
-  } else if (hasHistory) {
-    return (
-      <TextButton onClick={onRemoveCheckIn}>
-        Mark as unwatched{' '}
-        <i className="material-icons" style={iconStyle}>
-          remove_circle_outline
-        </i>
-      </TextButton>
+      <Button
+        size="xsmall"
+        onClick={onRemoveCheckIn}
+        progress={loading}
+        type="tertiary"
+        startIcon={<RemoveCircleOutline />}
+      >
+        Mark as unwatched
+      </Button>
     )
   } else {
     return (
-      <TextButton onClick={onCheckIn}>
-        Mark as watched{' '}
-        <i className="material-icons" style={iconStyle}>
-          tv
-        </i>
-      </TextButton>
+      <Button
+        size="xsmall"
+        onClick={onCheckIn}
+        progress={loading}
+        type="tertiary"
+        startIcon={<Tv />}
+      >
+        Mark as watched
+      </Button>
     )
   }
 }

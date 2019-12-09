@@ -5,7 +5,7 @@ import {
   numberOfUnwatchedHoursLeft
 } from '../../utils/episode.util'
 import { GapProgress } from '../progress/gap-progress'
-import { H3, HighlightSpan, P2 } from '../text'
+import { H3, Body1, Subtitle1 } from '../atoms/Typography'
 
 interface Props {
   episodeRuntime: number
@@ -27,13 +27,13 @@ export const Progress = ({
         height="100px"
         width="100px"
       />
-      <P2 center={true}>
-        You&apos;ve seen <HighlightSpan>{numberOfWatchedEpisodes}</HighlightSpan> out of{' '}
-        <HighlightSpan>{numberOfAiredEpisodes}</HighlightSpan> episodes. <br />
+      <Body1 style={{ textAlign: 'center' }}>
+        You&apos;ve seen <Subtitle1>{numberOfWatchedEpisodes}</Subtitle1> out of{' '}
+        <Subtitle1>{numberOfAiredEpisodes}</Subtitle1> episodes. <br />
         <HoursLeftText
           numberOfHoursLeft={numberOfUnwatchedHoursLeft(numberOfEpisodesToWatch, episodeRuntime)}
         />
-      </P2>
+      </Body1>
     </ProgressWarpper>
   )
 }
@@ -44,7 +44,7 @@ function HoursLeftText({ numberOfHoursLeft }: { numberOfHoursLeft: number }) {
   }
   return (
     <>
-      That means you have about <HighlightSpan>{numberOfHoursLeft}</HighlightSpan> hours left
+      That means you have about <Subtitle1>{numberOfHoursLeft}</Subtitle1> hours left
     </>
   )
 }

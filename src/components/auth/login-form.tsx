@@ -57,7 +57,7 @@ export const LoginForm = ({ login }: Props) => {
           margin="normal"
           variant="outlined"
         />
-        <ActionButton progress={loading} onClick={onLogin}>
+        <ActionButton progress={loading} onClick={onLogin} actionType="submit">
           Let me in
         </ActionButton>
         <ActionButton
