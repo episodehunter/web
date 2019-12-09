@@ -19,7 +19,7 @@ import {
   GetUpcomingShowQuery
 } from '../../dragonstone'
 import { Show } from '../../types/show'
-import { Button } from '../button'
+import { Button } from '../atoms/button'
 import { ApolloClient } from 'apollo-boost'
 
 interface Props {
@@ -31,13 +31,13 @@ export const FollowingButton = ({ show }: Props) => {
 
   if (show.isFollowing) {
     return (
-      <Button disabled={loading} onClick={() => unfollowShow()}>
+      <Button type="outlined" progress={loading} onClick={() => unfollowShow()}>
         Unfollow
       </Button>
     )
   } else {
     return (
-      <Button disabled={loading} onClick={() => followShow()}>
+      <Button type="secondary" progress={loading} onClick={() => followShow()}>
         Follow
       </Button>
     )

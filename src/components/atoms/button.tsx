@@ -5,13 +5,14 @@ import CircularProgress from '@material-ui/core/CircularProgress/CircularProgres
 import { colors } from '../../utils/colors'
 
 export type ButtonTypes = 'cta' | 'secondary' | 'tertiary' | 'outlined'
+type ButtonSize = 'big' | 'small' | 'xsmall'
 
 export interface ButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => unknown
   // If true, the button will be disabled. false by default
   disabled?: boolean
   // The size of the button. `small` by default
-  size?: 'big' | 'small'
+  size?: ButtonSize
   // Button type. `cta` by default
   type?: ButtonTypes
   // Override css
@@ -23,6 +24,7 @@ export interface ButtonProps {
    * onClick is also disabled when true
    */
   progress?: boolean
+  actionType?: 'submit' | 'reset' | 'button'
 }
 
 export const Button: FC<ButtonProps> = props => {
@@ -53,6 +55,7 @@ export const Button: FC<ButtonProps> = props => {
   }
   return (
     <MaterialButton
+      type={props.actionType}
       ref={buttonRef}
       onClick={onClick}
       className={`${classes.root} ${props.className}`}
@@ -117,24 +120,54 @@ const getColor = (p: ButtonProps): { bg: string; hover: string } => {
   }
 }
 
+const textDecoration = (p: ButtonProps) => (p.type === 'tertiary' ? 'underline' : 'none')
+const fontSize = {
+  big: '16px',
+  small: '14px',
+  xsmall: '12px'
+}
+const lineHeight = {
+  big: '20px',
+  small: '18px',
+  xsmall: '16px'
+}
+const minWidth = {
+  big: '266px',
+  small: '120px',
+  xsmall: '50px'
+}
+const minHeight = {
+  big: '52px',
+  small: '46px',
+  xsmall: '30px'
+}
+const padding = {
+  big: '16px 32px',
+  small: '12px 24px',
+  xsmall: '8px 16px'
+}
+const size = (obj: { [k in ButtonSize]: string }) => ({ size = 'small' }: ButtonProps) => obj[size]
+
 const useStyles = makeStyles({
   root: {
     '&:hover': {
       boxShadow: 'none',
-      backgroundColor: (p: ButtonProps) => getColor(p).hover
+      backgroundColor: (p: ButtonProps) => getColor(p).hover,
+      textDecoration
     },
     backgroundColor: (p: ButtonProps) => getColor(p).bg,
     fontWeight: 'bold',
     color: '#fff',
     textTransform: 'none',
-    fontSize: (p: ButtonProps) => (p.size === 'big' ? '16px' : '14px'),
-    lineHeight: (p: ButtonProps) => (p.size === 'big' ? '20px' : '18px'),
+    textDecoration,
+    fontSize: size(fontSize),
+    lineHeight: size(lineHeight),
     letterSpacing: '0.5px',
-    minWidth: (p: ButtonProps) => (p.size === 'big' ? '266px' : '120px'),
-    minHeight: (p: ButtonProps) => (p.size === 'big' ? '52px' : '42px'),
+    minWidth: size(minWidth),
+    minHeight: size(minHeight),
     boxShadow: 'none',
     borderRadius: '100px',
-    padding: (p: ButtonProps) => (p.size === 'big' ? '16px 32px' : '12px 24px')
+    padding: size(padding)
   },
   rippleEffect: {
     backgroundColor: 'white'

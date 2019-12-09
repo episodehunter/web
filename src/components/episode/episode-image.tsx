@@ -4,13 +4,21 @@ import { images } from '../../images.config'
 
 type Props = {
   tvdbId: number
+  theTvDbShowId: number
   children: JSX.Element | JSX.Element[]
   width?: string | number
   height?: string | number
   style?: any
 }
 
-export const EpisodeImage = ({ tvdbId, width = 250, height = 140, children, style }: Props) => (
+export const EpisodeImage = ({
+  tvdbId,
+  theTvDbShowId,
+  width = 250,
+  height = 140,
+  children,
+  style
+}: Props) => (
   <>
     <LazyLoadBackgroundImage
       width={width}
@@ -21,7 +29,7 @@ export const EpisodeImage = ({ tvdbId, width = 250, height = 140, children, styl
         alignItems: 'flex-end',
         ...style
       }}
-      defaultImage="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+      defaultImage={images.fanart.big(theTvDbShowId)}
       image={images.episode.small(tvdbId)}
     >
       {children}

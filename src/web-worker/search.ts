@@ -14,7 +14,13 @@ const fuseOptions: FuseOptions<any> = {
   includeScore: true
 }
 
-const returnData = (data: any) => {
+type CutomFuseOptions = typeof fuseOptions
+interface ReponseData {
+  fetchStatus: 'loaded' | 'loading' | 'error' | 'not loaded'
+  result: Dragonstone.Title[]
+  error?: Error
+}
+const returnData = (data: ReponseData) => {
   ;(self.postMessage as any)(data)
 }
 
@@ -29,27 +35,34 @@ const titlesQuery = gql`
   }
 `
 
-let fetchingFuse: Promise<Fuse<{ item: Dragonstone.Title; score: number }>> | null = null
+let fetchingFuse: Promise<Fuse<Dragonstone.Title, CutomFuseOptions>> | null = null
 
 function getFuse() {
   if (fetchingFuse) {
     return fetchingFuse
   }
+  returnData({
+    fetchStatus: 'loading',
+    result: []
+  })
   fetchingFuse = request<GetTitlesQuery>(config.dragonstoneUrl, titlesQuery)
     .then(result => result.titles)
-    .then(
-      titles => new Fuse<{ item: Dragonstone.Title; score: number }>(titles as any, fuseOptions)
-    )
+    .then(titles => new Fuse<Dragonstone.Title, CutomFuseOptions>(titles as any, fuseOptions))
     .catch(error => {
       console.error(error)
-      return new Fuse<{ item: Dragonstone.Title; score: number }>([], fuseOptions)
+      returnData({
+        fetchStatus: 'error',
+        error,
+        result: []
+      })
+      return new Fuse<Dragonstone.Title, CutomFuseOptions>([], fuseOptions)
     })
   return fetchingFuse
 }
 
-function search(fuse: Fuse<{ item: Dragonstone.Title; score: number }>, searchWord: string) {
+function search(fuse: Fuse<Dragonstone.Title, CutomFuseOptions>, searchWord: string) {
   return fuse
-    .search(searchWord)
+    .search<Dragonstone.Title, true, false>(searchWord)
     .map(searchResult => {
       searchResult.score =
         (1 - searchResult.score) * 10 + Math.min(Math.log10(searchResult.item.followers + 10), 20)
@@ -64,16 +77,14 @@ let currectSearchWord = ''
 
 self.addEventListener('message', async event => {
   const type = event.data.type
-  if (type === 'fetch') {
-    return getFuse()
-  } else if (type === 'search') {
+  if (type === 'search') {
     currectSearchWord = event.data.data
 
     const fuse = await getFuse()
     if (currectSearchWord) {
       const result = search(fuse, currectSearchWord)
       returnData({
-        fetchStatus: null,
+        fetchStatus: 'loaded',
         result: result
       })
       currectSearchWord = ''

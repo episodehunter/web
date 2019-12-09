@@ -16,30 +16,31 @@ type TextComponents =
 
 interface TextProps extends TypographyProps {
   variant?: TextComponents
-  gutterBottom?: boolean
+  gutter?: boolean
   style?: React.CSSProperties
-  children?: string | JSX.Element | (JSX.Element | string)[]
+  children?: React.ReactNode
   className?: string
 }
 
 const createTextComponent = (
   defaultVariant: TextComponents,
   component: React.ElementType<React.HTMLAttributes<HTMLElement>>,
-  defaultGutterBottom: boolean
+  defaultGutter: number
 ) => ({
   variant = defaultVariant,
-  gutterBottom = defaultGutterBottom,
+  gutter = Boolean(defaultGutter),
   children,
   style,
   className,
   ...rest
 }: TextProps) => {
+  const margin = style?.margin || `${gutter ? defaultGutter : 0}px 0`
+  const newStyle = { ...style, margin }
   return (
     <Typography
       variant={variant}
       component={component}
-      gutterBottom={gutterBottom}
-      style={style}
+      style={newStyle}
       className={className}
       {...rest}
     >
@@ -48,14 +49,14 @@ const createTextComponent = (
   )
 }
 
-export const H1 = createTextComponent('h1', 'h1', true)
-export const H2 = createTextComponent('h2', 'h2', true)
-export const H3 = createTextComponent('h3', 'h3', false)
-export const H4 = createTextComponent('h4', 'h4', false)
-export const H5 = createTextComponent('h5', 'h5', false)
-export const Body1 = createTextComponent('body1', 'p', false)
-export const Body2 = createTextComponent('body2', 'p', false)
-export const Caption = createTextComponent('caption', 'p', false)
-export const Overline = createTextComponent('overline', 'p', false)
-export const Subtitle1 = createTextComponent('subtitle1', 'p', false)
-export const Subtitle2 = createTextComponent('subtitle2', 'p', false)
+export const H1 = createTextComponent('h1', 'h1', 20)
+export const H2 = createTextComponent('h2', 'h2', 20)
+export const H3 = createTextComponent('h3', 'h3', 30)
+export const H4 = createTextComponent('h4', 'h4', 0)
+export const H5 = createTextComponent('h5', 'h5', 0)
+export const Body1 = createTextComponent('body1', 'p', 0)
+export const Body2 = createTextComponent('body2', 'p', 0)
+export const Caption = createTextComponent('caption', 'p', 0)
+export const Overline = createTextComponent('overline', 'p', 0)
+export const Subtitle1 = createTextComponent('subtitle1', 'span', 0)
+export const Subtitle2 = createTextComponent('subtitle2', 'span', 0)

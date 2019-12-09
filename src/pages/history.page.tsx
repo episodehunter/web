@@ -65,7 +65,7 @@ export const HistoryPage = () => {
           return (
             <ImageWarpper
               key={index}
-              onClick={() => navigate(`/show/${show.ids.id}/${show.ids.tvdb}`)}
+              onClick={() => navigate(`/show/${show.ids.id}/${show.ids.tvdb}`, null)}
             >
               <EpisodeImage tvdbId={episode.ids.tvdb} width={isMobile() ? '100%' : undefined}>
                 <BottomTextWrapper>

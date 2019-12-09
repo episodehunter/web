@@ -1,7 +1,7 @@
 import {
   addDays,
   differenceInCalendarDays,
-  formatDistance,
+  formatRelative,
   format as fromatDate,
   isBefore,
   isValid as isValidDate,
@@ -47,7 +47,7 @@ export const dateReleaseFormat = (
   if (diff === 0) {
     return fun('today 🎉')
   } else if (Math.abs(diff) < 7) {
-    return fun(formatDistance(date, _today, { addSuffix: true }) + ' 🎉')
+    return fun(formatRelative(date, _today, { weekStartsOn: 1 }) + ' 🎉')
   } else {
     return fun(format(date, 'do MMM yyyy'))
   }
