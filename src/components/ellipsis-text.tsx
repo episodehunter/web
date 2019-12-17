@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Body1 } from './atoms/Typography'
+import { Body1 } from './atoms/typography'
 
 type Props = { children?: string | null; length: number; style?: any }
 

@@ -3,7 +3,7 @@ import { safeJoin } from '@episodehunter/utils'
 import { format, parse } from '../../utils/date.utils'
 import { safeStringConvertion } from '../../utils/string.util'
 import { Show } from '../../types/show'
-import { Body1, Subtitle2 } from '../atoms/Typography'
+import { Body1, Subtitle2 } from '../atoms/typography'
 
 export const Facts = ({ show }: { show: Show }) => {
   const premiere = show.airs.first ? format(parse(show.airs.first), 'do MMM -yy') : '-'

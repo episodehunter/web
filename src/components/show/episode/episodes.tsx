@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useGetEpisodesForSeasonLazyQuery } from '../../../dragonstone'
 import { Episode } from './episode'
-import { AnimatedListItem } from '../../atoms/AnimatedListItem'
+import { AnimatedListItem } from '../../atoms/animated-list-item'
 
 interface Props {
   showId: ShowId

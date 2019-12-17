@@ -20,12 +20,17 @@ export const DesktopNavbar = () => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = () => {
+  const closeMenu = () => {
     setAnchorEl(null)
   }
 
+  const closeAndNavigate = (url: string) => () => {
+    closeMenu()
+    navigate(url)
+  }
+
   const selectedTab: string | false =
-    [Routes.upcoming, Routes.following, Routes.history].includes(state.url as any) && state.url
+    [Routes.upcoming, Routes.following].includes(state.url as any) && state.url
 
   return (
     <>
@@ -47,13 +52,15 @@ export const DesktopNavbar = () => {
               label="What to watch"
               onClick={() => navigate(Routes.following)}
             />
-            <Tab value={Routes.history} label="History" onClick={() => navigate(Routes.history)} />
           </StyledTabs>
           <IconButton onClick={handleClick}>
             <MoreVertIcon />
           </IconButton>
-          <Menu anchorEl={anchorEl} keepMounted open={isMenuOpen} onClose={handleClose}>
-            <MenuItem key={Routes.settings} onClick={handleClose}>
+          <Menu anchorEl={anchorEl} keepMounted open={isMenuOpen} onClose={closeMenu}>
+            <MenuItem key={Routes.history} onClick={closeAndNavigate(Routes.history)}>
+              History
+            </MenuItem>
+            <MenuItem key={Routes.settings} onClick={closeAndNavigate(Routes.settings)}>
               Settings
             </MenuItem>
           </Menu>

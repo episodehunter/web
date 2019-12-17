@@ -16,7 +16,6 @@ import {
   useRemoveCheckedInEpisodeMutation
 } from '../../../dragonstone'
 import { SeasonEpisode } from '../../../types/episode'
-import { melrose } from '../../../utils/colors'
 import { Button } from '../../atoms/button'
 
 type Props = {
@@ -82,32 +81,22 @@ function useCheckInMutaion(episode: SeasonEpisode) {
   const [checkIn, { loading: checkInLoading }] = useCheckInEpisodeMutation({
     update(cache, { data }) {
       setNextEpisodeToWatchInCahe(cache, episode, 1, data && data.checkInEpisode!.episode)
-      updateHistoryToEpisodeInCahe(
-        cache,
-        episode,
-        data && data.checkInEpisode!.episode,
-        episodeToUpdate => {
-          // TODO: Get this from Dragonstone instead
-          episodeToUpdate.watched.push({
-            __typename: 'WatchedEpisode',
-            time: unixTimestamp(),
-            type: 'checkIn'
-          })
-        }
-      )
+      updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
+        // TODO: Get this from Dragonstone instead
+        episodeToUpdate.watched.push({
+          __typename: 'WatchedEpisode',
+          time: unixTimestamp(),
+          type: 'checkIn'
+        })
+      })
     }
   })
   const [removeCheckIn, { loading: removeCheckInLoading }] = useRemoveCheckedInEpisodeMutation({
     update(cache, { data }) {
       setNextEpisodeToWatchInCahe(cache, episode, -1, data && data.removeCheckedInEpisode!.episode)
-      updateHistoryToEpisodeInCahe(
-        cache,
-        episode,
-        data && data.removeCheckedInEpisode!.episode,
-        episodeToUpdate => {
-          episodeToUpdate.watched = []
-        }
-      )
+      updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
+        episodeToUpdate.watched = []
+      })
     }
   })
 
@@ -154,7 +143,6 @@ function setNextEpisodeToWatchInCahe(
 function updateHistoryToEpisodeInCahe(
   cache: DataProxy,
   episode: SeasonEpisode,
-  response: NextEpisode,
   updateFn: (episode: SeasonEpisode) => void
 ) {
   const cacheSeason = cache.readQuery<
@@ -167,7 +155,7 @@ function updateHistoryToEpisodeInCahe(
       season: extractSeasonNumber(episode.episodenumber)
     }
   })
-  if (!cacheSeason || !response) {
+  if (!cacheSeason || !episode) {
     return
   }
   cache.writeQuery({
@@ -184,9 +172,4 @@ function updateHistoryToEpisodeInCahe(
       season: extractSeasonNumber(episode.episodenumber)
     }
   })
-}
-
-const iconStyle = {
-  fontSize: 'inherit',
-  color: melrose
 }

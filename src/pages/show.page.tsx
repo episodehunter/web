@@ -4,7 +4,8 @@ import { motion } from 'framer-motion'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import { H3 } from '../components/atoms/Typography'
+import { H3 } from '../components/atoms/typography'
+import { Margin } from '../components/atoms/margin'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ErrorState } from '../components/error-state'
 import { ShowFanart } from '../components/fanart/show-fanart'
@@ -16,8 +17,7 @@ import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
 import { H1 } from '../components/text'
 import { useGetShowQuery } from '../dragonstone'
-import { images } from '../images.config'
-import { HideOnMobile, media } from '../styles/media-queries'
+import { HideOnMobile, ShowOnlyOnMobile, media } from '../styles/media-queries'
 
 export const ShowPage = () => {
   const {
@@ -60,32 +60,37 @@ export const ShowPage = () => {
               onAnimationComplete={() => setAnimationComplete(true)}
             >
               <PosterAndTitleWrapper>
-                <HideOnMobile>
-                  <div style={{ display: 'grid', rowGap: '20px' }}>
-                    <SmallShowPoster tvdbId={show?.ids.tvdb} />
-                    <FollowingButton show={show} />
-                  </div>
-                </HideOnMobile>
+                <HideOnMobile
+                  render={() => (
+                    <div style={{ display: 'grid', rowGap: '20px' }}>
+                      <SmallShowPoster tvdbId={show?.ids.tvdb} />
+                      <FollowingButton show={show} />
+                    </div>
+                  )}
+                />
                 <ShowTitleAndOverview>
-                  <H1
-                    style={{
-                      maxWidth: 'calc(100vw - 40px)',
-                      wordWrap: 'break-word'
-                    }}
-                  >
-                    {show?.name}
-                  </H1>
+                  <ShowTitle>{show?.name}</ShowTitle>
+                  <ShowOnlyOnMobile
+                    render={() => (
+                      <>
+                        <FollowingButton show={show} />
+                        <Margin bottom={8} />
+                      </>
+                    )}
+                  />
                   <EllipsisText length={500}>{show.overview}</EllipsisText>
                 </ShowTitleAndOverview>
               </PosterAndTitleWrapper>
             </motion.div>
             <Content>
-              <HideOnMobile>
-                <FactWarpper>
-                  <H3>Facts</H3>
-                  <Facts show={show} />
-                </FactWarpper>
-              </HideOnMobile>
+              <HideOnMobile
+                render={() => (
+                  <FactWarpper>
+                    <H3>Facts</H3>
+                    <Facts show={show} />
+                  </FactWarpper>
+                )}
+              ></HideOnMobile>
               <Progress
                 episodeRuntime={show.runtime}
                 numberOfAiredEpisodes={show.numberOfAiredEpisodes}
@@ -140,6 +145,14 @@ const Content = styled.div`
   ${media.tabletAndUp`
     width: 1000px;
     grid-template-columns: 1fr 1fr 1fr;
+  `};
+`
+
+const ShowTitle = styled(H1)`
+  max-width: calc(100vw - 40px);
+  word-wrap: break-word;
+  ${media.mobile`
+    font-size: 15.5vw;
   `};
 `
 
