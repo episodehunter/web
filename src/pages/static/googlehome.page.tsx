@@ -1,14 +1,11 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import { P } from '../../components/text'
-import { alabaster, shark } from '../../utils/colors'
+import React from 'react'
+import { PageWrapper } from '../../components/atoms/page-wrapper'
+import { Body1, PageTitle } from '../../components/atoms/typography'
 
 export const GoogleHome = () => (
-  <Wrapper>
-    <TitleWrapper>
-      <Title>Google Home (beta)</Title>
-    </TitleWrapper>
-    <P>
+  <PageWrapper>
+    <PageTitle>Google Home (beta)</PageTitle>
+    <Body1>
       Episodehunter for Google Home is an easy way to keep trak of what you can watch and tell it
       what you watch/like etc.
       <br />
@@ -32,21 +29,6 @@ export const GoogleHome = () => (
       <br />
       Episodehunter for Google Home is just now under beta and is not publicly accessible. Contact
       us if you want to join and help on the beta.
-    </P>
-  </Wrapper>
+    </Body1>
+  </PageWrapper>
 )
-
-const Wrapper = styled.div`
-  margin: 5% 20%;
-  color: ${alabaster};
-  background-color: ${shark};
-  display: flex;
-  flex-direction: column;
-`
-const TitleWrapper = styled.div``
-const Title = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 32px;
-`

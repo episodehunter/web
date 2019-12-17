@@ -1,62 +1,59 @@
+import { Card, CardContent } from '@material-ui/core'
 import React from 'react'
-import styled from 'styled-components'
-import { useSearch } from '../contexts/search-context'
-import { alabaster, mountainMeadow, shark } from '../utils/colors'
-import { Button } from './button'
+import { Link } from 'the-react-router'
+import { AnimatedListItem } from '../components/atoms/animated-list-item'
+import { Margin } from '../components/atoms/margin'
+import { PageWrapper } from '../components/atoms/page-wrapper'
+import { Body1, PageTitle } from '../components/atoms/typography'
+import { Routes } from '../routes'
 
 export const EmptyState = () => {
-  const searchStore = useSearch()
   return (
-    <Wrapper>
-      <BoxWrapper>
-        <Header>Woops!</Header>
-        <Text>
-          It looks like you are not following any shows. The best way to start is by searching for
-          your favorite show and start follow that one
-        </Text>
-        <Button color={mountainMeadow} onClick={() => searchStore.openSearchBar()}>
-          Search for shows
-        </Button>
-      </BoxWrapper>
-    </Wrapper>
+    <PageWrapper>
+      <Margin top={70} />
+      <AnimatedListItem>
+        <Card>
+          <CardContent>
+            <PageTitle>Woops!</PageTitle>
+            <Body1>
+              It looks like you are not following any shows. The best way to start is by searching
+              for your favorite show and start follow that one.
+            </Body1>
+
+            <Body1>
+              It is also highly recommended to set up you media center to automatically sync what
+              you are watcing. See setup guides here for{' '}
+              <Link state={null} to={Routes.kodi}>
+                Kodi
+              </Link>{' '}
+              and{' '}
+              <Link state={null} to={Routes.kodi}>
+                Plex
+              </Link>
+              , and more to come.
+            </Body1>
+          </CardContent>
+        </Card>
+      </AnimatedListItem>
+    </PageWrapper>
   )
 }
 
 export const EmptyHistory = () => {
   return (
-    <Wrapper>
-      <BoxWrapper>
-        <Header>Woops!</Header>
-        <Text>
-          It looks like you haven&apos;t watched anything! Go and watch an episode of your favorite
-          tv show
-        </Text>
-      </BoxWrapper>
-    </Wrapper>
+    <PageWrapper>
+      <Margin top={70} />
+      <AnimatedListItem>
+        <Card>
+          <CardContent>
+            <PageTitle>Woops!</PageTitle>
+            <Body1>
+              It looks like you haven&apos;t watched anything! Go and watch an episode of your
+              favorite tv show
+            </Body1>
+          </CardContent>
+        </Card>
+      </AnimatedListItem>
+    </PageWrapper>
   )
 }
-
-const Wrapper = styled.div`
-  margin: 0 20px;
-  background-color: ${shark};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 85%;
-  padding-top: 70px;
-`
-
-const BoxWrapper = styled.div`
-  text-align: center;
-  max-width: 400px;
-  color: ${alabaster};
-`
-
-const Header = styled.div`
-  font-size: 24px;
-  margin-bottom: 10px;
-`
-const Text = styled.div`
-  font-size: 14px;
-  margin-bottom: 15px;
-`

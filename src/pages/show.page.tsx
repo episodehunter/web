@@ -1,8 +1,11 @@
 import { extractSeasonNumber } from '@episodehunter/utils'
+import { Tab, Tabs } from '@material-ui/core'
+import { motion } from 'framer-motion'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import { Button } from '../components/button'
+import { H3 } from '../components/atoms/typography'
+import { Margin } from '../components/atoms/margin'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ErrorState } from '../components/error-state'
 import { ShowFanart } from '../components/fanart/show-fanart'
@@ -12,16 +15,18 @@ import { Facts } from '../components/show/facts'
 import { FollowingButton } from '../components/show/following-button'
 import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
-import { H1, H3 } from '../components/text'
+import { H1 } from '../components/text'
 import { useGetShowQuery } from '../dragonstone'
-import { images } from '../images.config'
-import { HideOnMobile, isMobile, media } from '../styles/media-queries'
-import { AbsoluteSpinnerPage, SpinnerPage } from './spinner.page'
+import { HideOnMobile, ShowOnlyOnMobile, media } from '../styles/media-queries'
 
 export const ShowPage = () => {
-  const { params } = useNavigation<{ id: string; tvdb?: string }>()
+  const {
+    params,
+    state: { routeState }
+  } = useNavigation<{ id: string; tvdb?: string }, DOMRect>()
   const showId = Number(params.id)
   const [selectedSeason, setSelectedSeason] = useState(1)
+  const [animationComplete, setAnimationComplete] = useState(false)
   const { data, error, loading } = useGetShowQuery({
     skip: !showId,
     variables: { id: showId },
@@ -32,109 +37,107 @@ export const ShowPage = () => {
     }
   })
 
+  const show = data?.show
+
   if (error) {
     return <ErrorState />
-  } else if (loading || !data) {
-    if (params.tvdb) {
-      return (
-        <PageWrapper tvdbId={params.tvdb}>
-          <HideOnMobile>
-            <ShowFanart tvdbId={params.tvdb} />
-          </HideOnMobile>
-          <AbsoluteSpinnerPage />
-        </PageWrapper>
-      )
-    } else {
-      return <SpinnerPage />
-    }
-  } else if (!data.show) {
+  } else if (!loading && !show) {
     return <H1 style={{ paddingTop: '50px' }}>The show do not exist 😢</H1>
   }
 
-  const show = data.show
-  const seasons = show.seasons.sort((a, b) => a - b)
+  const showTvdb = show?.ids.tvdb || (params.tvdb && Number(params.tvdb))
+  const seasons = show?.seasons.sort((a, b) => a - b) || []
 
   return (
-    <PageWrapper tvdbId={show.ids.tvdb}>
-      <HideOnMobile>
-        <ShowFanart tvdbId={show.ids.tvdb} />
-      </HideOnMobile>
+    <OuterWrapper>
+      <ShowFanart tvdbId={showTvdb} animateFrom={routeState} />
       <Wrapper>
-        <PosterAndTitleWrapper>
-          <HideOnMobile>
-            <SmallShowPoster tvdbId={show.ids.tvdb} />
-          </HideOnMobile>
-          <ShowTitleAndOverview>
-            <H1
-              style={{
-                maxWidth: 'calc(100vw - 40px)',
-                wordWrap: 'break-word'
-              }}
+        {show && (
+          <>
+            <motion.div
+              initial={{ opacity: 0, y: -100, zIndex: 1 }}
+              animate={{ opacity: 1, y: 0 }}
+              onAnimationComplete={() => setAnimationComplete(true)}
             >
-              {show.name}
-            </H1>
-            <EllipsisText length={500}>{show.overview}</EllipsisText>
-            <FollowingButton show={show} />
-          </ShowTitleAndOverview>
-        </PosterAndTitleWrapper>
-        <Content>
-          <HideOnMobile>
-            <FactWarpper>
-              <H3>Facts</H3>
-              <Facts show={show} />
-            </FactWarpper>
-          </HideOnMobile>
-          <Progress
-            episodeRuntime={show.runtime}
-            numberOfAiredEpisodes={show.numberOfAiredEpisodes}
-            numberOfEpisodesToWatch={show.nextToWatch.numberOfEpisodesToWatch}
-          />
-          <NextEpisodeWarpper>
-            <NextEpisode episode={show.nextToWatch.episode} />
-          </NextEpisodeWarpper>
-        </Content>
+              <PosterAndTitleWrapper>
+                <HideOnMobile
+                  render={() => (
+                    <div style={{ display: 'grid', rowGap: '20px' }}>
+                      <SmallShowPoster tvdbId={show?.ids.tvdb} />
+                      <FollowingButton show={show} />
+                    </div>
+                  )}
+                />
+                <ShowTitleAndOverview>
+                  <ShowTitle>{show?.name}</ShowTitle>
+                  <ShowOnlyOnMobile
+                    render={() => (
+                      <>
+                        <FollowingButton show={show} />
+                        <Margin bottom={8} />
+                      </>
+                    )}
+                  />
+                  <EllipsisText length={500}>{show.overview}</EllipsisText>
+                </ShowTitleAndOverview>
+              </PosterAndTitleWrapper>
+            </motion.div>
+            <Content>
+              <HideOnMobile
+                render={() => (
+                  <FactWarpper>
+                    <H3>Facts</H3>
+                    <Facts show={show} />
+                  </FactWarpper>
+                )}
+              ></HideOnMobile>
+              <Progress
+                episodeRuntime={show.runtime}
+                numberOfAiredEpisodes={show.numberOfAiredEpisodes}
+                numberOfEpisodesToWatch={show.nextToWatch.numberOfEpisodesToWatch}
+              />
+              <NextEpisodeWarpper>
+                <NextEpisode episode={show.nextToWatch.episode} theTvDbShowId={show.ids.tvdb} />
+              </NextEpisodeWarpper>
+            </Content>
+          </>
+        )}
       </Wrapper>
-
-      <Wrapper>
-        <SeasonButtonsWrapper>
-          {seasons.map(season => (
-            <Button
-              key={season}
-              onClick={() => setSelectedSeason(season)}
-              active={season === selectedSeason}
+      {animationComplete && (
+        <Wrapper>
+          <SeasonButtonsWrapper>
+            <Tabs
+              value={selectedSeason}
+              onChange={(_, value) => setSelectedSeason(value)}
+              indicatorColor="secondary"
+              textColor="secondary"
+              variant="scrollable"
+              scrollButtons="auto"
             >
-              Season {season}
-            </Button>
-          ))}
-        </SeasonButtonsWrapper>
-        <EpisodesWrapper>
-          <Episodes showId={show.ids.id} season={selectedSeason} />
-        </EpisodesWrapper>
-      </Wrapper>
-    </PageWrapper>
+              {seasons.map(season => (
+                <Tab key={season} value={season} label={`Season ${season}`} />
+              ))}
+            </Tabs>
+          </SeasonButtonsWrapper>
+          {show && (
+            <EpisodesWrapper>
+              <Episodes
+                showId={show.ids.id}
+                theTvDbShowId={show.ids.tvdb}
+                season={selectedSeason}
+              />
+            </EpisodesWrapper>
+          )}
+        </Wrapper>
+      )}
+    </OuterWrapper>
   )
 }
 
-const PageWrapperTabletAndUp = styled.div<{ tvdbId: number | string }>``
-
-const PageWrapperMobile = styled.div<{ tvdbId: number | string }>`
-  position: relative;
-  z-index: 2;
-  &::before {
-    content: ' ';
-    position: fixed;
-    z-index: -1;
-    background-image: url(${props => images.poster.small(props.tvdbId)});
-    background-size: 100% 100%;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    filter: opacity(0.3) blur(5px);
-  }
+const OuterWrapper = styled.div`
+  ${media.tabletAndUp`padding-top: 70px;`};
+  ${media.mobile`padding-bottom: 70px;`};
 `
-
-const PageWrapper = isMobile() ? PageWrapperMobile : PageWrapperTabletAndUp
 
 const Content = styled.div`
   display: grid;
@@ -145,13 +148,19 @@ const Content = styled.div`
   `};
 `
 
+const ShowTitle = styled(H1)`
+  max-width: calc(100vw - 40px);
+  word-wrap: break-word;
+  ${media.mobile`
+    font-size: 15.5vw;
+  `};
+`
+
 const SeasonButtonsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  color: #fff;
   margin: 20px;
-  justify-content: space-around;
+  width: 100%;
   ${media.tabletAndUp`
-    justify-content: flex-start;
     width: 1000px;
   `};
 `
@@ -171,7 +180,7 @@ const PosterAndTitleWrapper = styled.div`
 `
 
 const ShowTitleAndOverview = styled.div`
-  margin: 66px 20px 0 20px;
+  margin: 20px 20px 0 20px;
   ${media.tabletAndUp`
     margin: 66px 0 0 20px;
   `};
@@ -188,5 +197,8 @@ const FactWarpper = styled.div``
 const NextEpisodeWarpper = styled(FactWarpper)`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  ${media.tabletAndUp`
+    align-items: flex-end;
+  `};
 `

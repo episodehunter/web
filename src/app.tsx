@@ -5,10 +5,7 @@ import { useUser } from './contexts/user-context'
 import { SpinnerPage } from './pages/spinner.page'
 import styled from 'styled-components'
 import { shark } from './utils/colors'
-import { Search } from './components/search'
 import { Navbar } from './components/navbar/navbar'
-import { Footer } from './components/main/footer'
-import { Routes as RoutesEnum } from './routes'
 
 const [Router, Routes] = createRouter(routes)
 
@@ -23,12 +20,10 @@ export const App = memo(() => {
       <Wrapper>
         {currentUser && (
           <>
-            <Search />
             <Navbar />
           </>
         )}
         <Routes />
-        <Footer hideOn={RoutesEnum.landingPage} />
       </Wrapper>
     </Router>
   )
@@ -38,7 +33,4 @@ const Wrapper = styled.div`
   height: 100%;
   background-color: ${shark};
   min-height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: 100%;
 `

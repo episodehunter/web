@@ -2,8 +2,8 @@ import React from 'react'
 import { safeJoin } from '@episodehunter/utils'
 import { format, parse } from '../../utils/date.utils'
 import { safeStringConvertion } from '../../utils/string.util'
-import { HighlightSpan, P2 } from '../text'
 import { Show } from '../../types/show'
+import { Body1, Subtitle2 } from '../atoms/typography'
 
 export const Facts = ({ show }: { show: Show }) => {
   const premiere = show.airs.first ? format(parse(show.airs.first), 'do MMM -yy') : '-'
@@ -22,12 +22,12 @@ export const Facts = ({ show }: { show: Show }) => {
     </ul>
   )
 }
-
+// #A29BFE 14
 const FactLine = ({ headline, info }: { headline: string; info: string }) => (
   <li>
-    <P2 margin={0}>
-      <HighlightSpan>{headline}:</HighlightSpan> {info}
-    </P2>
+    <Body1>
+      <Subtitle2>{headline}:</Subtitle2> {info}
+    </Body1>
   </li>
 )
 

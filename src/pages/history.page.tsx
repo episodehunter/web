@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
 import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import InfiniteScroll from 'react-infinite-scroller'
+import { PageWrapper } from '../components/atoms/page-wrapper'
 import { EmptyHistory } from '../components/empty-state'
 import { BottomTextWrapper } from '../components/episode/bottom-text-wrapper'
 import { EpisodeImage } from '../components/episode/episode-image'
 import { ErrorState } from '../components/error-state'
+import { Spinner } from '../components/spinner'
 import { H1, H3, P2 } from '../components/text'
 import { useGetHistoryPageQuery } from '../dragonstone'
 import { isMobile, media } from '../styles/media-queries'
 import { History } from '../types/history'
-import { shark } from '../utils/colors'
 import { format, time } from '../utils/date.utils'
 import { episodeNumberToString } from '../utils/episode.util'
 import { SpinnerPage } from './spinner.page'
-import { Spinner } from '../components/spinner'
 
 export const HistoryPage = () => {
   const [hasMore, setHasMore] = useState(true)
@@ -65,9 +65,13 @@ export const HistoryPage = () => {
           return (
             <ImageWarpper
               key={index}
-              onClick={() => navigate(`/show/${show.ids.id}/${show.ids.tvdb}`)}
+              onClick={() => navigate(`/show/${show.ids.id}/${show.ids.tvdb}`, null)}
             >
-              <EpisodeImage tvdbId={episode.ids.tvdb} width={isMobile() ? '100%' : undefined}>
+              <EpisodeImage
+                theTvDbShowId={show.ids.tvdb}
+                tvdbId={episode.ids.tvdb}
+                width={isMobile() ? '100%' : undefined}
+              >
                 <BottomTextWrapper>
                   <P2 margin={0}>{show.name}</P2>
                   <P2 margin={0}>
@@ -83,20 +87,16 @@ export const HistoryPage = () => {
     </React.Fragment>
   ))
   return (
-    <Wrapper>
-      <InnerWarpper>
-        <>
-          <H1>History</H1>
-          <InfiniteScroll
-            loadMore={loadMore}
-            hasMore={hasMore}
-            loader={<Spinner style={{ margin: 0 }} key="spinner" />}
-          >
-            {episodesSections}
-          </InfiniteScroll>
-        </>
-      </InnerWarpper>
-    </Wrapper>
+    <PageWrapper>
+      <H1>History</H1>
+      <InfiniteScroll
+        loadMore={loadMore}
+        hasMore={hasMore}
+        loader={<Spinner style={{ margin: 0 }} key="spinner" />}
+      >
+        {episodesSections}
+      </InfiniteScroll>
+    </PageWrapper>
   )
 }
 
@@ -119,20 +119,6 @@ const EpisodeGrid = styled.div`
   grid-template-columns: repeat(1, 1fr);
   ${media.tabletAndUp`grid-template-columns: repeat(4, 1fr);`};
   grid-gap: 20px;
-`
-
-const Wrapper = styled.div`
-  padding-top: 70px;
-  background-color: ${shark};
-  display: flex;
-  justify-content: center;
-`
-
-const InnerWarpper = styled.div`
-  width: 95%;
-  ${media.giant`width: 80%;`};
-  ${media.desktop`width: 80%;`};
-  ${media.tablet`width: 90%;`};
 `
 
 const ImageWarpper = styled.div`

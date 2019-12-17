@@ -5,30 +5,34 @@ import { SeasonEpisode } from '../../../types/episode'
 import { episodeNumberToString } from '../../../utils/episode.util'
 import { EllipsisText } from '../../ellipsis-text'
 import { EpisodeImage } from '../../episode/episode-image'
-import { H4, HighlightSpan } from '../../text'
+import { H4 } from '../../atoms/typography'
+import { HighlightSpan } from '../../atoms/highlight-span'
 import { AirDate } from './air-date'
 import { WatchedButton } from './watched-button'
 import { WatchedEpisodeDate } from './watched-episode-date'
 
 interface Props {
   episode: SeasonEpisode
+  theTvDbShowId: number
 }
 
-export const Episode = ({ episode }: Props) => (
+export const Episode = ({ episode, theTvDbShowId }: Props) => (
   <EpisodeWrapper>
-    <EpisodeImage {...episodeImageProps(episode.ids.tvdb)}>
+    <EpisodeImage {...episodeImageProps(episode.ids.tvdb, theTvDbShowId)}>
       <WatchedEpisodeDate watched={episode.watched} />
     </EpisodeImage>
 
     <DescriptionWrapper>
       <HeadlineWrapper>
-        <H4 margin={0}>
-          <HighlightSpan>{episodeNumberToString(episode.episodenumber)}</HighlightSpan>{' '}
-          {episode.name}
-        </H4>
+        <div>
+          <H4 style={{ margin: '0px 0px 4px 0px' }}>
+            <HighlightSpan>{episodeNumberToString(episode.episodenumber)}</HighlightSpan>{' '}
+            {episode.name}
+          </H4>
+          <AirDate firstAired={episode.aired} />
+        </div>
         <WatchedButton episode={episode} />
       </HeadlineWrapper>
-      <AirDate firstAired={episode.aired} />
       <EllipsisText length={350} style={{ margin: '7.5px 0 0 0' }}>
         {episode.overview}
       </EllipsisText>
@@ -36,20 +40,23 @@ export const Episode = ({ episode }: Props) => (
   </EpisodeWrapper>
 )
 
-const episodeImageProps = (tvdbId: number) =>
+const episodeImageProps = (tvdbId: number, theTvDbShowId: number) =>
   isMobile()
     ? {
         tvdbId,
+        theTvDbShowId,
         width: '100%'
       }
     : {
         tvdbId,
+        theTvDbShowId,
         style: { flexShrink: 0, borderRadius: 5 }
       }
 
 const HeadlineWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 170px;
+  grid-column-gap: 10px;
   margin-bottom: 5px;
 `
 const EpisodeWrapper = styled.div`

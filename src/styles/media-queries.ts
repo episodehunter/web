@@ -52,11 +52,30 @@ const mobile = (strings: TemplateStringsArray, ...args: string[]) => {
 
 export const isMobile = (windowWidth = getWindowWidth()) => windowWidth <= sizes.phone
 
-export const HideOnMobile = ({ children, windowWidth = getWindowWidth() }) => {
+export const HideOnMobile = ({
+  render,
+  windowWidth = getWindowWidth()
+}: {
+  render: () => JSX.Element
+  windowWidth?: number
+}): JSX.Element | null => {
   if (isMobile(windowWidth)) {
     return null
   }
-  return children
+  return render()
+}
+
+export const ShowOnlyOnMobile = ({
+  render,
+  windowWidth = getWindowWidth()
+}: {
+  render: () => JSX.Element
+  windowWidth?: number
+}): JSX.Element | null => {
+  if (!isMobile(windowWidth)) {
+    return null
+  }
+  return render()
 }
 
 export const media = {

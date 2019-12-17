@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { P } from './text'
+import { Body1 } from './atoms/typography'
 
 type Props = { children?: string | null; length: number; style?: any }
 
@@ -10,11 +10,19 @@ export const EllipsisText = ({ children, length, style }: Props) => {
   }
   const textLength = children.length
   if (showAllText || textLength < length) {
-    return <P style={style}>{children}</P>
+    return (
+      <Body1 gutterBottom={true} style={style}>
+        {children}
+      </Body1>
+    )
   }
   return (
-    <P style={{ ...style, cursor: 'pointer' }} onClick={() => setShowAllText(true)}>
+    <Body1
+      gutterBottom={true}
+      style={{ ...style, cursor: 'pointer' }}
+      onClick={() => setShowAllText(true)}
+    >
       {children.substr(0, length)}...
-    </P>
+    </Body1>
   )
 }

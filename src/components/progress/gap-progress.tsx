@@ -1,6 +1,6 @@
 import { Circle } from 'rc-progress'
 import * as React from 'react'
-import { melrose } from '../../utils/colors'
+import { mainBlue } from '../../utils/colors'
 
 type Props = {
   percent: number
@@ -16,7 +16,7 @@ export const GapProgress = ({ percent, height, width }: Props) => (
       gapPosition="bottom"
       strokeWidth={6}
       strokeLinecap="square"
-      strokeColor={melrose}
+      strokeColor={mainBlue}
     />
   </div>
 )
