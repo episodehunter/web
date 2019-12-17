@@ -2,6 +2,12 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || [])
 
 workbox.routing.registerNavigationRoute('/index.html')
 
+self.addEventListener('message', function(event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting()
+  }
+})
+
 // Cache the Google Fonts stylesheets with a stale while revalidate strategy.
 workbox.routing.registerRoute(
   /^https:\/\/fonts\.googleapis\.com/,

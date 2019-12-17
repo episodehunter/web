@@ -5,7 +5,7 @@ import {
   numberOfUnwatchedHoursLeft
 } from '../../utils/episode.util'
 import { GapProgress } from '../progress/gap-progress'
-import { H3, Body1, Subtitle1 } from '../atoms/Typography'
+import { H3, Body1, Subtitle1 } from '../atoms/typography'
 
 interface Props {
   episodeRuntime: number

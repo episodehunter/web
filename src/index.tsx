@@ -1,17 +1,21 @@
 import { ApolloProvider } from '@apollo/react-hooks'
+import { Snackbar } from '@material-ui/core'
 import { init } from '@sentry/browser'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import SearchWorker from 'worker-loader!./web-worker/search'
-import { Theme } from './components/theme'
 import { client } from './apollo-client'
 import { App } from './app'
+import { Button } from './components/atoms/button'
+import { Margin } from './components/atoms/margin'
 import { ErrorBoundary } from './components/error-boundary'
+import { Theme } from './components/theme'
 import { config } from './config'
 import { SearchProvider } from './contexts/search-context'
 import { UserProvider } from './contexts/user-context'
 import './favicon.ico'
 import './logo.png'
+import { useServiceWorker } from './utils/use-serviceworker'
 
 init({
   dsn: config.sentryDsn,
@@ -19,22 +23,34 @@ init({
   enabled: config.environment !== 'development'
 })
 
-if (config.environment !== 'development') {
-  // Use the window load event to keep the page load performant
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-  })
-}
-
 const searchWorker = new SearchWorker()
 
 function RootApp() {
+  const [showSnackbar, updateSw, ignore] = useServiceWorker()
+
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
         <UserProvider>
           <SearchProvider searchWorker={searchWorker}>
             <Theme>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+                open={showSnackbar}
+                message={<span>There is a new version</span>}
+                action={[
+                  <Button key="dissmis" type="secondary" size="xsmall" onClick={ignore}>
+                    Dissmis
+                  </Button>,
+                  <Margin key="margin" inline right={8} />,
+                  <Button key="update" size="xsmall" onClick={updateSw}>
+                    Update to latest version
+                  </Button>
+                ]}
+              />
               <App />
             </Theme>
           </SearchProvider>

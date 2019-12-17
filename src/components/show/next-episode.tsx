@@ -20,36 +20,34 @@ export const NextEpisode = ({
   return (
     <>
       <H3>Next episode to watch</H3>
-      <AnimatePresence>
-        <motion.div
-          key={episode.ids.tvdb}
-          initial={{ opacity: 0, x: 100, position: 'relative', width: 250, height: 140 }}
-          animate={{
-            opacity: 1,
-            x: 0,
-            transition: { damping: 50 }
-          }}
-          exit={{ opacity: 0 }}
-        >
-          <EpisodeImage
-            tvdbId={episode.ids.tvdb}
-            theTvDbShowId={theTvDbShowId}
-            style={{ position: 'absolute' }}
+      <div style={{ position: 'relative', width: 250, height: 140 }}>
+        <AnimatePresence>
+          <motion.div
+            key={episode.ids.tvdb}
+            initial={{ opacity: 0, x: 100, position: 'absolute', width: 250, height: 140 }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              transition: { damping: 50 }
+            }}
+            exit={{ opacity: 0 }}
           >
-            <BottomTextWrapper>
-              <P2 margin={0}>
-                {episodeNumberToString(episode.episodenumber)} {episode.name}
-              </P2>
-              <P2 margin={0}>
-                {dateReleaseFormat(parse(episode.aired), {
-                  future: date => `Airs ${date}`,
-                  past: date => `Aird ${date}`
-                })}
-              </P2>
-            </BottomTextWrapper>
-          </EpisodeImage>
-        </motion.div>
-      </AnimatePresence>
+            <EpisodeImage tvdbId={episode.ids.tvdb} theTvDbShowId={theTvDbShowId}>
+              <BottomTextWrapper>
+                <P2 margin={0}>
+                  {episodeNumberToString(episode.episodenumber)} {episode.name}
+                </P2>
+                <P2 margin={0}>
+                  {dateReleaseFormat(parse(episode.aired), {
+                    future: date => `Airs ${date}`,
+                    past: date => `Aird ${date}`
+                  })}
+                </P2>
+              </BottomTextWrapper>
+            </EpisodeImage>
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </>
   )
 }

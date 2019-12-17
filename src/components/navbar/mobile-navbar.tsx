@@ -18,9 +18,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 export const MobileNavbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { navigate, state } = useNavigation()
-  const selectedTab: string =
-    ([Routes.upcoming, Routes.following, Routes.search].includes(state.url as any) && state.url) ||
-    'more'
+  const selectedTab: string | false = getSelectedTab(state.url)
   const onClick = (route: string) => () => {
     setDrawerOpen(false)
     navigate(route)
@@ -93,6 +91,16 @@ export const MobileNavbar = () => {
       </Drawer>
     </>
   )
+}
+
+const getSelectedTab = (currentUrl: string): string | false => {
+  if ([Routes.upcoming, Routes.following, Routes.search].includes(currentUrl as any)) {
+    return currentUrl
+  } else if (currentUrl.includes('/show/')) {
+    return false
+  } else {
+    return 'more'
+  }
 }
 
 const rootStyle: React.CSSProperties = {

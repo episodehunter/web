@@ -1,12 +1,14 @@
+import { TextField } from '@material-ui/core'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { FloatingLabel } from '../components/floating-label'
+import { Button } from '../components/atoms/button'
+import { Margin } from '../components/atoms/margin'
+import { PageWrapper } from '../components/atoms/page-wrapper'
+import { Body1, H2 } from '../components/atoms/typography'
 import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
 import { useUser } from '../contexts/user-context'
-import { FormButton } from '../styles/form-button'
 import { media } from '../styles/media-queries'
-import { alabaster, mountainMeadow, shark, silver } from '../utils/colors'
 
 enum Status {
   none,
@@ -79,74 +81,66 @@ export const SettingsPage = () => {
   }
 
   return (
-    <Wrapper>
-      <FormWrapper>
-        <Header>Change Password</Header>
-        <StatusWrapper>
-          <StatusComponent errorMessage={errorMessage} status={status} />
-        </StatusWrapper>
-        <InputWrapper>
-          <LabelWrapper>
-            <FloatingLabel
-              styles={styles}
-              autoComplete="new-password"
-              placeholder="New password"
-              type="password"
-              value={newPassword}
-              onChange={setInput(setNewPassword)}
-              required
-            />
-          </LabelWrapper>
-          <LabelWrapper>
-            <FloatingLabel
-              styles={styles}
-              autoComplete="confirm-password"
-              placeholder="Confirm password"
-              type="password"
-              value={confirmPassword}
-              onChange={setInput(setConfirmPassword)}
-              required
-            />
-          </LabelWrapper>
-        </InputWrapper>
-        <Space />
-        <InputWrapper>
-          <LabelWrapper>
-            <FloatingLabel
-              styles={styles}
-              placeholder="Current password"
-              type="password"
-              autoComplete="password"
-              value={password}
-              onChange={setInput(setPassword)}
-              required
-            />
-          </LabelWrapper>
-        </InputWrapper>
-        <Space />
-        <FormButton color={mountainMeadow} disabled={status == Status.saving} onClick={save}>
+    <PageWrapper>
+      <div>
+        <H2>Change Password</H2>
+        {errorMessage && (
+          <StatusWrapper>
+            <StatusComponent errorMessage={errorMessage} status={status} />
+          </StatusWrapper>
+        )}
+        <TextField
+          autoComplete="new-password"
+          label="New password"
+          type="password"
+          value={newPassword}
+          onChange={setInput(setNewPassword)}
+          required
+        />
+        <Margin top={8} />
+        <TextField
+          autoComplete="confirm-password"
+          label="Confirm password"
+          type="password"
+          value={confirmPassword}
+          onChange={setInput(setConfirmPassword)}
+          required
+        />
+        <Margin top={8} />
+        <TextField
+          label="Current password"
+          type="password"
+          autoComplete="password"
+          value={password}
+          onChange={setInput(setPassword)}
+          required
+        />
+        <Margin top={16} />
+        <Button progress={status == Status.saving} onClick={save}>
           Save
-        </FormButton>
-      </FormWrapper>
-      <FormWrapper>
-        <Header>Delete you account</Header>
-        <Text>
+        </Button>
+      </div>
+      <Margin bottom={32} />
+      <div>
+        <H2>Delete you account</H2>
+        <Body1>
           Send an email to info@episodehunter.tv and I will remove your account and all your data as
           soon as possible (max 48h). In the meantime, watch this{' '}
           <a style={{ color: 'white' }} href="https://www.youtube.com/watch?v=wVyggTKDcOE">
             video
           </a>
           .
-        </Text>
-      </FormWrapper>
-      <FormWrapper>
-        <Header>Change your email</Header>
-        <Text>
+        </Body1>
+      </div>
+      <Margin bottom={32} />
+      <div>
+        <H2>Change your email</H2>
+        <Body1>
           Send an email to info@episodehunter.tv and I will change your email as soon as possible
           (max 48h).
-        </Text>
-      </FormWrapper>
-    </Wrapper>
+        </Body1>
+      </div>
+    </PageWrapper>
   )
 }
 
@@ -181,65 +175,3 @@ const StatusWrapper = styled.div`
   justify-content: center;
   align-items: center;
 `
-
-const LabelWrapper = styled.div`
-  flex: 1;
-  margin: 10px;
-`
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`
-const Space = styled.div`
-  height: 40px;
-`
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  margin-top: 100px;
-  align-items: center;
-  flex-direction: column;
-`
-
-const Wrapper = styled.div`
-  color: ${alabaster};
-  background-color: ${shark};
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  justify-content: start;
-`
-
-const Header = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 32px;
-`
-
-const Text = styled.p`
-  color: white;
-  font-size: 18px;
-  margin: 10px;
-`
-
-const styles = {
-  label: {
-    width: '100%'
-  },
-  input: {
-    fontSize: '1rem',
-    borderWidth: '2px',
-    color: mountainMeadow,
-    borderColor: silver
-  },
-  focus: {
-    borderColor: mountainMeadow
-  },
-  span: {
-    fontSize: '1rem',
-    color: silver
-  }
-}

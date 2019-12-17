@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { useNavigation } from 'the-react-router'
 import { images } from '../../images.config'
 import { episodeNumberToString } from '../../utils/episode.util'
-import { H5, Subtitle2 } from '../atoms/Typography'
+import { H5, Subtitle2 } from '../atoms/typography'
 
 type Props = {
   showId: number

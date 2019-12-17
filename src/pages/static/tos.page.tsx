@@ -1,14 +1,11 @@
 import * as React from 'react'
-import styled from 'styled-components'
-import { P } from '../../components/text'
-import { alabaster, shark } from '../../utils/colors'
+import { PageWrapper } from '../../components/atoms/page-wrapper'
+import { Body1, H3, PageTitle } from '../../components/atoms/typography'
 
 export const TosPage = () => (
-  <Wrapper>
-    <TitleWrapper>
-      <Title>TERMS OF SERVICE</Title>
-    </TitleWrapper>
-    <P>
+  <PageWrapper>
+    <PageTitle>TERMS OF SERVICE</PageTitle>
+    <Body1>
       This web page represents a legal document that serves as our Terms of Service and it governs
       the legal terms of our website, episodehunter.tv, sub-domains, and any associated web-based
       and mobile applications (collectively, &quot;Website&quot;), as owned and operated by
@@ -27,9 +24,9 @@ export const TosPage = () => (
       Legal Terms, do not access and use our Website. If you have already accessed our Website and
       do not accept our Legal Terms, you should immediately discontinue use of our Website. The last
       update to our Terms of Service was posted on February 28, 2013.
-    </P>
-    <Header>Definitions</Header>
-    <P>
+    </Body1>
+    <H3>Definitions</H3>
+    <Body1>
       The terms &quot;us&quot; or &quot;we&quot; or &quot;our&quot; refers to Episodehunter, the
       owner of the Website. A &quot;Visitor&quot; is someone who merely browses our Website, but has
       not registered as Member. A &quot;Member&quot; is an individual that has registered with us to
@@ -37,9 +34,9 @@ export const TosPage = () => (
       as offered through our Website to our Members. A &quot;User&quot; is a collective identifier
       that refers to either a Visitor or a Member. All text, information, graphics, audio, video,
       and data offered through our Website are collectively known as our &quot;Content&quot;.
-    </P>
-    <Header>Legal Compliance</Header>
-    <P>
+    </Body1>
+    <H3>Legal Compliance</H3>
+    <Body1>
       You agree to comply with all applicable domestic and international laws, statutes, ordinances,
       and regulations regarding your use of our Website. Episodehunter reserves the right to
       investigate complaints or reported violations of our Legal Terms and to take any action we
@@ -48,9 +45,9 @@ export const TosPage = () => (
       and disclosing any information necessary or appropriate to such persons or entities relating
       to your profile, email addresses, usage history, posted materials, IP addresses and traffic
       information, as allowed under our Privacy Policy.
-    </P>
-    <Header>Intellectual Property</Header>
-    <P>
+    </Body1>
+    <H3>Intellectual Property</H3>
+    <Body1>
       Our Website may contain our service marks or trademarks as well as those of our affiliates or
       other companies, in the form of words, graphics, and logos. Your use of our Website does not
       constitute any right or license for you to use such service marks/trademarks, without the
@@ -58,18 +55,18 @@ export const TosPage = () => (
       also protected under international copyright laws. The copying, redistribution, use or
       publication by you of any portion of our Website is strictly prohibited. Your use of our
       Website does not grant you ownership rights of any kind in our Website.
-    </P>
-    <Header>Links to Other Websites</Header>
-    <P>
+    </Body1>
+    <H3>Links to Other Websites</H3>
+    <Body1>
       Our Website may contain links to third party websites. These links are provided solely as a
       convenience to you. By linking to these websites, we do not create or have an affiliation
       with, or sponsor such third party websites. The inclusion of links within our Website does not
       constitute any endorsement, guarantee, warranty, or recommendation of such third party
       websites. Episodehunter has no control over the legal documents and privacy practices of third
       party websites; as such, you access any such third party websites at your own risk.
-    </P>
-    <Header>General Terms</Header>
-    <P>
+    </Body1>
+    <H3>General Terms</H3>
+    <Body1>
       Our Legal Terms shall be treated as though it were executed and performed in Sweden, and shall
       be governed by and construed in accordance with the laws of Sweden, without regard to conflict
       of law principles. In addition, you agree to submit to the personal jurisdiction and venue of
@@ -82,28 +79,6 @@ export const TosPage = () => (
       our Legal Terms shall not be deemed a waiver of such provision nor of the right to enforce
       such provision. The rights of Episodehunter under our Legal Terms shall survive the
       termination of our Legal Terms.
-    </P>
-  </Wrapper>
+    </Body1>
+  </PageWrapper>
 )
-
-const Wrapper = styled.div`
-  flex: 1;
-  margin: 5% 20%;
-  color: ${alabaster};
-  background-color: ${shark};
-  display: flex;
-  flex-direction: column;
-`
-const TitleWrapper = styled.div``
-const Title = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 32px;
-`
-const Header = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 18px;
-`

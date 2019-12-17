@@ -1,9 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
+import { PageWrapper } from '../../components/atoms/page-wrapper'
+import { Body1, PageTitle } from '../../components/atoms/typography'
 import { Spinner } from '../../components/spinner'
-import { P } from '../../components/text'
 import { useGetUserQuery } from '../../dragonstone'
-import { alabaster, shark } from '../../utils/colors'
 
 export const PlexPage = () => {
   const { data, loading } = useGetUserQuery()
@@ -12,11 +11,9 @@ export const PlexPage = () => {
   const apiKey = !loading && data ? data.me.apikey : ''
 
   return (
-    <Wrapper>
-      <TitleWrapper>
-        <Title>Plex</Title>
-      </TitleWrapper>
-      <P>
+    <PageWrapper>
+      <PageTitle>PLEX</PageTitle>
+      <Body1>
         Installing EpisodeHunter for plex is easy peasy but you are required a Plex Pass
         Subscription.
         <br />
@@ -28,33 +25,16 @@ export const PlexPage = () => {
         >
           webhook in plex
         </a>
-      </P>
-      <P>
+      </Body1>
+      <Body1>
         {username && apiKey ? (
-          <code>
-            https://scrobble.episodehunter.tv/plex?username={username}&key=
-            {apiKey}
-          </code>
+          <code
+            style={{ wordBreak: 'break-all' }}
+          >{`https://scrobble.episodehunter.tv/plex?username=${username}&key=${apiKey}`}</code>
         ) : (
           <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
         )}
-      </P>
-    </Wrapper>
+      </Body1>
+    </PageWrapper>
   )
 }
-
-const Wrapper = styled.div`
-  flex: 1;
-  margin: 5% 20%;
-  color: ${alabaster};
-  background-color: ${shark};
-  display: flex;
-  flex-direction: column;
-`
-const TitleWrapper = styled.div``
-const Title = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 32px;
-`
