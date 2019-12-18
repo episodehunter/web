@@ -22,7 +22,7 @@ export const Facts = ({ show }: { show: Show }) => {
     </ul>
   )
 }
-// #A29BFE 14
+
 const FactLine = ({ headline, info }: { headline: string; info: string }) => (
   <li>
     <Body1>
