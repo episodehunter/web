@@ -3,8 +3,6 @@ import { createRouter } from 'the-react-router'
 import { routes } from './components/router'
 import { useUser } from './contexts/user-context'
 import { SpinnerPage } from './pages/spinner.page'
-import styled from 'styled-components'
-import { shark } from './utils/colors'
 import { Navbar } from './components/navbar/navbar'
 
 const [Router, Routes] = createRouter(routes)
@@ -17,20 +15,12 @@ export const App = memo(() => {
   }
   return (
     <Router>
-      <Wrapper>
-        {currentUser && (
-          <>
-            <Navbar />
-          </>
-        )}
-        <Routes />
-      </Wrapper>
+      {currentUser && (
+        <>
+          <Navbar />
+        </>
+      )}
+      <Routes />
     </Router>
   )
 })
-
-const Wrapper = styled.div`
-  height: 100%;
-  background-color: ${shark};
-  min-height: 100%;
-`
