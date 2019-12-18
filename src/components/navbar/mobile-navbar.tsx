@@ -1,22 +1,24 @@
-import React, { useState } from 'react'
 import {
   BottomNavigation,
   BottomNavigationAction,
+  Divider,
   Drawer,
   List,
-  Divider,
   ListItem,
   ListItemText
 } from '@material-ui/core'
-import { useNavigation } from 'the-react-router'
-import { Routes } from '../../routes'
-import RestoreIcon from '@material-ui/icons/Restore'
 import FavoriteIcon from '@material-ui/icons/Favorite'
-import SearchIcon from '@material-ui/icons/Search'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import RestoreIcon from '@material-ui/icons/Restore'
+import SearchIcon from '@material-ui/icons/Search'
+import React, { useState } from 'react'
+import { useNavigation } from 'the-react-router'
+import { useUser } from '../../contexts/user-context'
+import { Routes } from '../../routes'
 
 export const MobileNavbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { auth } = useUser()
   const { navigate, state } = useNavigation()
   const selectedTab: string | false = getSelectedTab(state.url)
   const onClick = (route: string) => () => {
@@ -59,6 +61,9 @@ export const MobileNavbar = () => {
           </ListItem>
           <ListItem button>
             <ListItemText primary="Settings" onClick={onClick(Routes.settings)} />
+          </ListItem>
+          <ListItem button>
+            <ListItemText primary="Logout" onClick={() => auth.signOut()} />
           </ListItem>
         </List>
         <Divider />

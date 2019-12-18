@@ -7,6 +7,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search'
 import React, { useState } from 'react'
 import { useNavigation } from 'the-react-router'
+import { useUser } from '../../contexts/user-context'
 import logoPath from '../../logo96.png'
 import { Routes } from '../../routes'
 import { colors } from '../../utils/colors'
@@ -14,6 +15,7 @@ import { SearchBar } from './search-bar'
 
 export const DesktopNavbar = () => {
   const { navigate, state } = useNavigation()
+  const { auth } = useUser()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const isMenuOpen = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -63,6 +65,9 @@ export const DesktopNavbar = () => {
             <MenuItem key={Routes.settings} onClick={closeAndNavigate(Routes.settings)}>
               Settings
             </MenuItem>
+            <MenuItem key="logout" onClick={() => auth.signOut()}>
+              Logout
+            </MenuItem>
           </Menu>
         </StyledToolbar>
       </StyledAppBar>
@@ -91,6 +96,7 @@ const StyledAppBar = muiStyled(AppBar)({
 const SearchWrapper = muiStyled('div')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '34px 1fr',
+  // TODO: remove fade
   backgroundColor: fade(theme.palette.common.white, 0.15),
   borderRadius: '4px'
 }))
