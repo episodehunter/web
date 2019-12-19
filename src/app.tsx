@@ -8,14 +8,14 @@ import { Navbar } from './components/navbar/navbar'
 const [Router, Routes] = createRouter(routes)
 
 export const App = memo(() => {
-  const { loadingCurrentUser, currentUser } = useUser()
+  const { loadingCurrentUser, authenticated } = useUser()
 
   if (loadingCurrentUser) {
     return <SpinnerPage />
   }
   return (
     <Router>
-      {currentUser && (
+      {authenticated && (
         <>
           <Navbar />
         </>

@@ -9,8 +9,8 @@ type ExtendedProps<P> = P & { navigate: Navigate }
 export const requireLogin = <P>(Component: ComponentType<P>) => {
   return memo((props: ExtendedProps<P>) => {
     const { navigate } = useNavigation()
-    const { currentUser } = useUser()
-    if (!currentUser) {
+    const { authenticated } = useUser()
+    if (!authenticated) {
       navigate(Routes.landingPage)
       return null
     }

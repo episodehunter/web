@@ -4,13 +4,18 @@ import { Body1 } from './atoms/typography'
 
 type Props = {
   message?: string
+  success?: true
 }
 
-export const FormStatusMessage = ({ message }: Props) => {
+export const FormStatusMessage = ({ message, success }: Props) => {
   if (!message) return null
 
+  const style = {
+    backgroundColor: success ? '#6da925' : '#af574e'
+  }
+
   return (
-    <Wrapper>
+    <Wrapper style={style}>
       <Body1>{message}</Body1>
     </Wrapper>
   )
@@ -18,8 +23,6 @@ export const FormStatusMessage = ({ message }: Props) => {
 
 const Wrapper = styled('div')({
   width: '100%',
-  margin: '20px 0',
-  backgroundColor: '#af574e',
-  textAlign: 'center',
-  padding: '1px 0'
+  padding: '20px 0',
+  textAlign: 'center'
 })

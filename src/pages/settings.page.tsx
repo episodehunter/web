@@ -5,7 +5,6 @@ import { Margin } from '../components/atoms/margin'
 import { PageWrapper } from '../components/atoms/page-wrapper'
 import { Body1, H2 } from '../components/atoms/typography'
 import { FormStatusMessage } from '../components/form-status-message'
-import { Spinner } from '../components/spinner'
 import { useUser } from '../contexts/user-context'
 
 enum Status {
@@ -33,7 +32,7 @@ export const SettingsPage = () => {
     setValue(event.target.value)
   }
 
-  const save = () => {
+  const save = async () => {
     const passwordEdited = isEdited(newPassword, confirmPassword)
 
     if (!passwordEdited) {
@@ -42,47 +41,47 @@ export const SettingsPage = () => {
 
     if (hasMismatch(newPassword, confirmPassword)) {
       setErrorMessage('The passwords do not match')
+      setStatus(Status.error)
       return
     }
 
     if (!password) {
       setErrorMessage('Enter your current password')
+      setStatus(Status.error)
       return
     }
 
     if (newPassword.length < 6) {
       setErrorMessage('Enter at least 6 characters')
+      setStatus(Status.error)
       return
     }
 
     setStatus(Status.saving)
-    auth
-      .reauthenticate(password)
-      .then(() => {
-        auth
-          .changePassword(newPassword)
-          .then(() => {
-            setStatus(Status.success)
-            setNewPassword('')
-            setConfirmPassword('')
-            setPassword('')
-          })
-          .catch(() => {
-            setErrorMessage('Could not update settings')
-            setStatus(Status.error)
-          })
-      })
-      .catch(() => {
-        setErrorMessage('Enter the correct current password')
-        setStatus(Status.error)
-      })
+    try {
+      await auth.reauthenticate(password)
+    } catch (error) {
+      setErrorMessage('Enter the correct current password')
+      setStatus(Status.error)
+      return
+    }
+    try {
+      await auth.changePassword(newPassword)
+      setStatus(Status.success)
+      setNewPassword('')
+      setConfirmPassword('')
+      setPassword('')
+    } catch (error) {
+      setErrorMessage(error?.message || 'Could not update the password')
+      setStatus(Status.error)
+    }
   }
 
   return (
     <PageWrapper>
       <div>
         <H2>Change Password</H2>
-        {errorMessage && (
+        {(errorMessage || status === Status.success) && (
           <StatusWrapper>
             <StatusComponent errorMessage={errorMessage} status={status} />
           </StatusWrapper>
@@ -142,14 +141,12 @@ export const SettingsPage = () => {
   )
 }
 
-function StatusComponent({ status, errorMessage }: { status: Status; errorMessage: string }) {
+function StatusComponent({ status, errorMessage }: { status: Status; errorMessage?: string }) {
   switch (status) {
     case Status.error:
       return <FormStatusMessage message={errorMessage} />
     case Status.success:
       return <FormStatusMessage message="Password updated successfully" success />
-    case Status.saving:
-      return <Spinner />
     default:
       return null
   }

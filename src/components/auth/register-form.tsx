@@ -13,7 +13,7 @@ export const RegisterForm = ({
   register
 }: {
   hideForm: () => void
-  register: (email: string, password: string) => Promise<firebase.auth.UserCredential>
+  register: (email: string, password: string) => Promise<any>
 }) => {
   const { navigate } = useNavigation()
   const [createUser] = useCreateUserMutation()

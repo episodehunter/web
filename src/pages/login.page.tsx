@@ -1,6 +1,7 @@
 import { styled as miStyled, Tab, Tabs } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
-import React, { useEffect, useState } from 'react'
+import { useOnMount } from '../utils/use-on-mount'
+import React, { useState } from 'react'
 import { useNavigation } from 'the-react-router'
 import { motion } from 'framer-motion'
 import { LoginForm } from '../components/auth/login-form'
@@ -19,11 +20,11 @@ export function LoginPage() {
   const [selectedTab, setSelectedTab] = useState(params.type === 'register' ? 1 : 0)
   const [hidePage, setHidePage] = useState(false)
   const { auth } = useUser()
-  useEffect(() => {
-    if (auth.isSigndInUser()) {
+  useOnMount(async () => {
+    if (await auth.isSigndInUser()) {
       navigate(Routes.upcoming)
     }
-  }, [])
+  })
 
   const handleTabChange = (_: unknown, newTab: number) => {
     setSelectedTab(newTab)

@@ -1,6 +1,7 @@
 import { styled } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigation } from 'the-react-router'
+import { useOnMount } from '../utils/use-on-mount'
 import { Button } from '../components/atoms/button'
 import { useUser } from '../contexts/user-context'
 import { images } from '../images.config'
@@ -11,11 +12,11 @@ import { Footer } from '../components/main/footer'
 export function LandingPage() {
   const { auth } = useUser()
   const { navigate } = useNavigation()
-  useEffect(() => {
-    if (auth.isSigndInUser()) {
+  useOnMount(async () => {
+    if (await auth.isSigndInUser()) {
       navigate(Routes.upcoming)
     }
-  }, [])
+  })
 
   return (
     <Wrapper>

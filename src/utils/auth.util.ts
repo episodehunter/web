@@ -1,103 +1,44 @@
+import { wrap } from 'comlink'
 import { ApolloClient } from 'apollo-boost'
-import firebaseApp from 'firebase/app'
-import 'firebase/auth'
 
-export const createAuth = (
-  firebase: typeof firebaseApp,
-  getClient: () => ApolloClient<unknown>
-) => {
+type AuthLink = InstanceType<typeof import('../web-worker/auth').Auth>
+
+export const createAuth = (authWorker: Worker, getClient: () => ApolloClient<unknown>) => {
+  const authLink = wrap<AuthLink>(authWorker)
+
   const auth = {
     async signOut() {
-      await firebase.auth().signOut()
+      await authLink.signOut()
       getClient().resetStore()
       window.location.reload()
     },
 
-    login(email: string, password: string) {
-      return firebase.auth().signInWithEmailAndPassword(email, password)
-    },
-
-    register(email: string, password: string) {
-      return firebase.auth().createUserWithEmailAndPassword(email, password)
-    },
-
-    reauthenticate(password: string) {
-      const user = auth.getUser()
-      if (!user) {
-        throw new Error('User unknown')
-      } else if (!user.email) {
-        throw new Error('User email unknown')
-      }
-      return user.reauthenticateAndRetrieveDataWithCredential(
-        firebase.auth.EmailAuthProvider.credential(user.email, password)
-      )
-    },
-
-    changePassword(password: string) {
-      const user = auth.getUser()
-      if (!user) {
-        throw new Error('User unknown')
-      }
-      return user.updatePassword(password)
-    },
-
-    changeEmail(email: string) {
-      const user = auth.getUser()
-      if (!user) {
-        throw new Error('User unknown')
-      }
-      return user.updateEmail(email)
-    },
-
-    getUser() {
-      return firebase.auth().currentUser
-    },
-
-    getUsername() {
-      const user = auth.getUser()
-      if (!user) {
-        throw new Error('User unknown')
-      }
-      return user.displayName || ''
-    },
-
-    isSigndInUser() {
-      return Boolean(auth.getUser())
-    },
-
-    getUserId() {
-      const user = auth.getUser()
-      if (!user) {
-        throw new Error('User unknown')
-      }
-      return user.uid
-    },
-
-    getIdToken() {
-      const user = auth.getUser()
-      if (user) {
-        return user.getIdToken(/* forceRefresh */ false)
-      }
-      return Promise.reject(new Error('User not signed in'))
-    },
+    login: authLink.login,
+    register: authLink.register,
+    reauthenticate: authLink.reauthenticate,
+    changePassword: authLink.changePassword,
+    isSigndInUser: authLink.isSigndInUser,
+    getIdToken: authLink.getIdToken,
+    sendPasswordResetEmail: authLink.sendPasswordResetEmail,
+    resetPassword: authLink.resetPassword,
+    verifyPasswordResetCode: authLink.verifyPasswordResetCode,
 
     authStateChange$(
-      next: (user: firebase.User | null) => void,
+      next: (authenticated: boolean | null) => void,
       error: (error: firebase.auth.Error) => void
     ) {
-      return firebase.auth().onAuthStateChanged(next, error)
-    },
-
-    sendPasswordResetEmail(email: string) {
-      return firebase.auth().sendPasswordResetEmail(email)
-    },
-
-    resetPassword(code: string, password: string) {
-      return firebase.auth().confirmPasswordReset(code, password)
-    },
-
-    verifyPasswordResetCode(code: string) {
-      return firebase.auth().verifyPasswordResetCode(code)
+      const eventHandler = e => {
+        console.log(e.data)
+        if (e.data?.type === 'AuthStateChanged') {
+          if (typeof e.data.data === 'boolean') {
+            next(e.data.data)
+          } else if (e.data.error) {
+            error(e.data.error)
+          }
+        }
+      }
+      authWorker.addEventListener('message', eventHandler)
+      return () => authWorker.removeEventListener('message', eventHandler)
     }
   }
   return auth

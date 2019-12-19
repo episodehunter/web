@@ -82,6 +82,7 @@
     "@sentry/browser": "^5.9.1",
     "@tjoskar/react-lazyload-img": "^1.2.3",
     "apollo-boost": "^0.4.4",
+    "comlink": "^4.2.0",
     "date-fns": "^2.8.1",
     "firebase": "^7.5.0",
     "framer-motion": "^1.6.17",
