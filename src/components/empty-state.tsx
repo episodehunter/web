@@ -4,7 +4,7 @@ import { Link } from 'the-react-router'
 import { AnimatedListItem } from '../components/atoms/animated-list-item'
 import { Margin } from '../components/atoms/margin'
 import { PageWrapper } from '../components/atoms/page-wrapper'
-import { Body1, PageTitle } from '../components/atoms/typography'
+import { Body1, H2 } from '../components/atoms/typography'
 import { Routes } from '../routes'
 
 export const EmptyState = () => {
@@ -14,7 +14,7 @@ export const EmptyState = () => {
       <AnimatedListItem>
         <Card>
           <CardContent>
-            <PageTitle>Woops!</PageTitle>
+            <H2>Woops!</H2>
             <Body1>
               It looks like you are not following any shows. The best way to start is by searching
               for your favorite show and start follow that one.
@@ -46,7 +46,7 @@ export const EmptyHistory = () => {
       <AnimatedListItem>
         <Card>
           <CardContent>
-            <PageTitle>Woops!</PageTitle>
+            <H2>Woops!</H2>
             <Body1>
               It looks like you haven&apos;t watched anything! Go and watch an episode of your
               favorite tv show

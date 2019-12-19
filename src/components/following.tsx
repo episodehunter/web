@@ -1,8 +1,8 @@
 import React from 'react'
-import { ShowCard } from './show-card/show-card'
-import { H1 } from './text'
 import { FollowingShow } from '../types/following'
 import { ShowListWrapper } from './atoms/show-list-wrapper'
+import { H1 } from './atoms/typography'
+import { ShowCard } from './show-card/show-card'
 
 interface Props {
   shows: FollowingShow[]

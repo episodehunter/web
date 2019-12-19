@@ -1,10 +1,10 @@
 import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
-import { Body1, PageTitle } from '../../components/atoms/typography'
+import { Body1, H2 } from '../../components/atoms/typography'
 
 export const GoogleHome = () => (
   <PageWrapper>
-    <PageTitle>Google Home (beta)</PageTitle>
+    <H2>Google Home (beta)</H2>
     <Body1>
       Episodehunter for Google Home is an easy way to keep trak of what you can watch and tell it
       what you watch/like etc.

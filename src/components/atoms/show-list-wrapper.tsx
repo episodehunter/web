@@ -1,12 +1,14 @@
-import styled from 'styled-components'
-import { media } from '../../styles/media-queries'
+import { styled } from '@material-ui/core'
 
-export const ShowListWrapper = styled.div`
-  display: grid;
-  ${media.giant`grid-template-columns: repeat(4, 1fr);`};
-  ${media.desktop`grid-template-columns: repeat(4, 1fr);`};
-  ${media.tablet`grid-template-columns: repeat(2, 1fr);`};
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
-  grid-template-columns: 1fr;
-`
+export const ShowListWrapper = styled('div')(({ theme }) => ({
+  display: 'grid',
+  gridColumnGap: 20,
+  gridRowGap: 20,
+  gridTemplateColumns: '1fr',
+  [theme.breakpoints.up('lg')]: {
+    gridTemplateColumns: 'repeat(4, 1fr)'
+  },
+  [theme.breakpoints.only('md')]: {
+    gridTemplateColumns: 'repeat(2, 1fr)'
+  }
+}))

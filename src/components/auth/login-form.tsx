@@ -1,23 +1,21 @@
-import { styled as miStyled, TextField } from '@material-ui/core'
+import { styled, TextField } from '@material-ui/core'
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
 import { Routes } from '../../routes'
-import { shark } from '../../utils/colors'
 import { Button } from '../atoms/button'
 import { FormStatusMessage } from '../form-status-message'
 import { translateFirebaseError } from './auth.util'
 
 type Props = {
   login: (email: string, password: string) => Promise<any>
+  hideForm: () => void
 }
 
-export const LoginForm = ({ login }: Props) => {
+export const LoginForm = ({ login, hideForm }: Props) => {
   const [errorMsg, setErrorMsg] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showLoginAnimation, setShowLoginAnimation] = useState(false)
   const { navigate } = useNavigation()
 
   const onLogin = (event: React.MouseEvent) => {
@@ -26,8 +24,8 @@ export const LoginForm = ({ login }: Props) => {
     setLoading(true)
     login(email, password)
       .then(() => {
-        setShowLoginAnimation(true)
-        setTimeout(navigate, 2000, Routes.upcoming)
+        hideForm()
+        setTimeout(navigate, 500, Routes.upcoming)
       })
       .catch(error => {
         setLoading(false)
@@ -37,7 +35,6 @@ export const LoginForm = ({ login }: Props) => {
 
   return (
     <>
-      {showLoginAnimation && <LoginAnimation />}
       <form onSubmit={onLogin as any}>
         <FormStatusMessage message={errorMsg} />
         <TextField
@@ -72,31 +69,7 @@ export const LoginForm = ({ login }: Props) => {
   )
 }
 
-const ActionButton = miStyled(Button)(({ theme }) => ({
+const ActionButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
   width: '100% !important'
 }))
-
-const LoginAnimation = styled.div`
-  background: ${shark};
-  position: fixed;
-  width: ${window.innerWidth}px;
-  height: ${window.innerWidth}px;
-  margin: auto;
-  border-radius: 100%;
-  overflow: hidden;
-  animation: grow 5s;
-  animation-fill-mode: forwards;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  @keyframes grow {
-    0% {
-      transform: scale(0);
-    }
-
-    100% {
-      transform: scale(3);
-    }
-  }
-`

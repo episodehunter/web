@@ -1,10 +1,11 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Dragonstone } from '@episodehunter/types'
 import { UpcomingShow } from '../types/upcoming'
 import { ShowCard } from './show-card/show-card'
 import { dateReleaseFormat, parse } from '../utils/date.utils'
 import { ShowListWrapper } from './atoms/show-list-wrapper'
+import { Margin } from './atoms/margin'
+import { H2 } from './atoms/typography'
 
 type Props = {
   title: string
@@ -18,8 +19,8 @@ export const Upcoming = ({ title, shows, episodeKey, showDate }: Props) => {
     return null
   }
   return (
-    <UpcomingWrapper>
-      <Timespan>{title}</Timespan>
+    <Margin bottom={40}>
+      <H2>{title}</H2>
       <ShowListWrapper>
         {shows.map(show => (
           <ShowCard
@@ -33,7 +34,7 @@ export const Upcoming = ({ title, shows, episodeKey, showDate }: Props) => {
           />
         ))}
       </ShowListWrapper>
-    </UpcomingWrapper>
+    </Margin>
   )
 }
 
@@ -46,14 +47,3 @@ export const formatEpisodeAirDate = (
   }
   return dateReleaseFormat(parse(episode.aired))
 }
-
-const UpcomingWrapper = styled.div`
-  margin-bottom: 40px;
-`
-
-const Timespan = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 32px;
-`

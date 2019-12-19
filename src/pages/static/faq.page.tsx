@@ -1,10 +1,10 @@
 import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
-import { Body1, PageTitle } from '../../components/atoms/typography'
+import { Body1, H2 } from '../../components/atoms/typography'
 
 export const FaqPage = () => (
   <PageWrapper>
-    <PageTitle>FAQ</PageTitle>
+    <H2>FAQ</H2>
     <Body1 style={{ textTransform: 'uppercase', margin: '8px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> Where are all the movies?
     </Body1>

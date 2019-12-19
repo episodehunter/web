@@ -1,6 +1,6 @@
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import React, { FC } from 'react'
-import { colors, mainBlue, whiteIsh } from '../utils/colors'
+import { colors, mainBlue, whiteIsh, alabaster } from '../utils/colors'
 
 interface Props {
   key?: string
@@ -20,16 +20,28 @@ const theme = createMuiTheme({
     allVariants: {
       color: '#FFFFFF'
     },
-    h3: {
+    fontFamily: `'Lato', sans-serif`,
+    h1: {
+      fontSize: '60px',
       fontWeight: 300,
       textTransform: 'uppercase',
-      color: whiteIsh,
-      fontSize: '20px'
+      color: alabaster
+    },
+    h2: {
+      fontSize: '32px',
+      fontWeight: 300,
+      color: alabaster
+    },
+    h3: {
+      fontSize: '20px',
+      fontWeight: 300,
+      textTransform: 'uppercase',
+      color: whiteIsh
     },
     h4: {
+      fontSize: '20px',
       fontWeight: 400,
       color: whiteIsh,
-      fontSize: '20px',
       letterSpacing: '0.5px'
     },
     h5: {
@@ -39,18 +51,25 @@ const theme = createMuiTheme({
       fontSize: '16px',
       lineHeight: '22px',
       letterSpacing: '0.35px',
-      fontWeight: 400,
       fontFamily: 'Helvetica Neue'
     },
-    subtitle2: {
+    body2: {
       fontSize: '14px',
-      color: mainBlue
+      lineHeight: '20px',
+      letterSpacing: '0.35px',
+      fontFamily: 'Helvetica Neue'
     },
     subtitle1: {
       fontSize: '18px',
       color: mainBlue
     },
-    fontFamily: `'Lato', sans-serif`
+    subtitle2: {
+      fontSize: '12px',
+      color: mainBlue
+    },
+    caption: {
+      fontSize: '12px'
+    }
   }
 })
 

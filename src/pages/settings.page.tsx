@@ -1,6 +1,5 @@
-import { TextField } from '@material-ui/core'
+import { TextField, styled } from '@material-ui/core'
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { Button } from '../components/atoms/button'
 import { Margin } from '../components/atoms/margin'
 import { PageWrapper } from '../components/atoms/page-wrapper'
@@ -8,7 +7,6 @@ import { Body1, H2 } from '../components/atoms/typography'
 import { FormStatusMessage } from '../components/form-status-message'
 import { Spinner } from '../components/spinner'
 import { useUser } from '../contexts/user-context'
-import { media } from '../styles/media-queries'
 
 enum Status {
   none,
@@ -165,13 +163,13 @@ function hasMismatch(inputOne: string, inputTwo: string) {
   return inputOne !== inputTwo
 }
 
-const StatusWrapper = styled.div`
-  display: flex;
-  width: 20%;
-  ${media.mobile`
-    width: 100%;
-  `}
-  height: 70px;
-  justify-content: center;
-  align-items: center;
-`
+const StatusWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '20%;',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%;'
+  },
+  height: '70px',
+  justifyContent: 'center',
+  alignItems: 'center'
+}))
