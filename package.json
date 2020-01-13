@@ -91,7 +91,7 @@
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-infinite-scroller": "^1.2.4",
-    "styled-components": "^4.4.0",
+    "styled-components": "^5.0.0",
     "the-react-router": "^1.0.0"
   },
   "jest": {
