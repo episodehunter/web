@@ -1,8 +1,10 @@
 import React from 'react'
+import { Link } from 'the-react-router'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
 import { Body1, H2 } from '../../components/atoms/typography'
+import { Routes } from '../../routes'
 
-export const FaqPage = () => (
+export default () => (
   <PageWrapper>
     <H2>FAQ</H2>
     <Body1 style={{ textTransform: 'uppercase', margin: '8px 0 8px 0', fontSize: 18 }}>
@@ -24,31 +26,25 @@ export const FaqPage = () => (
       remove some features but they will get back.
     </Body1>
     <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
-      <b>Q:</b> Why is the new site much slower than the old one?{' '}
-    </Body1>
-    <Body1>
-      <b>A:</b> One of goals of the rewrite was to make the site cheaper. One solution was to use a
-      cheap database (<a href="https://firebase.google.com/">firebase</a>). However, it has turned
-      out that it preforms really badly and that it does not scale. I will therefor switch back to a
-      more expensive database to make the page fast again.
-    </Body1>
-    <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> I’m not able to login. Can you help me?
     </Body1>
     <Body1>
       <b>A:</b> Absolutely! You can reset your password here:{' '}
-      <a href="https://episodehunter.tv/login">https://episodehunter.tv/login</a>. If you do not
-      remember your email or have any other problems with the login. Just contact me and we will
-      work it out.
+      <a href="https://episodehunter.tv/login">https://episodehunter.tv/login</a>. If you don&apos;t
+      remember your email or have any other problems with the login. Just{' '}
+      <Link state={null} to={Routes.contact}>
+        contact me
+      </Link>{' '}
+      and we will work it out.
     </Body1>
     <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> How do I make contact with you?
     </Body1>
     <Body1>
-      <b>A:</b> The easiest way is to join{' '}
-      <a href="https://spectrum.chat/episodehunter">https://spectrum.chat/episodehunter</a>. If you
-      are using slack I can send you an invitation. You can also send me an email to
-      info@episodehunter.com
+      <b>A:</b>{' '}
+      <Link state={null} to={Routes.contact}>
+        See this page
+      </Link>
     </Body1>
     <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> How do I report a problem?
@@ -56,7 +52,10 @@ export const FaqPage = () => (
     <Body1>
       <b>A:</b> If you are using GitHub, you can create an issue{' '}
       <a href="https://github.com/episodehunter/web/issues">there</a>. Otherwise, send me an email
-      at: info@episodehunter.com
+      at: info@episodehunter.com. See more at the{' '}
+      <Link state={null} to={Routes.contact}>
+        contact page.
+      </Link>
     </Body1>
     <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> I’m a developer and I would like to help!
@@ -82,14 +81,21 @@ export const FaqPage = () => (
       <b>Q:</b> I have a suggestion, are you open for changes?
     </Body1>
     <Body1>
-      <b>A:</b> Absolutely! Just contact me and we will se what we can do/build!
+      <b>A:</b> Absolutely!{' '}
+      <Link state={null} to={Routes.contact}>
+        Just contact me
+      </Link>{' '}
+      and we will se what we can do/build!
     </Body1>
     <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> I miss a show. Can you add it?
     </Body1>
     <Body1>
-      <b>A:</b> Absolutely, just send me an email or send a message on slack/spectrum (se above) and
-      I will add it.
+      <b>A:</b> Absolutely, just{' '}
+      <Link state={null} to={Routes.contact}>
+        contact me
+      </Link>{' '}
+      and I will add it.
     </Body1>
     <Body1 style={{ textTransform: 'uppercase', margin: '40px 0 8px 0', fontSize: 18 }}>
       <b>Q:</b> I’m using Plex/Kodi. How do I set up the plugin?

@@ -68,6 +68,9 @@ export const DesktopNavbar = () => {
               Logout
             </MenuItem>
             <Divider />
+            <MenuItem key="contact" onClick={closeAndNavigate(Routes.contact)}>
+              Contact
+            </MenuItem>
             <MenuItem key="plex" onClick={closeAndNavigate(Routes.plex)}>
               Plex
             </MenuItem>

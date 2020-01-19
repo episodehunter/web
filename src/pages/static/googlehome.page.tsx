@@ -2,7 +2,7 @@ import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
 import { Body1, H2 } from '../../components/atoms/typography'
 
-export const GoogleHome = () => (
+export default () => (
   <PageWrapper>
     <H2>Google Home (beta)</H2>
     <Body1>

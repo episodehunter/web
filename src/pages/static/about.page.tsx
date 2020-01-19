@@ -2,7 +2,7 @@ import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
 import { Body1, H2 } from '../../components/atoms/typography'
 
-export const AboutPage = () => (
+export default () => (
   <PageWrapper>
     <H2>ABOUT EPISODEHUNTER</H2>
     <Body1>

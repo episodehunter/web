@@ -28,7 +28,6 @@ export const createAuth = (authWorker: Worker, getClient: () => ApolloClient<unk
       error: (error: firebase.auth.Error) => void
     ) {
       const eventHandler = e => {
-        console.log(e.data)
         if (e.data?.type === 'AuthStateChanged') {
           if (typeof e.data.data === 'boolean') {
             next(e.data.data)

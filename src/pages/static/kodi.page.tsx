@@ -4,7 +4,7 @@ import { Body1, H2 } from '../../components/atoms/typography'
 import { useGetUserQuery } from '../../dragonstone'
 import { SpinnerPage } from '../spinner.page'
 
-export const KodiPage = () => {
+export default () => {
   const { data, loading } = useGetUserQuery()
 
   if (loading || !data) {

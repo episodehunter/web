@@ -69,6 +69,9 @@ export const MobileNavbar = () => {
         <Divider />
         <List>
           <ListItem button>
+            <ListItemText primary="Contact" onClick={onClick(Routes.contact)} />
+          </ListItem>
+          <ListItem button>
             <ListItemText primary="Plex" onClick={onClick(Routes.plex)} />
           </ListItem>
           <ListItem button>

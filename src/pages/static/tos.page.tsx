@@ -2,7 +2,7 @@ import * as React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
 import { Body1, H3, H2 } from '../../components/atoms/typography'
 
-export const TosPage = () => (
+export default () => (
   <PageWrapper>
     <H2>TERMS OF SERVICE</H2>
     <Body1>

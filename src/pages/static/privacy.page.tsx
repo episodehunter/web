@@ -2,7 +2,7 @@ import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
 import { Body1, H3, H2 } from '../../components/atoms/typography'
 
-export const PrivacyPage = () => (
+export default () => (
   <PageWrapper>
     <H2>PRIVACY POLICY</H2>
     <H3>Personal identification information</H3>
