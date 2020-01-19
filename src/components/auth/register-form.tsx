@@ -9,9 +9,11 @@ import { FormStatusMessage } from '../form-status-message'
 import { translateFirebaseError } from './auth.util'
 
 export const RegisterForm = ({
+  hideForm,
   register
 }: {
-  register: (email: string, password: string) => Promise<firebase.auth.UserCredential>
+  hideForm: () => void
+  register: (email: string, password: string) => Promise<any>
 }) => {
   const { navigate } = useNavigation()
   const [createUser] = useCreateUserMutation()
@@ -29,7 +31,10 @@ export const RegisterForm = ({
       .then(() =>
         createUser({ variables: { username: displayName || slugify(email.split('@')[0]) } })
       )
-      .then(() => navigate(Routes.upcoming))
+      .then(() => {
+        hideForm()
+        setTimeout(navigate, 500, Routes.upcoming)
+      })
       .catch(error => {
         captureException(error)
         setLoading(false)

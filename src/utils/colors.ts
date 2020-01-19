@@ -9,7 +9,9 @@ export const melrose = '#A29BFE'
 export const manatee = '#9C9C9E'
 
 export const mainGreen = teal[500]
+export const mainBlue = lightBlue.A400
 export const whiteIsh = alabaster
+export const mainPurple = melrose
 
 export const colors = {
   palette: {
@@ -18,5 +20,6 @@ export const colors = {
   },
   neutral: {
     blackish: capeCod
-  }
+  },
+  backgroundColor: shark
 }

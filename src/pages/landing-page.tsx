@@ -1,23 +1,22 @@
-import { styled as miStyled } from '@material-ui/core'
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import { styled } from '@material-ui/core'
+import React from 'react'
 import { useNavigation } from 'the-react-router'
+import { useOnMount } from '../utils/use-on-mount'
 import { Button } from '../components/atoms/button'
 import { useUser } from '../contexts/user-context'
 import { images } from '../images.config'
 import { Routes } from '../routes'
-import { media } from '../styles/media-queries'
 import { mainGreen, whiteIsh } from '../utils/colors'
 import { Footer } from '../components/main/footer'
 
 export function LandingPage() {
   const { auth } = useUser()
   const { navigate } = useNavigation()
-  useEffect(() => {
-    if (auth.isSigndInUser()) {
+  useOnMount(async () => {
+    if (await auth.isSigndInUser()) {
       navigate(Routes.upcoming)
     }
-  }, [])
+  })
 
   return (
     <Wrapper>
@@ -25,6 +24,7 @@ export function LandingPage() {
         <Button onClick={() => navigate('/login')}>Sign in</Button>
       </LoginButtonWrapper>
       <TopImage>
+        <Fade />
         <Wrapper>
           <TextWrapper>
             <Header>Episodehunter</Header>
@@ -38,66 +38,74 @@ export function LandingPage() {
             </Button>
           </TextWrapper>
         </Wrapper>
-        <Footer style={{ padding: 0, alignSelf: 'end', zIndex: 1 }} />
+        <Footer />
       </TopImage>
     </Wrapper>
   )
 }
 
-const Description = styled.p`
-  ${media.giant`font-size: 24px;`};
-  ${media.desktop`font-size: 22px;`};
-  ${media.tablet`font-size: 20px;`};
-  font-size: 16px;
-`
+const Description = styled('p')(({ theme }) => ({
+  fontSize: '16px',
+  [theme.breakpoints.up('lg')]: {
+    fontSize: '24px'
+  },
+  [theme.breakpoints.only('md')]: {
+    fontSize: '20px'
+  }
+}))
 
-const Header = styled.h1`
-  ${media.giant`font-size: 60px;`};
-  ${media.desktop`font-size: 54px;`};
-  ${media.tablet`font-size: 48px;`};
-  font-size: 30px;
-  color: ${mainGreen};
-  text-transform: uppercase;
-  word-wrap: break-word;
-`
+const Header = styled('h1')(({ theme }) => ({
+  fontSize: '30px',
+  [theme.breakpoints.up('lg')]: {
+    fontSize: '60px'
+  },
+  [theme.breakpoints.only('md')]: {
+    fontSize: '48px'
+  },
+  color: mainGreen,
+  textTransform: 'uppercase',
+  wordwrap: 'break-word'
+}))
 
-const TextWrapper = styled.div`
-  ${media.giant`margin: 5%;`};
-  ${media.desktop`margin: 8%;`};
-  margin: 10%;
-  ${media.tabletAndUp`width: 50%;`}
-  color: ${whiteIsh};
-`
+const TextWrapper = styled('div')(({ theme }) => ({
+  margin: '10%',
+  color: whiteIsh,
+  [theme.breakpoints.up('xl')]: {
+    fontSize: '5%'
+  },
+  [theme.breakpoints.up('lg')]: {
+    fontSize: '8%'
+  },
+  [theme.breakpoints.up('md')]: {
+    width: '50%'
+  }
+}))
 
-const LoginButtonWrapper = miStyled('div')({
+const LoginButtonWrapper = styled('div')({
   position: 'absolute',
   top: '20px',
   right: '20px',
   zIndex: 2
 })
 
-const CoverImage = styled.div`
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-`
+const TopImage = styled('div')({
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  backgroundImage: `url(${images.fanart.big(270915)})`,
+  display: 'grid',
+  gridTemplateColumns: 'auto',
+  height: '100vh'
+})
 
-const TopImage = styled(CoverImage)`
-  background-image: url(${images.fanart.big(270915)});
-  display: grid;
-  grid-template-columns: auto;
-  height: 100vh;
-  &:after {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.7);
-    content: '';
-    height: 100vh;
-    width: 100vw;
-  }
-`
+const Fade = styled('div')({
+  position: 'absolute',
+  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  height: '100vh',
+  width: '100vw'
+})
 
-const Wrapper = styled.div`
-  align-self: flex-end;
-  z-index: 1;
-`
+const Wrapper = styled('div')({
+  alignSelf: 'flex-end',
+  zIndex: 1
+})

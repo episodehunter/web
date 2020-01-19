@@ -1,22 +1,22 @@
-import { unixTimestamp, extractSeasonNumber } from '@episodehunter/utils'
-import React from 'react'
+import { extractSeasonNumber, unixTimestamp } from '@episodehunter/utils'
+import { RemoveCircleOutline, Tv } from '@material-ui/icons'
+import { DataProxy } from 'apollo-cache'
 import produce from 'immer'
+import React from 'react'
 import {
-  useCheckInEpisodeMutation,
-  useRemoveCheckedInEpisodeMutation,
-  GetShowDocument,
-  GetShowQueryVariables,
-  GetShowQuery,
+  CheckInEpisodeMutation,
+  GetEpisodesForSeasonDocument,
   GetEpisodesForSeasonQuery,
   GetEpisodesForSeasonQueryVariables,
-  GetEpisodesForSeasonDocument,
-  CheckInEpisodeMutation,
-  RemoveCheckedInEpisodeMutation
+  GetShowDocument,
+  GetShowQuery,
+  GetShowQueryVariables,
+  RemoveCheckedInEpisodeMutation,
+  useCheckInEpisodeMutation,
+  useRemoveCheckedInEpisodeMutation
 } from '../../../dragonstone'
 import { SeasonEpisode } from '../../../types/episode'
-import { melrose } from '../../../utils/colors'
-import { TextButton } from '../../button'
-import { DataProxy } from 'apollo-cache'
+import { Button } from '../../atoms/button'
 
 type Props = {
   episode: SeasonEpisode
@@ -50,32 +50,29 @@ export const WatchedButton = ({ episode }: Props) => {
     })
   }
 
-  if (loading) {
+  if (hasHistory) {
     return (
-      <TextButton>
-        Updating...{' '}
-        <i className="material-icons" style={iconStyle}>
-          loop
-        </i>
-      </TextButton>
-    )
-  } else if (hasHistory) {
-    return (
-      <TextButton onClick={onRemoveCheckIn}>
-        Mark as unwatched{' '}
-        <i className="material-icons" style={iconStyle}>
-          remove_circle_outline
-        </i>
-      </TextButton>
+      <Button
+        size="xsmall"
+        onClick={onRemoveCheckIn}
+        progress={loading}
+        type="tertiary"
+        startIcon={<RemoveCircleOutline />}
+      >
+        Mark as unwatched
+      </Button>
     )
   } else {
     return (
-      <TextButton onClick={onCheckIn}>
-        Mark as watched{' '}
-        <i className="material-icons" style={iconStyle}>
-          tv
-        </i>
-      </TextButton>
+      <Button
+        size="xsmall"
+        onClick={onCheckIn}
+        progress={loading}
+        type="tertiary"
+        startIcon={<Tv />}
+      >
+        Mark as watched
+      </Button>
     )
   }
 }
@@ -84,32 +81,22 @@ function useCheckInMutaion(episode: SeasonEpisode) {
   const [checkIn, { loading: checkInLoading }] = useCheckInEpisodeMutation({
     update(cache, { data }) {
       setNextEpisodeToWatchInCahe(cache, episode, 1, data && data.checkInEpisode!.episode)
-      updateHistoryToEpisodeInCahe(
-        cache,
-        episode,
-        data && data.checkInEpisode!.episode,
-        episodeToUpdate => {
-          // TODO: Get this from Dragonstone instead
-          episodeToUpdate.watched.push({
-            __typename: 'WatchedEpisode',
-            time: unixTimestamp(),
-            type: 'checkIn'
-          })
-        }
-      )
+      updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
+        // TODO: Get this from Dragonstone instead
+        episodeToUpdate.watched.push({
+          __typename: 'WatchedEpisode',
+          time: unixTimestamp(),
+          type: 'checkIn'
+        })
+      })
     }
   })
   const [removeCheckIn, { loading: removeCheckInLoading }] = useRemoveCheckedInEpisodeMutation({
     update(cache, { data }) {
       setNextEpisodeToWatchInCahe(cache, episode, -1, data && data.removeCheckedInEpisode!.episode)
-      updateHistoryToEpisodeInCahe(
-        cache,
-        episode,
-        data && data.removeCheckedInEpisode!.episode,
-        episodeToUpdate => {
-          episodeToUpdate.watched = []
-        }
-      )
+      updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
+        episodeToUpdate.watched = []
+      })
     }
   })
 
@@ -156,7 +143,6 @@ function setNextEpisodeToWatchInCahe(
 function updateHistoryToEpisodeInCahe(
   cache: DataProxy,
   episode: SeasonEpisode,
-  response: NextEpisode,
   updateFn: (episode: SeasonEpisode) => void
 ) {
   const cacheSeason = cache.readQuery<
@@ -169,7 +155,7 @@ function updateHistoryToEpisodeInCahe(
       season: extractSeasonNumber(episode.episodenumber)
     }
   })
-  if (!cacheSeason || !response) {
+  if (!cacheSeason || !episode) {
     return
   }
   cache.writeQuery({
@@ -186,9 +172,4 @@ function updateHistoryToEpisodeInCahe(
       season: extractSeasonNumber(episode.episodenumber)
     }
   })
-}
-
-const iconStyle = {
-  fontSize: 'inherit',
-  color: melrose
 }

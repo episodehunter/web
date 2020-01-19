@@ -1,12 +1,11 @@
 import React from 'react'
-import styled from 'styled-components'
+import { PageWrapper } from '../components/atoms/page-wrapper'
 import { EmptyState } from '../components/empty-state'
 import { ErrorState } from '../components/error-state'
 import { Following } from '../components/following'
-import { shark } from '../utils/colors'
-import { SpinnerPage } from './spinner.page'
 import { useGetFollowingShowsQuery } from '../dragonstone'
 import { FollowingShow } from '../types/following'
+import { SpinnerPage } from './spinner.page'
 
 export const FollowingPage = () => {
   const { loading, error, data } = useGetFollowingShowsQuery()
@@ -26,9 +25,9 @@ export const FollowingPage = () => {
   const shows = data.following.map(following => following.show).sort(sortShows)
 
   return (
-    <Wrapper>
+    <PageWrapper>
       <Following shows={shows} />
-    </Wrapper>
+    </PageWrapper>
   )
 }
 
@@ -51,11 +50,3 @@ function sortShows(s1: FollowingShow, s2: FollowingShow) {
     return p
   }
 }
-
-// TODO: Do we need this?
-const Wrapper = styled.div`
-  background-color: ${shark};
-  display: flex;
-  justify-content: center;
-  padding-top: 70px;
-`

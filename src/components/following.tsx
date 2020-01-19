@@ -1,29 +1,28 @@
 import React from 'react'
-import styled from 'styled-components'
-import { media } from '../styles/media-queries'
-import { ShowCard } from './show-card/show-card'
-import { H1 } from './text'
 import { FollowingShow } from '../types/following'
+import { ShowListWrapper } from './atoms/show-list-wrapper'
+import { H1 } from './atoms/typography'
+import { ShowCard } from './show-card/show-card'
 
 interface Props {
   shows: FollowingShow[]
 }
 
 export const Following = ({ shows }: Props) => (
-  <Wrapper>
+  <>
     <H1>Following</H1>
-    <FollowingWrapper>
+    <ShowListWrapper>
       {shows.map(show => (
         <ShowCard
           key={show.ids.id}
           showId={show.ids.id}
           tvdbId={show.ids.tvdb}
-          topRight={show.name}
-          bottomRight={episodeLeftText(show.nextToWatch.numberOfEpisodesToWatch)}
+          showName={show.name}
+          bottomText={episodeLeftText(show.nextToWatch.numberOfEpisodesToWatch)}
         />
       ))}
-    </FollowingWrapper>
-  </Wrapper>
+    </ShowListWrapper>
+  </>
 )
 
 export const episodeLeftText = (n: number) => {
@@ -32,18 +31,3 @@ export const episodeLeftText = (n: number) => {
   }
   return `You have ${n} episodes left`
 }
-
-const FollowingWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  ${media.mobile`
-    grid-template-columns: 1fr;
-  `};
-`
-
-const Wrapper = styled.div`
-  ${media.giant`width: 80%;`};
-  ${media.desktop`width: 80%;`};
-  ${media.tablet`width: 90%;`};
-  width: 95%;
-`

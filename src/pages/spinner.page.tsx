@@ -1,14 +1,6 @@
+import { styled } from '@material-ui/core'
 import React from 'react'
-import styled from 'styled-components'
 import { Spinner } from '../components/spinner'
-
-const Content = styled.div`
-  width: 100%;
-  height: calc(100vh - 50px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
 
 export const SpinnerPage = () => (
   <Content>
@@ -16,8 +8,10 @@ export const SpinnerPage = () => (
   </Content>
 )
 
-export const AbsoluteSpinnerPage = () => (
-  <Content style={{ position: 'absolute', top: 0 }}>
-    <Spinner />
-  </Content>
-)
+const Content = styled('div')({
+  width: '100%',
+  height: 'calc(100vh - 50px)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+})

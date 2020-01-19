@@ -1,16 +1,14 @@
-import React from 'react'
-import styled from 'styled-components'
 import { captureException } from '@sentry/browser'
+import { isSameDay } from 'date-fns'
+import React from 'react'
+import { PageWrapper } from '../components/atoms/page-wrapper'
 import { EmptyState } from '../components/empty-state'
-import { Upcoming } from '../components/upcoming'
-import { media } from '../styles/media-queries'
-import { shark } from '../utils/colors'
-import { SpinnerPage } from './spinner.page'
 import { ErrorState } from '../components/error-state'
+import { Upcoming } from '../components/upcoming'
 import { useGetUpcomingQuery } from '../dragonstone'
 import { UpcomingShow } from '../types/upcoming'
-import { now, isBeforeDaysFrom, parse } from '../utils/date.utils'
-import { isSameDay } from 'date-fns'
+import { isBeforeDaysFrom, now, parse } from '../utils/date.utils'
+import { SpinnerPage } from './spinner.page'
 
 export const UpcomingPage = () => {
   const { data, error, loading } = useGetUpcomingQuery()
@@ -31,20 +29,39 @@ export const UpcomingPage = () => {
   }
 
   return (
-    <Wrapper>
-      <UpcomingWrapper>
-        <Upcoming title={'Just aired'} shows={upcoming.justAired} episodeKey="justAirdEpisode" />
-        <Upcoming title={'Today'} shows={upcoming.today} episodeKey="upcomingEpisode" />
-        <Upcoming
-          title={'The week ahead'}
-          shows={upcoming.weekAhead}
-          episodeKey="upcomingEpisode"
-        />
-        <Upcoming title={'Upcoming'} shows={upcoming.upcoming} episodeKey="upcomingEpisode" />
-        <Upcoming title={'TBA'} shows={upcoming.tba} episodeKey="upcomingEpisode" />
-        <Upcoming title={'Ended'} shows={upcoming.ended} episodeKey="upcomingEpisode" />
-      </UpcomingWrapper>
-    </Wrapper>
+    <PageWrapper>
+      <Upcoming
+        showDate={true}
+        title={'Just aired'}
+        shows={upcoming.justAired}
+        episodeKey="justAirdEpisode"
+      />
+      <Upcoming
+        showDate={false}
+        title={'Today'}
+        shows={upcoming.today}
+        episodeKey="upcomingEpisode"
+      />
+      <Upcoming
+        showDate={true}
+        title={'The week ahead'}
+        shows={upcoming.weekAhead}
+        episodeKey="upcomingEpisode"
+      />
+      <Upcoming
+        showDate={true}
+        title={'Upcoming'}
+        shows={upcoming.upcoming}
+        episodeKey="upcomingEpisode"
+      />
+      <Upcoming showDate={false} title={'TBA'} shows={upcoming.tba} episodeKey="upcomingEpisode" />
+      <Upcoming
+        showDate={false}
+        title={'Ended'}
+        shows={upcoming.ended}
+        episodeKey="upcomingEpisode"
+      />
+    </PageWrapper>
   )
 }
 
@@ -91,17 +108,3 @@ function calculateUpcoming(upcomingShows: UpcomingShow[], today = now()): Upcomi
   }
   return upcoming
 }
-
-const UpcomingWrapper = styled.div`
-  ${media.giant`width: 80%;`};
-  ${media.desktop`width: 80%;`};
-  ${media.tablet`width: 90%;`};
-  width: 95%;
-`
-
-const Wrapper = styled.div`
-  padding-top: 70px;
-  background-color: ${shark};
-  display: flex;
-  justify-content: center;
-`

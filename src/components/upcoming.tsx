@@ -1,66 +1,49 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Dragonstone } from '@episodehunter/types'
-import { media } from '../styles/media-queries'
-import { UpcomingEpisodeCard } from './poster-cards/upcoming-episode-card'
 import { UpcomingShow } from '../types/upcoming'
+import { ShowCard } from './show-card/show-card'
+import { dateReleaseFormat, parse } from '../utils/date.utils'
+import { ShowListWrapper } from './atoms/show-list-wrapper'
+import { Margin } from './atoms/margin'
+import { H2 } from './atoms/typography'
 
 type Props = {
   title: string
   shows: UpcomingShow[]
   episodeKey: 'upcomingEpisode' | 'justAirdEpisode'
+  showDate: boolean
 }
 
-export const Upcoming = ({ title, shows, episodeKey }: Props) => {
+export const Upcoming = ({ title, shows, episodeKey, showDate }: Props) => {
   if (!shows.length) {
     return null
   }
   return (
-    <UpcomingWrapper>
-      <Timespan>{title}</Timespan>
-      <ShowsWrapper>
+    <Margin bottom={40}>
+      <H2>{title}</H2>
+      <ShowListWrapper>
         {shows.map(show => (
-          <UpcomingEpisodeCard
+          <ShowCard
             key={show.ids.id}
-            episodeAirDate={formatEpisodeAirDate(show.ended, show[episodeKey])}
+            episodeName={show[episodeKey] && show[episodeKey]!.name}
+            episodeNumber={show[episodeKey] && show[episodeKey]!.episodenumber}
+            episodeAirDate={formatEpisodeAirDate(showDate, show[episodeKey])}
             showId={show.ids.id}
             tvdbId={show.ids.tvdb}
             showName={show.name}
           />
         ))}
-      </ShowsWrapper>
-    </UpcomingWrapper>
+      </ShowListWrapper>
+    </Margin>
   )
 }
 
 export const formatEpisodeAirDate = (
-  ended: boolean,
+  showDate: boolean,
   episode: Pick<Dragonstone.Episode, 'aired'> | null
 ) => {
-  if (episode) {
-    return episode.aired
-  } else if (ended) {
-    return 'Ended'
-  } else {
-    return 'TBA'
+  if (!showDate || !episode) {
+    return null
   }
+  return dateReleaseFormat(parse(episode.aired))
 }
-
-const ShowsWrapper = styled.div`
-  display: grid;
-  ${media.giant`grid-template-columns: repeat(6, 1fr);`};
-  ${media.desktop`grid-template-columns: repeat(6, 1fr);`};
-  ${media.tablet`grid-template-columns: repeat(4, 1fr);`};
-  grid-template-columns: 1fr;
-`
-
-const UpcomingWrapper = styled.div`
-  margin-bottom: 40px;
-`
-
-const Timespan = styled.h1`
-  color: white;
-  text-transform: uppercase;
-  font-weight: lighter;
-  font-size: 32px;
-`

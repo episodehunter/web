@@ -6,6 +6,8 @@
       {
         "loose": true
       }
-    ]
+    ],
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-syntax-dynamic-import"
   ]
 }
