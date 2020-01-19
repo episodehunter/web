@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import { isMobile, media } from '../../../styles/media-queries'
+import { isMobile } from '../../../styles/media-queries'
 import { SeasonEpisode } from '../../../types/episode'
 import { episodeNumberToString } from '../../../utils/episode.util'
 import { EllipsisText } from '../../ellipsis-text'
@@ -10,6 +9,7 @@ import { HighlightSpan } from '../../atoms/highlight-span'
 import { AirDate } from './air-date'
 import { WatchedButton } from './watched-button'
 import { WatchedEpisodeDate } from './watched-episode-date'
+import { styled } from '@material-ui/core'
 
 interface Props {
   episode: SeasonEpisode
@@ -53,26 +53,27 @@ const episodeImageProps = (tvdbId: number, theTvDbShowId: number) =>
         style: { flexShrink: 0, borderRadius: 5 }
       }
 
-const HeadlineWrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto 170px;
-  grid-column-gap: 10px;
-  margin-bottom: 5px;
-`
-const EpisodeWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  align-items: center;
-  ${media.tabletAndUp`
-    flex-direction: row;
-    align-items: normal;
-  `};
-`
-const DescriptionWrapper = styled.div`
-  flex-grow: 1;
-  margin: 20px;
-  ${media.tabletAndUp`
-    margin: 0 0 0 20px;
-  `};
-`
+const HeadlineWrapper = styled('div')({
+  display: 'grid',
+  gridTemplateColumns: 'auto 170px',
+  gridColumnGap: '10px',
+  marginBottom: '5px'
+})
+
+const EpisodeWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  marginBottom: '20px',
+  alignItems: 'center',
+  [theme.breakpoints.up('md')]: {
+    flexDirection: 'row',
+    alignItems: 'normal'
+  }
+}))
+const DescriptionWrapper = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  margin: '20px',
+  [theme.breakpoints.up('md')]: {
+    margin: '0 0 0 20px'
+  }
+}))

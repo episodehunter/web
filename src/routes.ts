@@ -14,6 +14,7 @@ export const Routes = {
   plex: '/plex',
   googlehome: '/googlehome',
   faq: '/faq',
+  contact: '/contact',
   landingPage: '/landingpage',
   forgotPassword: '/forgotpassword'
 } as const

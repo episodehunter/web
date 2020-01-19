@@ -1,10 +1,9 @@
 import { extractSeasonNumber } from '@episodehunter/utils'
-import { Tab, Tabs } from '@material-ui/core'
+import { Tab, Tabs, styled } from '@material-ui/core'
 import { motion } from 'framer-motion'
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { useNavigation } from 'the-react-router'
-import { H3 } from '../components/atoms/typography'
+import { H1, H3 } from '../components/atoms/typography'
 import { Margin } from '../components/atoms/margin'
 import { EllipsisText } from '../components/ellipsis-text'
 import { ErrorState } from '../components/error-state'
@@ -15,9 +14,8 @@ import { Facts } from '../components/show/facts'
 import { FollowingButton } from '../components/show/following-button'
 import { NextEpisode } from '../components/show/next-episode'
 import { Progress } from '../components/show/progress'
-import { H1 } from '../components/text'
 import { useGetShowQuery } from '../dragonstone'
-import { HideOnMobile, ShowOnlyOnMobile, media } from '../styles/media-queries'
+import { HideOnMobile, ShowOnlyOnMobile } from '../styles/media-queries'
 
 export const ShowPage = () => {
   const {
@@ -85,10 +83,10 @@ export const ShowPage = () => {
             <Content>
               <HideOnMobile
                 render={() => (
-                  <FactWarpper>
+                  <div>
                     <H3>Facts</H3>
                     <Facts show={show} />
-                  </FactWarpper>
+                  </div>
                 )}
               ></HideOnMobile>
               <Progress
@@ -134,71 +132,73 @@ export const ShowPage = () => {
   )
 }
 
-const OuterWrapper = styled.div`
-  ${media.tabletAndUp`padding-top: 70px;`};
-  ${media.mobile`padding-bottom: 70px;`};
-`
+const OuterWrapper = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    paddingTop: 70
+  },
+  [theme.breakpoints.down('sm')]: {
+    paddingBottom: 70
+  }
+}))
 
-const Content = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  ${media.tabletAndUp`
-    width: 1000px;
-    grid-template-columns: 1fr 1fr 1fr;
-  `};
-`
+const Content = styled('div')(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  [theme.breakpoints.up('md')]: {
+    width: '1000px',
+    gridTemplateColumns: '1fr 1fr 1fr'
+  }
+}))
 
-const ShowTitle = styled(H1)`
-  max-width: calc(100vw - 40px);
-  word-wrap: break-word;
-  ${media.mobile`
-    font-size: 15.5vw;
-  `};
-`
+const ShowTitle = styled(H1)(({ theme }) => ({
+  maxWidth: 'calc(100vw - 40px)',
+  wordWrap: 'break-word',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '15.5vw'
+  }
+}))
 
-const SeasonButtonsWrapper = styled.div`
-  color: #fff;
-  margin: 20px;
-  width: 100%;
-  ${media.tabletAndUp`
-    width: 1000px;
-  `};
-`
+const SeasonButtonsWrapper = styled('div')(({ theme }) => ({
+  color: '#fff',
+  margin: '20px',
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    width: '1000px'
+  }
+}))
 
-const EpisodesWrapper = styled.div`
-  ${media.tabletAndUp`
-    width: 1000px;
-  `};
-`
+const EpisodesWrapper = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    width: '1000px'
+  }
+}))
 
-const PosterAndTitleWrapper = styled.div`
-  ${media.tabletAndUp`
-    display: flex;
-    width: 1000px;
-    margin-top: -66px;
-  `};
-`
+const PosterAndTitleWrapper = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+    width: '1000px',
+    marginTop: '-66px'
+  }
+}))
 
-const ShowTitleAndOverview = styled.div`
-  margin: 20px 20px 0 20px;
-  ${media.tabletAndUp`
-    margin: 66px 0 0 20px;
-  `};
-`
+const ShowTitleAndOverview = styled('div')(({ theme }) => ({
+  margin: '20px 20px 0 20px',
+  [theme.breakpoints.up('md')]: {
+    margin: '66px 0 0 20px'
+  }
+}))
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
+const Wrapper = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+})
 
-const FactWarpper = styled.div``
-
-const NextEpisodeWarpper = styled(FactWarpper)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  ${media.tabletAndUp`
-    align-items: flex-end;
-  `};
-`
+const NextEpisodeWarpper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-end'
+  }
+}))

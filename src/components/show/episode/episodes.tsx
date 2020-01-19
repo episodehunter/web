@@ -1,7 +1,6 @@
 import { ShowId } from '@episodehunter/types'
 import { LinearProgress } from '@material-ui/core'
 import React, { useEffect, useRef } from 'react'
-import styled from 'styled-components'
 import { useGetEpisodesForSeasonLazyQuery } from '../../../dragonstone'
 import { Episode } from './episode'
 import { AnimatedListItem } from '../../atoms/animated-list-item'
@@ -31,7 +30,7 @@ export const Episodes = ({ showId, theTvDbShowId, season }: Props) => {
   }
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <div ref={wrapperRef}>
       {data.season.map((episode, i) => {
         return (
           <AnimatedListItem index={i} key={episode.episodenumber}>
@@ -39,11 +38,6 @@ export const Episodes = ({ showId, theTvDbShowId, season }: Props) => {
           </AnimatedListItem>
         )
       })}
-    </Wrapper>
+    </div>
   )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`

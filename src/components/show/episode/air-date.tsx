@@ -1,7 +1,7 @@
 import React from 'react'
 import { melrose } from '../../../utils/colors'
 import { dateReleaseFormat, parse } from '../../../utils/date.utils'
-import { SmallText } from '../../text'
+import { Subtitle2 } from '../../atoms/typography'
 
 type Props = {
   firstAired: string
@@ -16,12 +16,12 @@ export const AirDate = ({ firstAired }: Props) => {
     return null
   }
   return (
-    <SmallText>
+    <Subtitle2>
       <i className="material-icons" style={iconStyle}>
         calendar_today
       </i>
       {releaseText}
-    </SmallText>
+    </Subtitle2>
   )
 }
 

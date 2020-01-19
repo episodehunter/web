@@ -1,32 +1,30 @@
 import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
-import { Body1, PageTitle } from '../../components/atoms/typography'
-import { Spinner } from '../../components/spinner'
+import { Body1, H2 } from '../../components/atoms/typography'
 import { useGetUserQuery } from '../../dragonstone'
+import { SpinnerPage } from '../spinner.page'
 
-export const KodiPage = () => {
+export default () => {
   const { data, loading } = useGetUserQuery()
 
-  const username = !loading && data ? data.me.username : ''
-  const apiKey = !loading && data ? data.me.apikey : ''
+  if (loading || !data) {
+    return <SpinnerPage />
+  }
+
+  const username = data.me.username
+  const apiKey = data.me.apikey
 
   return (
     <PageWrapper>
-      <PageTitle>KODI</PageTitle>
+      <H2>KODI</H2>
       <Body1>
         Install EpisodeHunter&apos;s KODI add-on to release the full power of EpisodeHunter.
       </Body1>
       <Body1 style={{ margin: 0 }}>
-        Your username:{' '}
-        {username ? (
-          <code>{username}</code>
-        ) : (
-          <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
-        )}
+        Your username: <code>{username}</code>
       </Body1>
       <Body1 style={{ margin: 0 }}>
-        Your api key:{' '}
-        {apiKey ? <code>{apiKey}</code> : <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />}
+        Your api key: <code>{apiKey}</code>
       </Body1>
       <Body1>Option 1 (recommended):</Body1>
       <ul>
@@ -41,19 +39,8 @@ export const KodiPage = () => {
         </li>
         <li>
           <Body1>
-            4. Then fill in &quot;
-            {username ? (
-              <code>{username}</code>
-            ) : (
-              <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
-            )}
-            &quot; as your username and &quot;
-            {apiKey ? (
-              <code>{apiKey}</code>
-            ) : (
-              <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
-            )}
-            &quot; as your api key
+            4. Then fill in &quot;<code>{username}</code>&quot; as your username and &quot;
+            <code>{apiKey}</code>&quot; as your api key
           </Body1>
         </li>
         <li>

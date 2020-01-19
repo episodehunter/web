@@ -1,11 +1,11 @@
+import { styled } from '@material-ui/core'
 import React from 'react'
-import styled from 'styled-components'
 import {
   numberOfEpisodesToWatchPercent,
   numberOfUnwatchedHoursLeft
 } from '../../utils/episode.util'
+import { Body1, H3, Subtitle1 } from '../atoms/typography'
 import { GapProgress } from '../progress/gap-progress'
-import { H3, Body1, Subtitle1 } from '../atoms/typography'
 
 interface Props {
   episodeRuntime: number
@@ -49,8 +49,8 @@ function HoursLeftText({ numberOfHoursLeft }: { numberOfHoursLeft: number }) {
   )
 }
 
-const ProgressWarpper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
+const ProgressWarpper = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+})

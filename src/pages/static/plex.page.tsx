@@ -1,18 +1,22 @@
 import React from 'react'
 import { PageWrapper } from '../../components/atoms/page-wrapper'
-import { Body1, PageTitle } from '../../components/atoms/typography'
-import { Spinner } from '../../components/spinner'
+import { Body1, H2 } from '../../components/atoms/typography'
 import { useGetUserQuery } from '../../dragonstone'
+import { SpinnerPage } from '../spinner.page'
 
-export const PlexPage = () => {
+export default () => {
   const { data, loading } = useGetUserQuery()
 
-  const username = !loading && data ? data.me.username : ''
-  const apiKey = !loading && data ? data.me.apikey : ''
+  if (loading || !data) {
+    return <SpinnerPage />
+  }
+
+  const username = data.me.username
+  const apiKey = data.me.apikey
 
   return (
     <PageWrapper>
-      <PageTitle>PLEX</PageTitle>
+      <H2>PLEX</H2>
       <Body1>
         Installing EpisodeHunter for plex is easy peasy but you are required a Plex Pass
         Subscription.
@@ -27,13 +31,9 @@ export const PlexPage = () => {
         </a>
       </Body1>
       <Body1>
-        {username && apiKey ? (
-          <code
-            style={{ wordBreak: 'break-all' }}
-          >{`https://scrobble.episodehunter.tv/plex?username=${username}&key=${apiKey}`}</code>
-        ) : (
-          <Spinner size={16} style={{ margin: '0 0 -4px 0' }} />
-        )}
+        <code
+          style={{ wordBreak: 'break-all' }}
+        >{`https://scrobble.episodehunter.tv/plex?username=${username}&key=${apiKey}`}</code>
       </Body1>
     </PageWrapper>
   )

@@ -5,7 +5,7 @@ import React from 'react'
 import { WatchedEpisode } from '../../../types/episode'
 import { whiteIsh } from '../../../utils/colors'
 import { dateReleaseFormat, format } from '../../../utils/date.utils'
-import { BottomTextWrapper } from '../../episode/bottom-text-wrapper'
+import { BottomContentOnImage } from '../../episode/bottom-content-on-image'
 
 interface Props {
   watched: WatchedEpisode[]
@@ -15,14 +15,14 @@ export const WatchedEpisodeDate = ({ watched }: Props) => {
   const latestWatched = getLatestWatchInfo(watched)
   if (!latestWatched) {
     return (
-      <BottomTextWrapper style={{ background: 'none' }}>
+      <BottomContentOnImage style={{ background: 'none' }}>
         <AnimatePresence />
-      </BottomTextWrapper>
+      </BottomContentOnImage>
     )
   }
   const time = latestWatched && new Date(latestWatched.time * 1000)
   return (
-    <BottomTextWrapper>
+    <BottomContentOnImage>
       <AnimatePresence>
         {latestWatched && (
           <motion.div
@@ -42,7 +42,7 @@ export const WatchedEpisodeDate = ({ watched }: Props) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </BottomTextWrapper>
+    </BottomContentOnImage>
   )
 }
 

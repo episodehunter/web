@@ -60,7 +60,3 @@ export const Caption = createTextComponent('caption', 'p', 0)
 export const Overline = createTextComponent('overline', 'p', 0)
 export const Subtitle1 = createTextComponent('subtitle1', 'span', 0)
 export const Subtitle2 = createTextComponent('subtitle2', 'span', 0)
-
-export const PageTitle: React.FC = ({ children }) => {
-  return <H2 style={{ fontSize: 32 }}>{children}</H2>
-}

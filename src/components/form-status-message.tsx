@@ -1,26 +1,28 @@
 import React from 'react'
-import styled from 'styled-components'
-import { P } from './text'
+import { styled } from '@material-ui/core'
+import { Body1 } from './atoms/typography'
 
 type Props = {
   message?: string
-  success?: boolean
+  success?: true
 }
 
 export const FormStatusMessage = ({ message, success }: Props) => {
   if (!message) return null
 
+  const style = {
+    backgroundColor: success ? '#6da925' : '#af574e'
+  }
+
   return (
-    <Wrapper success={success}>
-      <P>{message}</P>
+    <Wrapper style={style}>
+      <Body1>{message}</Body1>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  width: 100%;
-  margin: 20px 0;
-  background-color: ${({ success }: { success?: boolean }) => (success ? '#43ba73' : '#af574e')};
-  text-align: center;
-  padding: 1px 0;
-`
+const Wrapper = styled('div')({
+  width: '100%',
+  padding: '20px 0',
+  textAlign: 'center'
+})

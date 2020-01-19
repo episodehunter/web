@@ -1,11 +1,11 @@
-import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import React from 'react'
 import { NextEpisodeToWatch } from '../../types/show'
 import { dateReleaseFormat, parse } from '../../utils/date.utils'
 import { episodeNumberToString } from '../../utils/episode.util'
-import { BottomTextWrapper } from '../episode/bottom-text-wrapper'
+import { Body2, H3 } from '../atoms/typography'
+import { BottomContentOnImage } from '../episode/bottom-content-on-image'
 import { EpisodeImage } from '../episode/episode-image'
-import { H3, P2 } from '../text'
 
 export const NextEpisode = ({
   episode,
@@ -33,17 +33,16 @@ export const NextEpisode = ({
             exit={{ opacity: 0 }}
           >
             <EpisodeImage tvdbId={episode.ids.tvdb} theTvDbShowId={theTvDbShowId}>
-              <BottomTextWrapper>
-                <P2 margin={0}>
+              <BottomContentOnImage>
+                <Body2>
                   {episodeNumberToString(episode.episodenumber)} {episode.name}
-                </P2>
-                <P2 margin={0}>
+                  <br />
                   {dateReleaseFormat(parse(episode.aired), {
                     future: date => `Airs ${date}`,
                     past: date => `Aird ${date}`
                   })}
-                </P2>
-              </BottomTextWrapper>
+                </Body2>
+              </BottomContentOnImage>
             </EpisodeImage>
           </motion.div>
         </AnimatePresence>

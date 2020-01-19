@@ -1,12 +1,12 @@
-import { AppBar, styled as muiStyled, Tab, Tabs, Toolbar } from '@material-ui/core'
+import { AppBar, Divider, styled, Tab, Tabs, Toolbar } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import { fade } from '@material-ui/core/styles'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search'
 import React, { useState } from 'react'
 import { useNavigation } from 'the-react-router'
+import { useUser } from '../../contexts/user-context'
 import logoPath from '../../logo96.png'
 import { Routes } from '../../routes'
 import { colors } from '../../utils/colors'
@@ -14,6 +14,7 @@ import { SearchBar } from './search-bar'
 
 export const DesktopNavbar = () => {
   const { navigate, state } = useNavigation()
+  const { auth } = useUser()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const isMenuOpen = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -63,6 +64,34 @@ export const DesktopNavbar = () => {
             <MenuItem key={Routes.settings} onClick={closeAndNavigate(Routes.settings)}>
               Settings
             </MenuItem>
+            <MenuItem key="logout" onClick={() => auth.signOut()}>
+              Logout
+            </MenuItem>
+            <Divider />
+            <MenuItem key="contact" onClick={closeAndNavigate(Routes.contact)}>
+              Contact
+            </MenuItem>
+            <MenuItem key="plex" onClick={closeAndNavigate(Routes.plex)}>
+              Plex
+            </MenuItem>
+            <MenuItem key="kodi" onClick={closeAndNavigate(Routes.kodi)}>
+              Kodi
+            </MenuItem>
+            <MenuItem key="googlehome" onClick={closeAndNavigate(Routes.googlehome)}>
+              Google Home
+            </MenuItem>
+            <MenuItem key="faq" onClick={closeAndNavigate(Routes.faq)}>
+              FAQ
+            </MenuItem>
+            <MenuItem key="about" onClick={closeAndNavigate(Routes.about)}>
+              About
+            </MenuItem>
+            <MenuItem
+              key="github"
+              onClick={() => (window.location.href = 'https://github.com/episodehunter/web')}
+            >
+              Github ♥️
+            </MenuItem>
           </Menu>
         </StyledToolbar>
       </StyledAppBar>
@@ -70,32 +99,32 @@ export const DesktopNavbar = () => {
   )
 }
 
-const Logo = muiStyled('img')({
+const Logo = styled('img')({
   height: '50px',
   cursor: 'pointer'
 })
 
-const StyledToolbar = muiStyled(Toolbar)({
+const StyledToolbar = styled(Toolbar)({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr 50px'
 })
-const StyledTabs = muiStyled(Tabs)({
+const StyledTabs = styled(Tabs)({
   justifySelf: 'end'
 })
 
-const StyledAppBar = muiStyled(AppBar)({
+const StyledAppBar = styled(AppBar)({
   backgroundColor: colors.backgroundColor,
   zIndex: 100
 })
 
-const SearchWrapper = muiStyled('div')(({ theme }) => ({
+const SearchWrapper = styled('div')({
   display: 'grid',
   gridTemplateColumns: '34px 1fr',
-  backgroundColor: fade(theme.palette.common.white, 0.15),
+  backgroundColor: '#424242',
   borderRadius: '4px'
-}))
+})
 
-const StyledSearchIcon = muiStyled(SearchIcon)({
+const StyledSearchIcon = styled(SearchIcon)({
   padding: '0 5px',
   marginTop: '3px'
 })
