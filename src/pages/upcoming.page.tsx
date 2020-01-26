@@ -106,5 +106,14 @@ function calculateUpcoming(upcomingShows: UpcomingShow[], today = now()): Upcomi
       }
     }
   }
+  upcoming.justAired.sort((a, b) =>
+    a.justAirdEpisode!.aired.localeCompare(b.justAirdEpisode!.aired)
+  )
+  upcoming.weekAhead.sort((a, b) =>
+    a.upcomingEpisode!.aired.localeCompare(b.upcomingEpisode!.aired)
+  )
+  upcoming.upcoming.sort((a, b) => a.upcomingEpisode!.aired.localeCompare(b.upcomingEpisode!.aired))
+  upcoming.tba.sort((a, b) => a.name.localeCompare(b.name))
+  upcoming.ended.sort((a, b) => a.name.localeCompare(b.name))
   return upcoming
 }
