@@ -9,44 +9,41 @@ export function useServiceWorker() {
       return
     }
 
-    // Use the window load event to keep the page load performant
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js').then(registration => {
-        // if there's no controller, this page wasn't loaded
-        // via a service worker, so they're looking at the latest version.
-        // In that case, exit early
-        if (!navigator.serviceWorker.controller) {
-          return
-        }
+    navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      // if there's no controller, this page wasn't loaded
+      // via a service worker, so they're looking at the latest version.
+      // In that case, exit early
+      if (!navigator.serviceWorker.controller) {
+        return
+      }
 
-        // if there's an updated worker already waiting, update
-        if (registration.waiting) {
-          setNewSw(registration.waiting)
-          return
-        }
+      // if there's an updated worker already waiting, update
+      if (registration.waiting) {
+        setNewSw(registration.waiting)
+        return
+      }
 
-        // if there's an updated worker installing, track its
-        // progress. If it becomes "installed", update
-        if (registration.installing) {
-          registration.addEventListener('statechange', () => {
-            if (registration.installing?.state == 'installed') {
-              setNewSw(registration.installing)
-            }
-          })
-          return
-        }
+      // if there's an updated worker installing, track its
+      // progress. If it becomes "installed", update
+      if (registration.installing) {
+        registration.addEventListener('statechange', () => {
+          if (registration.installing?.state == 'installed') {
+            setNewSw(registration.installing)
+          }
+        })
+        return
+      }
 
-        // otherwise, listen for new installing workers arriving.
-        // If one arrives, track its progress.
-        // If it becomes "installed", update
-        registration.addEventListener('updatefound', () => {
-          const newServiceWorker = registration.installing
+      // otherwise, listen for new installing workers arriving.
+      // If one arrives, track its progress.
+      // If it becomes "installed", update
+      registration.addEventListener('updatefound', () => {
+        const newServiceWorker = registration.installing
 
-          newServiceWorker?.addEventListener('statechange', () => {
-            if (newServiceWorker.state == 'installed') {
-              setNewSw(newServiceWorker)
-            }
-          })
+        newServiceWorker?.addEventListener('statechange', () => {
+          if (newServiceWorker.state == 'installed') {
+            setNewSw(newServiceWorker)
+          }
         })
       })
     })

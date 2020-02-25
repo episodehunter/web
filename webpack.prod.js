@@ -1,15 +1,11 @@
 const path = require('path')
 const common = require('./webpack.base.js')
-const { InjectManifest } = require('workbox-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 
 module.exports = Object.assign({}, common, {
   mode: 'production',
   plugins: [
     ...common.plugins,
-    new InjectManifest({
-      swSrc: path.join('src', 'service-worker.js')
-    }),
     new WebpackPwaManifest({
       short_name: 'Episodehunter',
       name: 'Episodehunter',
