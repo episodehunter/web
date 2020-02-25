@@ -3,7 +3,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || [])
 workbox.routing.registerNavigationRoute('/index.html')
 
 self.addEventListener('message', function(event) {
-  if (event.data.action === 'skipWaiting') {
+  if (event.data === 'skipWaiting') {
     self.skipWaiting()
   }
 })

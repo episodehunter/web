@@ -31,9 +31,9 @@ export function useServiceWorker() {
           registration.addEventListener('statechange', () => {
             if (registration.installing?.state == 'installed') {
               setNewSw(registration.installing)
-              return
             }
           })
+          return
         }
 
         // otherwise, listen for new installing workers arriving.
@@ -45,7 +45,6 @@ export function useServiceWorker() {
           newServiceWorker?.addEventListener('statechange', () => {
             if (newServiceWorker.state == 'installed') {
               setNewSw(newServiceWorker)
-              newServiceWorker.postMessage({ updateSw: true })
             }
           })
         })
@@ -61,7 +60,7 @@ export function useServiceWorker() {
 
   const showAppUpdateModal = Boolean(newSw)
   const updateServiceWorker = () => {
-    newSw?.postMessage({ updateSw: true })
+    newSw?.postMessage('skipWaiting')
   }
   const ignore = () => {
     setNewSw(null)
