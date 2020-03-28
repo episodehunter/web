@@ -13,7 +13,7 @@ import {
   GetShowQueryVariables,
   RemoveCheckedInEpisodeMutation,
   useCheckInEpisodeMutation,
-  useRemoveCheckedInEpisodeMutation
+  useRemoveCheckedInEpisodeMutation,
 } from '../../../dragonstone'
 import { SeasonEpisode } from '../../../types/episode'
 import { Button } from '../../atoms/button'
@@ -33,9 +33,9 @@ export const WatchedButton = ({ episode }: Props) => {
           episodenumber: episode.episodenumber,
           showId: episode.ids.showId,
           time: unixTimestamp(),
-          type: 'checkIn'
-        }
-      }
+          type: 'checkIn',
+        },
+      },
     })
   }
 
@@ -44,9 +44,9 @@ export const WatchedButton = ({ episode }: Props) => {
       variables: {
         episode: {
           episodenumber: episode.episodenumber,
-          showId: episode.ids.showId
-        }
-      }
+          showId: episode.ids.showId,
+        },
+      },
     })
   }
 
@@ -86,10 +86,10 @@ function useCheckInMutaion(episode: SeasonEpisode) {
         episodeToUpdate.watched.push({
           __typename: 'WatchedEpisode',
           time: unixTimestamp(),
-          type: 'checkIn'
+          type: 'checkIn',
         })
       })
-    }
+    },
   })
   const [removeCheckIn, { loading: removeCheckInLoading }] = useRemoveCheckedInEpisodeMutation({
     update(cache, { data }) {
@@ -97,7 +97,7 @@ function useCheckInMutaion(episode: SeasonEpisode) {
       updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
         episodeToUpdate.watched = []
       })
-    }
+    },
   })
 
   const loading = checkInLoading || removeCheckInLoading
@@ -122,7 +122,7 @@ function setNextEpisodeToWatchInCahe(
 ) {
   const cacheShow = cache.readQuery<GetShowQuery, GetShowQueryVariables>({
     query: GetShowDocument,
-    variables: { id: episode.ids.showId }
+    variables: { id: episode.ids.showId },
   })
   if (!cacheShow || !nextEpisode) {
     return
@@ -133,7 +133,7 @@ function setNextEpisodeToWatchInCahe(
       draft.show!.nextToWatch.episode = nextEpisode
     }),
     query: GetShowDocument,
-    variables: { id: episode.ids.showId }
+    variables: { id: episode.ids.showId },
   })
 }
 
@@ -152,8 +152,8 @@ function updateHistoryToEpisodeInCahe(
     query: GetEpisodesForSeasonDocument,
     variables: {
       showId: episode.ids.showId,
-      season: extractSeasonNumber(episode.episodenumber)
-    }
+      season: extractSeasonNumber(episode.episodenumber),
+    },
   })
   if (!cacheSeason || !episode) {
     return
@@ -169,7 +169,7 @@ function updateHistoryToEpisodeInCahe(
     query: GetEpisodesForSeasonDocument,
     variables: {
       showId: episode.ids.showId,
-      season: extractSeasonNumber(episode.episodenumber)
-    }
+      season: extractSeasonNumber(episode.episodenumber),
+    },
   })
 }

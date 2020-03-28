@@ -67,5 +67,5 @@ const SearcBarhWrapper = styled('div')({
   display: 'grid',
   gridTemplateColumns: 'auto 50px',
   alignItems: 'center',
-  backgroundColor: '#424242'
+  backgroundColor: '#424242',
 })

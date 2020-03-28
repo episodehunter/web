@@ -38,7 +38,7 @@ export const createAuth = (authWorker: Worker, getClient: () => ApolloClient<unk
       }
       authWorker.addEventListener('message', eventHandler)
       return () => authWorker.removeEventListener('message', eventHandler)
-    }
+    },
   }
   return auth
 }

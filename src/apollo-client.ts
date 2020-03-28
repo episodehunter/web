@@ -10,7 +10,7 @@ const cache = new InMemoryCache({
       default:
         return defaultDataIdFromObject(object)
     }
-  }
+  },
 })
 
 export const client = new ApolloClient({
@@ -20,8 +20,8 @@ export const client = new ApolloClient({
     const token = await auth.getIdToken()
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : ''
-      }
+        authorization: token ? `Bearer ${token}` : '',
+      },
     })
-  }
+  },
 })

@@ -11,7 +11,7 @@ const fuseOptions: FuseOptions<any> = {
   minMatchCharLength: 2,
   threshold: 0.6,
   distance: 100,
-  includeScore: true
+  includeScore: true,
 }
 
 type CutomFuseOptions = typeof fuseOptions
@@ -43,7 +43,7 @@ function getFuse() {
   }
   returnData({
     fetchStatus: 'loading',
-    result: []
+    result: [],
   })
   fetchingFuse = request<GetTitlesQuery>(config.dragonstoneUrl, titlesQuery)
     .then(result => result.titles)
@@ -53,7 +53,7 @@ function getFuse() {
       returnData({
         fetchStatus: 'error',
         error,
-        result: []
+        result: [],
       })
       return new Fuse<Dragonstone.Title, CutomFuseOptions>([], fuseOptions)
     })
@@ -85,7 +85,7 @@ self.addEventListener('message', async event => {
       const result = search(fuse, currectSearchWord)
       returnData({
         fetchStatus: 'loaded',
-        result: result
+        result: result,
       })
       currectSearchWord = ''
     }

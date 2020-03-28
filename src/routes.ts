@@ -16,5 +16,5 @@ export const Routes = {
   faq: '/faq',
   contact: '/contact',
   landingPage: '/landingpage',
-  forgotPassword: '/forgotpassword'
+  forgotPassword: '/forgotpassword',
 } as const

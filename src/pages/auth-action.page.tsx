@@ -17,7 +17,7 @@ enum ResetState {
   codeIsInvalid,
   watingForUser,
   updatingPassword,
-  updatedPassword
+  updatedPassword,
 }
 
 export function AuthAction() {
@@ -124,17 +124,17 @@ export function AuthAction() {
 
 const ActionButton = miStyled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  width: '100% !important'
+  width: '100% !important',
 }))
 
 const Logo = miStyled('img')(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginLeft: 'auto',
   marginRight: 'auto',
-  display: 'block'
+  display: 'block',
 }))
 
 const FormWrapper = miStyled('div')(({ theme }) => ({
   marginTop: theme.spacing(8),
-  width: '100%'
+  width: '100%',
 }))

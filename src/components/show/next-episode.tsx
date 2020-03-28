@@ -9,7 +9,7 @@ import { EpisodeImage } from '../episode/episode-image'
 
 export const NextEpisode = ({
   episode,
-  theTvDbShowId
+  theTvDbShowId,
 }: {
   episode: NextEpisodeToWatch | null
   theTvDbShowId: number
@@ -28,7 +28,7 @@ export const NextEpisode = ({
             animate={{
               opacity: 1,
               x: 0,
-              transition: { damping: 50 }
+              transition: { damping: 50 },
             }}
             exit={{ opacity: 0 }}
           >
@@ -39,7 +39,7 @@ export const NextEpisode = ({
                   <br />
                   {dateReleaseFormat(parse(episode.aired), {
                     future: date => `Airs ${date}`,
-                    past: date => `Aird ${date}`
+                    past: date => `Aird ${date}`,
                   })}
                 </Body2>
               </BottomContentOnImage>

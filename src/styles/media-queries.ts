@@ -8,7 +8,7 @@ export const isMobile = (windowWidth = getWindowWidth()) => windowWidth <= MOBIL
 
 export const HideOnMobile = ({
   render,
-  windowWidth = getWindowWidth()
+  windowWidth = getWindowWidth(),
 }: {
   render: () => JSX.Element
   windowWidth?: number
@@ -21,7 +21,7 @@ export const HideOnMobile = ({
 
 export const ShowOnlyOnMobile = ({
   render,
-  windowWidth = getWindowWidth()
+  windowWidth = getWindowWidth(),
 }: {
   render: () => JSX.Element
   windowWidth?: number

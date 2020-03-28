@@ -66,8 +66,8 @@ export const Button: FC<ButtonProps> = props => {
       TouchRippleProps={{
         classes: {
           child: classes.rippleEffect,
-          rippleVisible: classes.rippleVisible
-        }
+          rippleVisible: classes.rippleVisible,
+        },
       }}
       data-testid={props['data-testid']}
     >
@@ -105,17 +105,17 @@ const getColor = (p: ButtonProps): { bg: string; hover: string } => {
     case 'outlined':
       return {
         bg: 'rgba(0, 0, 0, 0)',
-        hover: colors.neutral.blackish
+        hover: colors.neutral.blackish,
       }
     case 'secondary':
       return {
         bg: colors.palette.secondary[500],
-        hover: colors.palette.secondary[300]
+        hover: colors.palette.secondary[300],
       }
     default:
       return {
         bg: colors.palette.primary[500],
-        hover: colors.palette.primary[300]
+        hover: colors.palette.primary[300],
       }
   }
 }
@@ -124,27 +124,27 @@ const textDecoration = (p: ButtonProps) => (p.type === 'tertiary' ? 'underline' 
 const fontSize = {
   big: '16px',
   small: '14px',
-  xsmall: '12px'
+  xsmall: '12px',
 }
 const lineHeight = {
   big: '20px',
   small: '18px',
-  xsmall: '16px'
+  xsmall: '16px',
 }
 const minWidth = {
   big: '266px',
   small: '120px',
-  xsmall: '50px'
+  xsmall: '50px',
 }
 const minHeight = {
   big: '52px',
   small: '46px',
-  xsmall: '30px'
+  xsmall: '30px',
 }
 const padding = {
   big: '16px 32px',
   small: '12px 24px',
-  xsmall: '8px 16px'
+  xsmall: '8px 16px',
 }
 const size = (obj: { [k in ButtonSize]: string }) => ({ size = 'small' }: ButtonProps) => obj[size]
 
@@ -153,7 +153,7 @@ const useStyles = makeStyles({
     '&:hover': {
       boxShadow: 'none',
       backgroundColor: (p: ButtonProps) => getColor(p).hover,
-      textDecoration
+      textDecoration,
     },
     backgroundColor: (p: ButtonProps) => getColor(p).bg,
     fontWeight: 'bold',
@@ -167,24 +167,24 @@ const useStyles = makeStyles({
     minHeight: size(minHeight),
     boxShadow: 'none',
     borderRadius: '100px',
-    padding: size(padding)
+    padding: size(padding),
   },
   rippleEffect: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   rippleVisible: {
     opacity: 0.3,
     animation: '$KeyframeRippleEffect 550ms cubic-bezier(0.4, 0, 0.2, 1)',
-    transform: 'scale(1)'
+    transform: 'scale(1)',
   },
   '@keyframes KeyframeRippleEffect': {
     '0%': {
       transform: 'scale(0)',
-      opacity: 0.3
+      opacity: 0.3,
     },
     '100%': {
       transform: 'scale(1)',
-      opacity: 0.9
-    }
-  }
+      opacity: 0.9,
+    },
+  },
 })

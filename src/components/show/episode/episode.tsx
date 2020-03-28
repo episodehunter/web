@@ -45,19 +45,19 @@ const episodeImageProps = (tvdbId: number, theTvDbShowId: number) =>
     ? {
         tvdbId,
         theTvDbShowId,
-        width: '100%'
+        width: '100%',
       }
     : {
         tvdbId,
         theTvDbShowId,
-        style: { flexShrink: 0, borderRadius: 5 }
+        style: { flexShrink: 0, borderRadius: 5 },
       }
 
 const HeadlineWrapper = styled('div')({
   display: 'grid',
   gridTemplateColumns: 'auto 170px',
   gridColumnGap: '10px',
-  marginBottom: '5px'
+  marginBottom: '5px',
 })
 
 const EpisodeWrapper = styled('div')(({ theme }) => ({
@@ -67,13 +67,13 @@ const EpisodeWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   [theme.breakpoints.up('md')]: {
     flexDirection: 'row',
-    alignItems: 'normal'
-  }
+    alignItems: 'normal',
+  },
 }))
 const DescriptionWrapper = styled('div')(({ theme }) => ({
   flexGrow: 1,
   margin: '20px',
   [theme.breakpoints.up('md')]: {
-    margin: '0 0 0 20px'
-  }
+    margin: '0 0 0 20px',
+  },
 }))

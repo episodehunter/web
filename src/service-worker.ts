@@ -1,6 +1,6 @@
 const cacheNames = {
   precache: 'precache-v1',
-  images: 'images-v1'
+  images: 'images-v1',
 }
 
 const PRECACHE_URLS = [
@@ -9,7 +9,7 @@ const PRECACHE_URLS = [
   '/main.js',
   'https://fonts.googleapis.com/css?family=Lato:100,400,700',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
-  'https://polyfill.io/v3/polyfill.min.js?flags=gated&features=IntersectionObserver%2CIntersectionObserverEntry'
+  'https://polyfill.io/v3/polyfill.min.js?flags=gated&features=IntersectionObserver%2CIntersectionObserverEntry',
 ]
 
 function initialize(service: ServiceWorkerGlobalScope): void {
@@ -48,7 +48,7 @@ function initialize(service: ServiceWorkerGlobalScope): void {
       /\.worker\.js$/,
       /(localhost|episodehunter).*\.(png|jpg)/,
       /localhost:1337\/$/,
-      /episodehunter\.tv\/$/
+      /episodehunter\.tv\/$/,
     ]
 
     const isPrecacheMatch = usePrecache.find(p => event.request.url.match(p))

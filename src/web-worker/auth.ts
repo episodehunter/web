@@ -17,13 +17,13 @@ export class Auth {
       data => {
         postMessage({
           type: 'AuthStateChanged',
-          data: Boolean(data)
+          data: Boolean(data),
         })
       },
       error => {
         postMessage({
           type: 'AuthStateChanged',
-          error
+          error,
         })
       }
     )

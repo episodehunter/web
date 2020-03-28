@@ -71,5 +71,5 @@ export const LoginForm = ({ login, hideForm }: Props) => {
 
 const ActionButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  width: '100% !important'
+  width: '100% !important',
 }))

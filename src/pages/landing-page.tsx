@@ -47,45 +47,45 @@ export function LandingPage() {
 const Description = styled('p')(({ theme }) => ({
   fontSize: '16px',
   [theme.breakpoints.up('lg')]: {
-    fontSize: '24px'
+    fontSize: '24px',
   },
   [theme.breakpoints.only('md')]: {
-    fontSize: '20px'
-  }
+    fontSize: '20px',
+  },
 }))
 
 const Header = styled('h1')(({ theme }) => ({
   fontSize: '30px',
   [theme.breakpoints.up('lg')]: {
-    fontSize: '60px'
+    fontSize: '60px',
   },
   [theme.breakpoints.only('md')]: {
-    fontSize: '48px'
+    fontSize: '48px',
   },
   color: mainGreen,
   textTransform: 'uppercase',
-  wordwrap: 'break-word'
+  wordwrap: 'break-word',
 }))
 
 const TextWrapper = styled('div')(({ theme }) => ({
   margin: '10%',
   color: whiteIsh,
   [theme.breakpoints.up('xl')]: {
-    fontSize: '5%'
+    fontSize: '5%',
   },
   [theme.breakpoints.up('lg')]: {
-    fontSize: '8%'
+    fontSize: '8%',
   },
   [theme.breakpoints.up('md')]: {
-    width: '50%'
-  }
+    width: '50%',
+  },
 }))
 
 const LoginButtonWrapper = styled('div')({
   position: 'absolute',
   top: '20px',
   right: '20px',
-  zIndex: 2
+  zIndex: 2,
 })
 
 const TopImage = styled('div')({
@@ -95,17 +95,17 @@ const TopImage = styled('div')({
   backgroundImage: `url(${images.fanart.big(270915)})`,
   display: 'grid',
   gridTemplateColumns: 'auto',
-  height: '100vh'
+  height: '100vh',
 })
 
 const Fade = styled('div')({
   position: 'absolute',
   backgroundColor: 'rgba(0, 0, 0, 0.7)',
   height: '100vh',
-  width: '100vw'
+  width: '100vw',
 })
 
 const Wrapper = styled('div')({
   alignSelf: 'flex-end',
-  zIndex: 1
+  zIndex: 1,
 })

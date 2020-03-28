@@ -13,64 +13,64 @@ const theme = createMuiTheme({
     type: 'dark',
     text: {
       primary: '#FFFFFF',
-      secondary: '#FFFFFF'
-    }
+      secondary: '#FFFFFF',
+    },
   },
   typography: {
     allVariants: {
-      color: '#FFFFFF'
+      color: '#FFFFFF',
     },
     fontFamily: `'Lato', sans-serif`,
     h1: {
       fontSize: '60px',
       fontWeight: 300,
       textTransform: 'uppercase',
-      color: alabaster
+      color: alabaster,
     },
     h2: {
       fontSize: '32px',
       fontWeight: 300,
-      color: alabaster
+      color: alabaster,
     },
     h3: {
       fontSize: '20px',
       fontWeight: 300,
       textTransform: 'uppercase',
-      color: whiteIsh
+      color: whiteIsh,
     },
     h4: {
       fontSize: '20px',
       fontWeight: 400,
       color: whiteIsh,
-      letterSpacing: '0.5px'
+      letterSpacing: '0.5px',
     },
     h5: {
-      fontSize: '1.3rem'
+      fontSize: '1.3rem',
     },
     body1: {
       fontSize: '16px',
       lineHeight: '22px',
       letterSpacing: '0.35px',
-      fontFamily: 'Helvetica Neue'
+      fontFamily: 'Helvetica Neue',
     },
     body2: {
       fontSize: '14px',
       lineHeight: '20px',
       letterSpacing: '0.35px',
-      fontFamily: 'Helvetica Neue'
+      fontFamily: 'Helvetica Neue',
     },
     subtitle1: {
       fontSize: '18px',
-      color: mainBlue
+      color: mainBlue,
     },
     subtitle2: {
       fontSize: '12px',
-      color: mainBlue
+      color: mainBlue,
     },
     caption: {
-      fontSize: '12px'
-    }
-  }
+      fontSize: '12px',
+    },
+  },
 })
 
 export const Theme: FC<Props> = ({ children, key }) => {

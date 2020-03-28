@@ -10,7 +10,7 @@ const style = {
   backgroundRepeat: 'no-repeat',
   backgroundPosition: '0 0',
   backgroundSize: 'cover',
-  transition: 'background-image 1s ease-in-out'
+  transition: 'background-image 1s ease-in-out',
 }
 
 export const Fanart = ({ imagePath, height = '90vh' }: Props) => (

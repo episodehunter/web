@@ -31,7 +31,7 @@ export const WatchedEpisodeDate = ({ watched }: Props) => {
             animate={{
               opacity: 1,
               x: 0,
-              transition: { damping: 0 }
+              transition: { damping: 0 },
             }}
             exit={{ opacity: 0 }}
           >
@@ -59,11 +59,11 @@ const DateText = styled('p')({
   fontSize: '14px',
   color: whiteIsh,
   margin: 0,
-  display: 'inline-block'
+  display: 'inline-block',
 })
 
 const CheckIcon = styled(CheckCircleOutline)({
   color: '#35e035',
   margin: '-2px 4px',
-  fontSize: 'inherit'
+  fontSize: 'inherit',
 })

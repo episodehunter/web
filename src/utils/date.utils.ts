@@ -6,7 +6,7 @@ import {
   isBefore,
   isValid as isValidDate,
   parseISO,
-  startOfToday
+  startOfToday,
 } from 'date-fns'
 
 export const time = (date: Date) => format(date, 'HH:mm')

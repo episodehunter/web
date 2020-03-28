@@ -22,8 +22,8 @@ export const HistoryPage = () => {
   const [loadingMore, setLoadingMore] = useState(false)
   const { data, error, loading, fetchMore } = useGetHistoryPageQuery({
     variables: {
-      page: 0
-    }
+      page: 0,
+    },
   })
   const { navigate } = useNavigation()
   const loadMore = () => {
@@ -38,7 +38,7 @@ export const HistoryPage = () => {
           setPage(page + 1)
           return Object.assign({}, prev, { history: [...prev.history, ...fetchMoreResult.history] })
         }
-      }
+      },
     }).finally(() => setLoadingMore(false))
   }
 
@@ -128,10 +128,10 @@ const EpisodeGrid = styled('div')(({ theme }) => ({
   gridTemplateColumns: 'repeat(1, 1fr)',
   gridGap: '20px',
   [theme.breakpoints.up('md')]: {
-    gridTemplateColumns: 'repeat(4, 1fr)'
-  }
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
 }))
 
 const ImageWarpper = styled('div')({
-  cursor: 'pointer'
+  cursor: 'pointer',
 })

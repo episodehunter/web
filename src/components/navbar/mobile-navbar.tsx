@@ -5,7 +5,7 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
 } from '@material-ui/core'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
@@ -112,5 +112,5 @@ const rootStyle: React.CSSProperties = {
   bottom: 0,
   position: 'fixed',
   width: '100%',
-  zIndex: 1000
+  zIndex: 1000,
 }

@@ -43,7 +43,7 @@ export const ShowFanart = React.memo(({ tvdbId, animateFrom }: Props) => {
             backgroundSize: 'cover',
             transition: 'background-image 1s ease-in-out 0s',
             backgroundImage: `url("${images.fanart.big(tvdbId)}")`,
-            transformOrigin: 'left top'
+            transformOrigin: 'left top',
           }}
         />
       </Wrapper>
@@ -61,7 +61,7 @@ const Wrapper = styled('div')(({ theme }) => ({
   width: '100%',
   height: '90vh',
   [theme.breakpoints.down('sm')]: {
-    height: '200px'
+    height: '200px',
   },
-  position: 'relative'
+  position: 'relative',
 }))

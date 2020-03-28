@@ -22,7 +22,7 @@ export const ShowCard = ({
   episodeNumber,
   episodeName,
   episodeAirDate,
-  bottomText
+  bottomText,
 }: Props) => {
   const { navigate } = useNavigation()
   const imageRef = useRef<HTMLImageElement>(null)

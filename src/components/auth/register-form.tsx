@@ -10,7 +10,7 @@ import { translateFirebaseError } from './auth.util'
 
 export const RegisterForm = ({
   hideForm,
-  register
+  register,
 }: {
   hideForm: () => void
   register: (email: string, password: string) => Promise<any>
@@ -81,7 +81,7 @@ export const RegisterForm = ({
 
 const ActionButton = miStyled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  width: '100% !important'
+  width: '100% !important',
 }))
 
 function slugify(str: string): string {

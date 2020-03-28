@@ -8,6 +8,6 @@ export const config = {
     databaseURL: 'https://newagent-dc3d1.firebaseio.com',
     projectId: 'newagent-dc3d1',
     storageBucket: 'newagent-dc3d1.appspot.com',
-    messagingSenderId: '776415085282'
-  }
+    messagingSenderId: '776415085282',
+  },
 }

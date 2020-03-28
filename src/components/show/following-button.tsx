@@ -16,7 +16,7 @@ import {
   GetUpcomingDocument,
   GetUpcomingShowDocument,
   GetUpcomingShowQueryVariables,
-  GetUpcomingShowQuery
+  GetUpcomingShowQuery,
 } from '../../dragonstone'
 import { Show } from '../../types/show'
 import { Button } from '../atoms/button'
@@ -54,8 +54,8 @@ function useFollowMutation(show: Show) {
       updateFollowingListInCache(cache, client, show, 'Following')
     },
     variables: {
-      showId: show.ids.id
-    }
+      showId: show.ids.id,
+    },
   })
   const [unfollowShow, { loading: unfollowLoading }] = useUnfollowShowMutation({
     update(cache) {
@@ -63,8 +63,8 @@ function useFollowMutation(show: Show) {
       updateFollowingListInCache(cache, client, show, 'NotFollowing')
     },
     variables: {
-      showId: show.ids.id
-    }
+      showId: show.ids.id,
+    },
   })
 
   const loading = followLoading || unfollowLoading
@@ -79,7 +79,7 @@ function updateFollowingStatusForShowInCache(
 ) {
   const cacheShow = cache.readQuery<GetShowQuery, GetShowQueryVariables>({
     query: GetShowDocument,
-    variables: { id: show.ids.id }
+    variables: { id: show.ids.id },
   })
   if (!cacheShow) {
     return
@@ -90,7 +90,7 @@ function updateFollowingStatusForShowInCache(
       draft.show!.isFollowing = nextState === 'Following'
     }),
     query: GetShowDocument,
-    variables: { id: show.ids.id }
+    variables: { id: show.ids.id },
   })
 }
 
@@ -104,12 +104,12 @@ async function updateFollowingListInCache(
   let cacheUpcomingList: GetUpcomingQuery | null = null
   try {
     cacheFollowingList = cache.readQuery<GetFollowingShowsQuery, GetFollowingShowsQueryVariables>({
-      query: GetFollowingShowsDocument
+      query: GetFollowingShowsDocument,
     })
   } catch {}
   try {
     cacheUpcomingList = cache.readQuery<GetUpcomingQuery, GetUpcomingQueryVariables>({
-      query: GetUpcomingDocument
+      query: GetUpcomingDocument,
     })
   } catch {}
 
@@ -123,14 +123,14 @@ async function updateFollowingListInCache(
               __typename: 'Show',
               ids: show.ids,
               name: show.name,
-              nextToWatch: show.nextToWatch
-            }
+              nextToWatch: show.nextToWatch,
+            },
           })
         } else {
           draft.following = draft.following.filter(f => f.show.ids.id !== show.ids.id)
         }
       }),
-      query: GetFollowingShowsDocument
+      query: GetFollowingShowsDocument,
     })
   }
   if (cacheUpcomingList) {
@@ -139,12 +139,12 @@ async function updateFollowingListInCache(
         data: produce(cacheUpcomingList, draft => {
           draft.following = draft.following.filter(f => f.show.ids.id !== show.ids.id)
         }),
-        query: GetUpcomingDocument
+        query: GetUpcomingDocument,
       })
     } else {
       const upcoming = await client.query<GetUpcomingShowQuery, GetUpcomingShowQueryVariables>({
         query: GetUpcomingShowDocument,
-        variables: { id: show.ids.id }
+        variables: { id: show.ids.id },
       })
       if (!upcoming.data.show) {
         return
@@ -153,10 +153,10 @@ async function updateFollowingListInCache(
         data: produce(cacheUpcomingList, draft => {
           draft.following.push({
             __typename: 'Following',
-            show: upcoming.data.show as NonNullable<typeof upcoming.data.show>
+            show: upcoming.data.show as NonNullable<typeof upcoming.data.show>,
           })
         }),
-        query: GetUpcomingDocument
+        query: GetUpcomingDocument,
       })
     }
   }

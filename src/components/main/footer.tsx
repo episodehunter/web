@@ -30,22 +30,22 @@ const FooterWrapper = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: 50
+    margin: 50,
   },
   [theme.breakpoints.down('sm')]: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     rowGap: '15px',
     justifyItems: 'center',
-    marginBottom: '40px'
+    marginBottom: '40px',
   },
   padding: 0,
   alignSelf: 'end',
-  zIndex: 3
+  zIndex: 3,
 }))
 
 const FooterItem = styled('div')({
   fontSize: 12,
   color: manatee,
-  cursor: 'pointer'
+  cursor: 'pointer',
 })

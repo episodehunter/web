@@ -30,7 +30,7 @@ export const UserProvider = memo(({ children }: { children: JSX.Element }) => {
   return createElement(
     UserContextProvider,
     {
-      value: { authenticated, loadingCurrentUser, auth }
+      value: { authenticated, loadingCurrentUser, auth },
     },
     children
   )

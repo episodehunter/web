@@ -18,7 +18,7 @@ export const Margin: React.FC<Props> = props => {
     marginRight: props.right,
     marginBottom: props.bottom,
     marginLeft: props.left,
-    display: props.inline ? 'inline-block' : 'block'
+    display: props.inline ? 'inline-block' : 'block',
   })
   const component = props.component || 'span'
   return createElement(component, { style }, props.children)

@@ -10,7 +10,7 @@ type Props = {
 export const AirDate = ({ firstAired }: Props) => {
   const releaseText = dateReleaseFormat(parse(firstAired), {
     future: date => `  Airs ${date}`,
-    past: date => `  Aired ${date}`
+    past: date => `  Aired ${date}`,
   })
   if (!releaseText) {
     return null
@@ -27,5 +27,5 @@ export const AirDate = ({ firstAired }: Props) => {
 
 const iconStyle = {
   fontSize: 'inherit',
-  color: melrose
+  color: melrose,
 }

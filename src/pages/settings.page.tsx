@@ -11,7 +11,7 @@ enum Status {
   none,
   saving,
   error,
-  success
+  success,
 }
 
 export const SettingsPage = () => {
@@ -164,9 +164,9 @@ const StatusWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   width: '20%;',
   [theme.breakpoints.down('sm')]: {
-    width: '100%;'
+    width: '100%;',
   },
   height: '70px',
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
 }))

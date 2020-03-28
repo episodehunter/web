@@ -81,7 +81,7 @@ function calculateUpcoming(upcomingShows: UpcomingShow[], today = now()): Upcomi
     weekAhead: [],
     upcoming: [],
     tba: [],
-    ended: []
+    ended: [],
   }
   const isBeforeAWeekFromNow = isBeforeDaysFrom(7, today)
   for (const show of upcomingShows) {

@@ -12,7 +12,7 @@ import { Routes } from '../routes'
 
 const animationVariants = {
   show: { opacity: 1, x: 0 },
-  hide: { opacity: 0, y: '100%' }
+  hide: { opacity: 0, y: '100%' },
 }
 
 export function LoginPage() {
@@ -64,10 +64,10 @@ const Logo = miStyled('img')(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginLeft: 'auto',
   marginRight: 'auto',
-  display: 'block'
+  display: 'block',
 }))
 
 const FormWrapper = miStyled('div')(({ theme }) => ({
   marginTop: theme.spacing(8),
-  width: '100%'
+  width: '100%',
 }))

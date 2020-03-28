@@ -16,7 +16,7 @@ export const Episodes = ({ showId, theTvDbShowId, season }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     getSeason({
-      variables: { season, showId }
+      variables: { season, showId },
     })
   }, [season, showId])
 

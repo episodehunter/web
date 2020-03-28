@@ -3,7 +3,7 @@ import { Component } from 'react'
 
 export class ErrorBoundary extends Component<{}, { error: Error | null }> {
   state = {
-    error: null
+    error: null,
   }
 
   componentDidCatch(error: Error, errorInfo: any) {

@@ -20,75 +20,75 @@ export const routes = {
     {
       path: Routes.upcoming,
       exact: true,
-      component: requireLogin(UpcomingPage)
+      component: requireLogin(UpcomingPage),
     },
     {
       path: Routes.following,
-      component: requireLogin(FollowingPage)
+      component: requireLogin(FollowingPage),
     },
     {
       path: Routes.history,
-      component: requireLogin(HistoryPage)
+      component: requireLogin(HistoryPage),
     },
     {
       path: Routes.settings,
-      component: requireLogin(SettingsPage)
+      component: requireLogin(SettingsPage),
     },
     {
       path: Routes.show,
-      component: requireLogin(ShowPage)
+      component: requireLogin(ShowPage),
     },
     {
       path: Routes.search,
-      component: requireLogin(SearchPage)
+      component: requireLogin(SearchPage),
     },
     {
       path: Routes.login,
-      component: LoginPage
+      component: LoginPage,
     },
     {
       path: Routes.forgotPassword,
-      component: ForgotPassword
+      component: ForgotPassword,
     },
     {
       path: Routes.landingPage,
-      component: LandingPage
+      component: LandingPage,
     },
     {
       path: Routes.authAction,
-      component: AuthAction
+      component: AuthAction,
     },
     {
       path: Routes.about,
-      component: lazyloadComponent(lazy(() => import('../pages/static/about.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/about.page'))),
     },
     {
       path: Routes.privacy,
-      component: lazyloadComponent(lazy(() => import('../pages/static/privacy.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/privacy.page'))),
     },
     {
       path: Routes.tos,
-      component: lazyloadComponent(lazy(() => import('../pages/static/tos.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/tos.page'))),
     },
     {
       path: Routes.kodi,
-      component: lazyloadComponent(lazy(() => import('../pages/static/kodi.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/kodi.page'))),
     },
     {
       path: Routes.plex,
-      component: lazyloadComponent(lazy(() => import('../pages/static/plex.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/plex.page'))),
     },
     {
       path: Routes.googlehome,
-      component: lazyloadComponent(lazy(() => import('../pages/static/googlehome.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/googlehome.page'))),
     },
     {
       path: Routes.faq,
-      component: lazyloadComponent(lazy(() => import('../pages/static/faq.page')))
+      component: lazyloadComponent(lazy(() => import('../pages/static/faq.page'))),
     },
     {
       path: Routes.contact,
-      component: lazyloadComponent(lazy(() => import('../pages/static/contact.page')))
-    }
-  ]
+      component: lazyloadComponent(lazy(() => import('../pages/static/contact.page'))),
+    },
+  ],
 }

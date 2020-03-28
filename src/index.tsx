@@ -20,7 +20,7 @@ import { useServiceWorker } from './utils/use-serviceworker'
 init({
   dsn: config.sentryDsn,
   environment: config.environment,
-  enabled: config.environment !== 'development'
+  enabled: config.environment !== 'development',
 })
 
 const searchWorker = new SearchWorker()
@@ -37,7 +37,7 @@ function RootApp() {
               <Snackbar
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'left'
+                  horizontal: 'left',
                 }}
                 open={showSnackbar}
                 message={<span>There is a new version</span>}
@@ -48,7 +48,7 @@ function RootApp() {
                   <Margin key="margin" inline right={8} />,
                   <Button key="update" size="xsmall" onClick={updateSw}>
                     Update to latest version
-                  </Button>
+                  </Button>,
                 ]}
               />
               <App />

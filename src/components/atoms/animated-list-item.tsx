@@ -22,6 +22,6 @@ const animationVariants = {
   visible: (custom: number) => ({
     opacity: 1,
     x: 0,
-    transition: { delay: custom * 0.07, damping: 0 }
-  })
+    transition: { delay: custom * 0.07, damping: 0 },
+  }),
 }

@@ -17,7 +17,7 @@ export const EpisodeImage = ({
   width = 250,
   height = 140,
   children,
-  style
+  style,
 }: Props) => (
   <>
     <LazyLoadBackgroundImage
@@ -27,7 +27,7 @@ export const EpisodeImage = ({
         backgroundSize: 'cover',
         display: 'flex',
         alignItems: 'flex-end',
-        ...style
+        ...style,
       }}
       defaultImage={images.fanart.big(theTvDbShowId)}
       image={images.episode.small(tvdbId)}

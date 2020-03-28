@@ -101,30 +101,30 @@ export const DesktopNavbar = () => {
 
 const Logo = styled('img')({
   height: '50px',
-  cursor: 'pointer'
+  cursor: 'pointer',
 })
 
 const StyledToolbar = styled(Toolbar)({
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr 50px'
+  gridTemplateColumns: '1fr 1fr 1fr 50px',
 })
 const StyledTabs = styled(Tabs)({
-  justifySelf: 'end'
+  justifySelf: 'end',
 })
 
 const StyledAppBar = styled(AppBar)({
   backgroundColor: colors.backgroundColor,
-  zIndex: 100
+  zIndex: 100,
 })
 
 const SearchWrapper = styled('div')({
   display: 'grid',
   gridTemplateColumns: '34px 1fr',
   backgroundColor: '#424242',
-  borderRadius: '4px'
+  borderRadius: '4px',
 })
 
 const StyledSearchIcon = styled(SearchIcon)({
   padding: '0 5px',
-  marginTop: '3px'
+  marginTop: '3px',
 })

@@ -11,7 +11,7 @@ export const FormStatusMessage = ({ message, success }: Props) => {
   if (!message) return null
 
   const style = {
-    backgroundColor: success ? '#6da925' : '#af574e'
+    backgroundColor: success ? '#6da925' : '#af574e',
   }
 
   return (
@@ -24,5 +24,5 @@ export const FormStatusMessage = ({ message, success }: Props) => {
 const Wrapper = styled('div')({
   width: '100%',
   padding: '20px 0',
-  textAlign: 'center'
+  textAlign: 'center',
 })

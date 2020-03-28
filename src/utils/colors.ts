@@ -16,10 +16,10 @@ export const mainPurple = melrose
 export const colors = {
   palette: {
     primary: teal,
-    secondary: lightBlue
+    secondary: lightBlue,
   },
   neutral: {
-    blackish: capeCod
+    blackish: capeCod,
   },
-  backgroundColor: shark
+  backgroundColor: shark,
 }

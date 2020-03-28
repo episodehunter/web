@@ -39,7 +39,7 @@ export const SearchProvider = memo(
       if (debouncedSearchTerm) {
         searchWorker.postMessage({
           type: 'search',
-          data: debouncedSearchTerm
+          data: debouncedSearchTerm,
         })
       } else {
         setSearchResult([])
@@ -55,8 +55,8 @@ export const SearchProvider = memo(
           search,
           searchResult,
           fetchStataus,
-          searchTerm
-        }
+          searchTerm,
+        },
       },
       children
     )

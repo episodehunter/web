@@ -38,7 +38,7 @@ const dayOfWeekString = [
   'Thursday',
   'Friday',
   'Saturday',
-  'Sunday'
+  'Sunday',
 ]
 
 const buildAirsString = (

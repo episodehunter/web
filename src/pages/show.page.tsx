@@ -20,7 +20,7 @@ import { HideOnMobile, ShowOnlyOnMobile } from '../styles/media-queries'
 export const ShowPage = () => {
   const {
     params,
-    state: { routeState }
+    state: { routeState },
   } = useNavigation<{ id: string; tvdb?: string }, DOMRect>()
   const showId = Number(params.id)
   const [selectedSeason, setSelectedSeason] = useState(1)
@@ -32,7 +32,7 @@ export const ShowPage = () => {
       if (d.show && d.show.nextToWatch.episode && d.show.nextToWatch.episode.episodenumber) {
         setSelectedSeason(extractSeasonNumber(d.show.nextToWatch.episode.episodenumber))
       }
-    }
+    },
   })
 
   const show = data?.show
@@ -134,11 +134,11 @@ export const ShowPage = () => {
 
 const OuterWrapper = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
-    paddingTop: 70
+    paddingTop: 70,
   },
   [theme.breakpoints.down('sm')]: {
-    paddingBottom: 70
-  }
+    paddingBottom: 70,
+  },
 }))
 
 const Content = styled('div')(({ theme }) => ({
@@ -146,16 +146,16 @@ const Content = styled('div')(({ theme }) => ({
   gridTemplateColumns: '1fr',
   [theme.breakpoints.up('md')]: {
     width: '1000px',
-    gridTemplateColumns: '1fr 1fr 1fr'
-  }
+    gridTemplateColumns: '1fr 1fr 1fr',
+  },
 }))
 
 const ShowTitle = styled(H1)(({ theme }) => ({
   maxWidth: 'calc(100vw - 40px)',
   wordWrap: 'break-word',
   [theme.breakpoints.down('sm')]: {
-    fontSize: '15.5vw'
-  }
+    fontSize: '15.5vw',
+  },
 }))
 
 const SeasonButtonsWrapper = styled('div')(({ theme }) => ({
@@ -163,35 +163,35 @@ const SeasonButtonsWrapper = styled('div')(({ theme }) => ({
   margin: '20px',
   width: '100%',
   [theme.breakpoints.up('md')]: {
-    width: '1000px'
-  }
+    width: '1000px',
+  },
 }))
 
 const EpisodesWrapper = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
-    width: '1000px'
-  }
+    width: '1000px',
+  },
 }))
 
 const PosterAndTitleWrapper = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
     width: '1000px',
-    marginTop: '-66px'
-  }
+    marginTop: '-66px',
+  },
 }))
 
 const ShowTitleAndOverview = styled('div')(({ theme }) => ({
   margin: '20px 20px 0 20px',
   [theme.breakpoints.up('md')]: {
-    margin: '66px 0 0 20px'
-  }
+    margin: '66px 0 0 20px',
+  },
 }))
 
 const Wrapper = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center'
+  alignItems: 'center',
 })
 
 const NextEpisodeWarpper = styled('div')(({ theme }) => ({
@@ -199,6 +199,6 @@ const NextEpisodeWarpper = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-end'
-  }
+    alignItems: 'flex-end',
+  },
 }))
