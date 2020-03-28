@@ -39,7 +39,7 @@ const createTextComponent = (
   return (
     <Typography
       variant={variant}
-      component={component}
+      component={component as any}
       style={newStyle}
       className={className}
       {...rest}
