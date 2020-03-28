@@ -1,9 +1,11 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { InjectManifest } = require('workbox-webpack-plugin')
 
 module.exports = {
-  entry: ['./src/index.tsx'],
+  entry: {
+    main: './src/index.tsx',
+    'service-worker': './src/service-worker.ts'
+  },
   devtool: 'source-map',
   module: {
     rules: [
@@ -29,16 +31,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       alwaysWriteToDisk: true
-    }),
-    new InjectManifest({
-      swSrc: path.join('src', 'service-worker.js')
     })
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
-    filename: '[hash].bundle.js',
+    filename: '[name].js',
     path: path.join(__dirname, 'build'),
     publicPath: '/',
     globalObject: 'this'

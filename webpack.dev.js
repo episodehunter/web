@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const common = require('./webpack.base.js')
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 
 module.exports = Object.assign({}, common, {
   mode: 'development',
@@ -12,5 +11,5 @@ module.exports = Object.assign({}, common, {
     port: 1337,
     historyApiFallback: true
   },
-  plugins: [...common.plugins, new HtmlWebpackHarddiskPlugin(), new webpack.NamedModulesPlugin()]
+  plugins: [...common.plugins, new webpack.NamedModulesPlugin()]
 })
