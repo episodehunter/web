@@ -59,7 +59,7 @@
     "file-loader": "6.0.0",
     "graphql": "14.6.0",
     "html-webpack-plugin": "4.0.3",
-    "jest": "25.2.3",
+    "jest": "25.2.4",
     "prettier": "2.0.2",
     "react-test-renderer": "16.13.1",
     "simple-spy": "3.0.1",
