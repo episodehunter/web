@@ -60,7 +60,7 @@
     "graphql": "14.6.0",
     "html-webpack-plugin": "4.0.4",
     "jest": "25.2.7",
-    "prettier": "2.0.2",
+    "prettier": "2.0.4",
     "react-test-renderer": "16.13.1",
     "simple-spy": "3.0.1",
     "ts-jest": "25.3.1",
