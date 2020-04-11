@@ -1,5 +1,5 @@
 const cacheNames = {
-  precache: 'precache-v1',
+  precache: 'precache-v2',
   images: 'images-v1',
 }
 
@@ -35,7 +35,6 @@ function initialize(service: ServiceWorkerGlobalScope): void {
 
   const onFetch = (event: FetchEvent) => {
     if (event.request.method.toLowerCase() !== 'get') {
-      console.debug('Skip', event.request.url)
       return
     }
 
@@ -54,13 +53,9 @@ function initialize(service: ServiceWorkerGlobalScope): void {
     const isPrecacheMatch = usePrecache.find(p => event.request.url.match(p))
 
     if (event.request.url.match(/^https:\/\/d1lolx4ilifvdr\.cloudfront\.net/)) {
-      console.debug('Match images', event.request.url)
       event.respondWith(cacheOrNetwork(cacheNames.images)(event))
     } else if (isPrecacheMatch) {
-      console.debug('Use precache', event.request.url)
       event.respondWith(cacheOrNetwork(cacheNames.precache)(event))
-    } else {
-      console.debug('Skipping', event.request.url)
     }
   }
 
