@@ -60,6 +60,9 @@ export const MobileNavbar = () => {
             <ListItemText primary="History" onClick={onClick(Routes.history)} />
           </ListItem>
           <ListItem button>
+            <ListItemText primary="Popular" onClick={onClick(Routes.popular)} />
+          </ListItem>
+          <ListItem button>
             <ListItemText primary="Settings" onClick={onClick(Routes.settings)} />
           </ListItem>
           <ListItem button>

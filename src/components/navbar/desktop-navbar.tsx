@@ -31,7 +31,7 @@ export const DesktopNavbar = () => {
   }
 
   const selectedTab: string | false =
-    [Routes.upcoming, Routes.following].includes(state.url as any) && state.url
+    [Routes.upcoming, Routes.following, Routes.popular].includes(state.url as any) && state.url
 
   return (
     <>
