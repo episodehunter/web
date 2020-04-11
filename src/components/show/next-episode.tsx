@@ -11,7 +11,7 @@ export const NextEpisode = ({
   episode,
   theTvDbShowId,
 }: {
-  episode: NextEpisodeToWatch | null
+  episode?: NextEpisodeToWatch | null
   theTvDbShowId: number
 }) => {
   if (!episode) {

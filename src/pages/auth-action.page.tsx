@@ -24,7 +24,7 @@ export function AuthAction() {
   const [oobCode, setOobCode] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
   const [resetState, setResetState] = useState<ResetState>(ResetState.validatingCode)
-  const [newPassword, setNewPassword] = useState()
+  const [newPassword, setNewPassword] = useState('')
   const { auth } = useUser()
   const { navigate } = useNavigation()
 

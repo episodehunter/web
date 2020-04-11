@@ -1,13 +1,12 @@
 import { Dragonstone } from '@episodehunter/types'
 import { gql } from '@episodehunter/utils'
-import Fuse, { FuseOptions } from 'fuse.js'
+import Fuse, { IFuseOptions } from 'fuse.js'
 import { request } from 'graphql-request'
 import { config } from '../config'
 import { GetTitlesQuery } from '../dragonstone'
 
-const fuseOptions: FuseOptions<any> = {
+const fuseOptions: IFuseOptions<any> = {
   keys: ['name'],
-  maxPatternLength: 32,
   minMatchCharLength: 2,
   threshold: 0.6,
   distance: 100,
@@ -62,13 +61,14 @@ function getFuse() {
 
 function search(fuse: Fuse<Dragonstone.Title, CutomFuseOptions>, searchWord: string) {
   return fuse
-    .search<Dragonstone.Title, true, false>(searchWord)
+    .search<Dragonstone.Title>(searchWord)
     .map(searchResult => {
       searchResult.score =
-        (1 - searchResult.score) * 10 + Math.min(Math.log10(searchResult.item.followers + 10), 20)
+        (1 - (searchResult.score || 0)) * 10 +
+        Math.min(Math.log10(searchResult.item.followers + 10), 20)
       return searchResult
     })
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score! - a.score!)
     .map(a => a.item)
     .slice(0, 20)
 }

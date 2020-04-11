@@ -40,7 +40,7 @@ export const Upcoming = ({ title, shows, episodeKey, showDate }: Props) => {
 
 export const formatEpisodeAirDate = (
   showDate: boolean,
-  episode: Pick<Dragonstone.Episode, 'aired'> | null
+  episode?: Pick<Dragonstone.Episode, 'aired'> | null
 ) => {
   if (!showDate || !episode) {
     return null

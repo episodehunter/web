@@ -6,13 +6,14 @@ import { ForgotPassword } from '../pages/forgot-password.page'
 import { HistoryPage } from '../pages/history.page'
 import { LandingPage } from '../pages/landing-page'
 import { LoginPage } from '../pages/login.page'
+import { PopularPage } from '../pages/popular.page'
 import { SearchPage } from '../pages/search.page'
 import { SettingsPage } from '../pages/settings.page'
 import { ShowPage } from '../pages/show.page'
 import { UpcomingPage } from '../pages/upcoming.page'
 import { Routes } from '../routes'
-import { requireLogin } from '../utils/require-login'
 import { lazyloadComponent } from '../utils/lazyload-page'
+import { requireLogin } from '../utils/require-login'
 
 export const routes = {
   fallback: Fallback,
@@ -25,6 +26,10 @@ export const routes = {
     {
       path: Routes.following,
       component: requireLogin(FollowingPage),
+    },
+    {
+      path: Routes.popular,
+      component: requireLogin(PopularPage),
     },
     {
       path: Routes.history,

@@ -1,6 +1,7 @@
 export const Routes = {
   upcoming: '/',
   following: '/following',
+  popular: '/popular',
   history: '/history',
   settings: '/settings',
   search: '/search',

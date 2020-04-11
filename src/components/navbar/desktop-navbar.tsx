@@ -53,6 +53,7 @@ export const DesktopNavbar = () => {
               label="What to watch"
               onClick={() => navigate(Routes.following)}
             />
+            <Tab value={Routes.popular} label="Popular" onClick={() => navigate(Routes.popular)} />
           </StyledTabs>
           <IconButton onClick={handleClick}>
             <MoreVertIcon />

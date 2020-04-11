@@ -1,0 +1,12 @@
+query PopularShows {
+  popularShows {
+    ids {
+      id
+      tvdb
+    }
+    name
+    nextToWatch {
+      numberOfEpisodesToWatch
+    }
+  }
+}
