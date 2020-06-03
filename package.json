@@ -87,7 +87,7 @@
     "graphql-request": "^1.8.2",
     "idb-keyval": "^3.2.0",
     "immer": "6.0.3",
-    "rc-progress": "^2.5.2",
+    "rc-progress": "^3.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "the-react-router": "^1.2.1"
