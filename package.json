@@ -38,7 +38,7 @@
     "@babel/preset-react": "7.10.4",
     "@babel/preset-typescript": "7.10.4",
     "@episodehunter/types": "3.0.7",
-    "@graphql-codegen/cli": "1.16.3",
+    "@graphql-codegen/cli": "1.17.0",
     "@graphql-codegen/typescript": "1.16.3",
     "@graphql-codegen/typescript-operations": "1.16.3",
     "@graphql-codegen/typescript-react-apollo": "1.16.3",
