@@ -72,13 +72,13 @@
     "worker-loader": "2.0.0"
   },
   "dependencies": {
-    "@apollo/react-hooks": "3.1.4",
+    "@apollo/react-hooks": "3.1.5",
     "@episodehunter/utils": "1.1.4",
     "@material-ui/core": "4.9.11",
     "@material-ui/icons": "4.9.1",
     "@sentry/browser": "5.15.5",
     "@tjoskar/react-lazyload-img": "^1.2.3",
-    "apollo-boost": "0.4.7",
+    "apollo-boost": "0.4.9",
     "comlink": "^4.2.0",
     "date-fns": "2.12.0",
     "firebase": "7.14.0",
