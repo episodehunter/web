@@ -80,7 +80,7 @@
     "@tjoskar/react-lazyload-img": "^1.2.3",
     "apollo-boost": "0.4.7",
     "comlink": "^4.2.0",
-    "date-fns": "2.12.0",
+    "date-fns": "2.15.0",
     "firebase": "7.14.0",
     "framer-motion": "1.10.3",
     "fuse.js": "5.1.0",
