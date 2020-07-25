@@ -62,7 +62,6 @@
     "jest": "26.1.0",
     "prettier": "2.0.5",
     "react-test-renderer": "16.13.1",
-    "simple-spy": "3.0.1",
     "ts-jest": "26.1.3",
     "typescript": "3.9.7",
     "webpack": "4.44.0",
@@ -72,13 +71,12 @@
     "worker-loader": "2.0.0"
   },
   "dependencies": {
-    "@apollo/react-hooks": "4.0.0",
+    "@apollo/client": "3.0.2",
     "@episodehunter/utils": "1.1.4",
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
     "@sentry/browser": "5.20.1",
     "@tjoskar/react-lazyload-img": "1.2.3",
-    "apollo-boost": "0.4.9",
     "comlink": "4.3.0",
     "date-fns": "2.15.0",
     "firebase": "7.17.1",

@@ -1,6 +1,12 @@
-import ApolloClient, { InMemoryCache, defaultDataIdFromObject } from 'apollo-boost'
-import { auth } from './contexts/user-context'
+import {
+  ApolloClient,
+  createHttpLink,
+  defaultDataIdFromObject,
+  InMemoryCache,
+} from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { config } from './config'
+import { auth } from './contexts/user-context'
 
 const cache = new InMemoryCache({
   dataIdFromObject: (object: any) => {
@@ -13,15 +19,21 @@ const cache = new InMemoryCache({
   },
 })
 
+const authLink = setContext(async (_, { headers }) => {
+  const token = await auth.getIdToken()
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  }
+})
+
+const httpLink = createHttpLink({
+  uri: config.dragonstoneUrl,
+})
+
 export const client = new ApolloClient({
   cache,
-  uri: config.dragonstoneUrl,
-  request: async operation => {
-    const token = await auth.getIdToken()
-    operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    })
-  },
+  link: authLink.concat(httpLink),
 })

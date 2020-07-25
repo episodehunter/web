@@ -1,7 +1,7 @@
 import { captureException, showReportDialog, withScope } from '@sentry/browser'
 import { Component } from 'react'
 
-export class ErrorBoundary extends Component<{}, { error: Error | null }> {
+export class ErrorBoundary extends Component<unknown, { error: Error | null }> {
   state = {
     error: null,
   }

@@ -1,5 +1,5 @@
 import { wrap } from 'comlink'
-import { ApolloClient } from 'apollo-boost'
+import { ApolloClient } from '@apollo/client'
 
 type AuthLink = InstanceType<typeof import('../web-worker/auth').Auth>
 

@@ -1,6 +1,6 @@
+import { ApolloCache } from '@apollo/client'
 import { extractSeasonNumber, unixTimestamp } from '@episodehunter/utils'
 import { RemoveCircleOutline, Tv } from '@material-ui/icons'
-import { DataProxy } from 'apollo-cache'
 import produce from 'immer'
 import React from 'react'
 import {
@@ -115,7 +115,7 @@ type NextEpisode =
  * Update the local cache with the new episode to watch
  */
 function setNextEpisodeToWatchInCahe(
-  cache: DataProxy,
+  cache: ApolloCache<CheckInEpisodeMutation>,
   episode: SeasonEpisode,
   numberOfSeenEpisodes: number,
   nextEpisode?: NextEpisode
@@ -141,7 +141,7 @@ function setNextEpisodeToWatchInCahe(
  * Update the watch history of an episode in the local cache
  */
 function updateHistoryToEpisodeInCahe(
-  cache: DataProxy,
+  cache: ApolloCache<CheckInEpisodeMutation>,
   episode: SeasonEpisode,
   updateFn: (episode: SeasonEpisode) => void
 ) {

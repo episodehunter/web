@@ -13,7 +13,9 @@ generates:
       - typescript-operations
       - typescript-react-apollo
     config:
+      reactApolloVersion: 3
       enumsAsTypes: true
       withHooks: true
       withHOC: false
       withComponent: false
+      gqlImport: "@apollo/client#gql"

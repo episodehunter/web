@@ -1,11 +1,11 @@
 import { Dragonstone } from '@episodehunter/types'
 import { gql } from '@episodehunter/utils'
-import Fuse, { IFuseOptions } from 'fuse.js'
+import Fuse from 'fuse.js'
 import { request } from 'graphql-request'
 import { config } from '../config'
 import { GetTitlesQuery } from '../dragonstone'
 
-const fuseOptions: IFuseOptions<any> = {
+const fuseOptions: Fuse.IFuseOptions<any> = {
   keys: ['name'],
   minMatchCharLength: 2,
   threshold: 0.6,

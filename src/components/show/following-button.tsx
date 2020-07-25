@@ -1,26 +1,26 @@
-import { DataProxy } from 'apollo-cache'
+import { ApolloCache, ApolloClient, useApolloClient } from '@apollo/client'
 import produce from 'immer'
 import React from 'react'
-import { useApolloClient } from '@apollo/react-hooks'
 import {
+  FollowShowMutation,
   GetFollowingShowsDocument,
   GetFollowingShowsQuery,
   GetFollowingShowsQueryVariables,
   GetShowDocument,
   GetShowQuery,
   GetShowQueryVariables,
-  useFollowShowMutation,
-  useUnfollowShowMutation,
+  GetUpcomingDocument,
   GetUpcomingQuery,
   GetUpcomingQueryVariables,
-  GetUpcomingDocument,
   GetUpcomingShowDocument,
-  GetUpcomingShowQueryVariables,
   GetUpcomingShowQuery,
+  GetUpcomingShowQueryVariables,
+  UnfollowShowMutation,
+  useFollowShowMutation,
+  useUnfollowShowMutation,
 } from '../../dragonstone'
 import { Show } from '../../types/show'
 import { Button } from '../atoms/button'
-import { ApolloClient } from 'apollo-boost'
 
 interface Props {
   show: Show
@@ -73,7 +73,7 @@ function useFollowMutation(show: Show) {
 }
 
 function updateFollowingStatusForShowInCache(
-  cache: DataProxy,
+  cache: ApolloCache<FollowShowMutation | UnfollowShowMutation>,
   show: Show,
   nextState: FollowingState
 ) {
@@ -95,8 +95,8 @@ function updateFollowingStatusForShowInCache(
 }
 
 async function updateFollowingListInCache(
-  cache: DataProxy,
-  client: ApolloClient<object>,
+  cache: ApolloCache<FollowShowMutation | UnfollowShowMutation>,
+  client: ApolloClient<unknown>,
   show: Show,
   nextState: FollowingState
 ) {
@@ -146,14 +146,14 @@ async function updateFollowingListInCache(
         query: GetUpcomingShowDocument,
         variables: { id: show.ids.id },
       })
-      if (!upcoming.data.show) {
+      if (!upcoming?.data?.show) {
         return
       }
       cache.writeQuery({
         data: produce(cacheUpcomingList, draft => {
           draft.following.push({
             __typename: 'Following',
-            show: upcoming.data.show as NonNullable<typeof upcoming.data.show>,
+            show: upcoming!.data!.show!,
           })
         }),
         query: GetUpcomingDocument,

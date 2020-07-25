@@ -1,4 +1,4 @@
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import { Snackbar } from '@material-ui/core'
 import { init } from '@sentry/browser'
 import React from 'react'
