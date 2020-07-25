@@ -43,6 +43,7 @@ export const ShowCard = ({
               />
             )}
             <CardMedia
+              style={{ width: 'min(421px, 90vw)' }}
               ref={imageRef}
               component="img"
               alt={showName}
