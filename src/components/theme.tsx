@@ -34,7 +34,7 @@ const theme = createMuiTheme({
     },
     h3: {
       fontSize: '20px',
-      fontWeight: 300,
+      fontWeight: 400,
       textTransform: 'uppercase',
       color: whiteIsh,
     },

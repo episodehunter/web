@@ -25,12 +25,16 @@ export const ShowPage = () => {
   const showId = Number(params.id)
   const [selectedSeason, setSelectedSeason] = useState(1)
   const [animationComplete, setAnimationComplete] = useState(false)
+  const [seasons, setSeasons] = useState<number[]>([])
   const { data, error, loading } = useGetShowQuery({
     skip: !showId,
     variables: { id: showId },
     onCompleted(d) {
       if (d.show && d.show.nextToWatch.episode && d.show.nextToWatch.episode.episodenumber) {
         setSelectedSeason(extractSeasonNumber(d.show.nextToWatch.episode.episodenumber))
+      }
+      if (d.show?.seasons) {
+        setSeasons(d.show.seasons.slice().sort((a, b) => a - b))
       }
     },
   })
@@ -44,7 +48,6 @@ export const ShowPage = () => {
   }
 
   const showTvdb = show?.ids.tvdb || (params.tvdb && Number(params.tvdb))
-  const seasons = show?.seasons.sort((a, b) => a - b) || []
 
   return (
     <OuterWrapper>

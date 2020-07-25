@@ -46,8 +46,9 @@ export const ShowCard = ({
               ref={imageRef}
               component="img"
               alt={showName}
-              height="140"
-              image={images.fanart.big(tvdbId)}
+              height="236"
+              width="421"
+              image={images.fanart.size(tvdbId, '842x472')}
               title={showName}
             />
           </div>

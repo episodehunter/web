@@ -41,7 +41,7 @@ export const SearchPage = () => {
         <ShowListWrapper>
           {search.searchResult.map(show => {
             return (
-              <motion.div key={show.id} layoutTransition>
+              <motion.div key={show.id} layout>
                 <ShowCard
                   key={show.id}
                   showId={show.id}

@@ -1,6 +1,6 @@
-import React from 'react'
-import { styled, useMediaQuery, useTheme } from '@material-ui/core'
+import { styled } from '@material-ui/core'
 import { motion } from 'framer-motion'
+import React from 'react'
 import { images } from '../../images.config'
 import { Fanart } from './fanart'
 
@@ -10,48 +10,37 @@ type Props = {
 }
 
 export const ShowFanart = React.memo(({ tvdbId, animateFrom }: Props) => {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   if (!tvdbId) {
     return null
   }
 
   if (animateFrom) {
-    const windowWidth = window.innerWidth
-    const windowHeight = window.innerHeight
-
-    const imageWidth = animateFrom.width
-    const imageHeight = animateFrom.height
-    const scaleX = windowWidth / imageWidth
-    let scaleY = (0.9 * windowHeight) / imageHeight
-    if (isMobile) {
-      scaleY = 200 / imageHeight
-    }
     return (
       <Wrapper>
         <motion.div
-          animate={{ y: -animateFrom.top, x: -animateFrom.left, scaleX, scaleY }}
-          transition={{ duration: 0.2 }}
+          animate={{ y: -animateFrom.top, x: -animateFrom.left, width: '100%', height: '100%' }}
+          transition={{ duration: 0.5 }}
           style={{
             position: 'absolute',
             top: animateFrom.top,
             left: animateFrom.left,
-            width: imageWidth,
+            width: animateFrom.width,
             height: animateFrom.height,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: '0px 0px',
-            backgroundSize: 'cover',
-            transition: 'background-image 1s ease-in-out 0s',
-            backgroundImage: `url("${images.fanart.big(tvdbId)}")`,
             transformOrigin: 'left top',
           }}
-        />
+        >
+          <Fanart
+            imagePath={images.fanart.big(tvdbId)}
+            // imagePath={images.fanart.size(tvdbId, '842x472')}
+            defaultImage={images.fanart.size(tvdbId, '842x472')}
+          />
+        </motion.div>
       </Wrapper>
     )
   } else {
     return (
       <Wrapper>
-        <Fanart imagePath={images.fanart.big(tvdbId)} height={isMobile ? '200px' : undefined} />
+        <Fanart imagePath={images.fanart.big(tvdbId)} />
       </Wrapper>
     )
   }
