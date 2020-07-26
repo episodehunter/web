@@ -81,7 +81,7 @@
     "date-fns": "2.15.0",
     "firebase": "7.17.1",
     "framer-motion": "2.1.4",
-    "fuse.js": "6.4.0",
+    "fuse.js": "6.4.1",
     "graphql-request": "2.0.0",
     "idb-keyval": "3.2.0",
     "immer": "7.0.7",
