@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.0.2",
-    "@episodehunter/utils": "1.1.4",
+    "@episodehunter/utils": "1.1.5",
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
     "@sentry/browser": "5.20.1",
