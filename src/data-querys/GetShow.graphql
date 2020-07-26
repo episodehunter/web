@@ -19,10 +19,12 @@ query GetShow($id: Int!) {
     numberOfAiredEpisodes
     seasons
     nextToWatch {
+      showId
       numberOfEpisodesToWatch
       episode {
         ids {
           tvdb
+          showId
         }
         aired
         name

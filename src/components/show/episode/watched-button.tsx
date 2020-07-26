@@ -8,10 +8,6 @@ import {
   GetEpisodesForSeasonDocument,
   GetEpisodesForSeasonQuery,
   GetEpisodesForSeasonQueryVariables,
-  GetShowDocument,
-  GetShowQuery,
-  GetShowQueryVariables,
-  RemoveCheckedInEpisodeMutation,
   useCheckInEpisodeMutation,
   useRemoveCheckedInEpisodeMutation,
 } from '../../../dragonstone'
@@ -77,10 +73,10 @@ export const WatchedButton = ({ episode }: Props) => {
   }
 }
 
+// TODO: Remove this code by getting the updated episode from Dragonstone in the response
 function useCheckInMutaion(episode: SeasonEpisode) {
   const [checkIn, { loading: checkInLoading }] = useCheckInEpisodeMutation({
-    update(cache, { data }) {
-      setNextEpisodeToWatchInCahe(cache, episode, 1, data && data.checkInEpisode!.episode)
+    update(cache) {
       updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
         // TODO: Get this from Dragonstone instead
         episodeToUpdate.watched.push({
@@ -92,8 +88,7 @@ function useCheckInMutaion(episode: SeasonEpisode) {
     },
   })
   const [removeCheckIn, { loading: removeCheckInLoading }] = useRemoveCheckedInEpisodeMutation({
-    update(cache, { data }) {
-      setNextEpisodeToWatchInCahe(cache, episode, -1, data && data.removeCheckedInEpisode!.episode)
+    update(cache) {
       updateHistoryToEpisodeInCahe(cache, episode, episodeToUpdate => {
         episodeToUpdate.watched = []
       })
@@ -102,39 +97,6 @@ function useCheckInMutaion(episode: SeasonEpisode) {
 
   const loading = checkInLoading || removeCheckInLoading
   return { checkIn, removeCheckIn, loading }
-}
-
-type NextEpisode =
-  | NonNullable<
-      | CheckInEpisodeMutation['checkInEpisode']
-      | RemoveCheckedInEpisodeMutation['removeCheckedInEpisode']
-    >['episode']
-  | undefined
-
-/**
- * Update the local cache with the new episode to watch
- */
-function setNextEpisodeToWatchInCahe(
-  cache: ApolloCache<CheckInEpisodeMutation>,
-  episode: SeasonEpisode,
-  numberOfSeenEpisodes: number,
-  nextEpisode?: NextEpisode
-) {
-  const cacheShow = cache.readQuery<GetShowQuery, GetShowQueryVariables>({
-    query: GetShowDocument,
-    variables: { id: episode.ids.showId },
-  })
-  if (!cacheShow || !nextEpisode) {
-    return
-  }
-  cache.writeQuery({
-    data: produce(cacheShow, draft => {
-      draft.show!.nextToWatch.numberOfEpisodesToWatch -= numberOfSeenEpisodes
-      draft.show!.nextToWatch.episode = nextEpisode
-    }),
-    query: GetShowDocument,
-    variables: { id: episode.ids.showId },
-  })
 }
 
 /**

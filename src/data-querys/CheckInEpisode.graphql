@@ -1,8 +1,11 @@
 mutation CheckInEpisode($episode: WatchedEpisodeInput!) {
   checkInEpisode(episode: $episode) {
+    showId
+    numberOfEpisodesToWatch
     episode {
       ids {
         tvdb
+        showId
       }
       name
       aired
@@ -13,9 +16,12 @@ mutation CheckInEpisode($episode: WatchedEpisodeInput!) {
 
 mutation RemoveCheckedInEpisode($episode: UnwatchedEpisodeInput!) {
   removeCheckedInEpisode(episode: $episode) {
+    showId
+    numberOfEpisodesToWatch
     episode {
       ids {
         tvdb
+        showId
       }
       name
       aired
