@@ -12,6 +12,7 @@ query GetHistoryPage($page: Int!) {
     }
     episode {
       ids {
+        showId
         tvdb
       }
       name

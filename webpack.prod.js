@@ -13,13 +13,13 @@ module.exports = Object.assign({}, common, {
         {
           src: path.resolve('src/logo.png'),
           sizes: [96, 128, 192, 256, 384, 512],
-          ios: true
+          ios: true,
         },
         {
           src: path.resolve('src/logo.png'),
           sizes: 1024,
-          ios: 'startup'
-        }
+          ios: 'startup',
+        },
       ],
       background_color: '#1a1c21',
       theme_color: '#03A37E',
@@ -27,7 +27,7 @@ module.exports = Object.assign({}, common, {
       display: 'standalone',
       orientation: 'portrait',
       inject: true,
-      ios: true
-    })
-  ]
+      ios: true,
+    }),
+  ],
 })
