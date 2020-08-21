@@ -80,7 +80,7 @@
     "comlink": "4.3.0",
     "date-fns": "2.15.0",
     "firebase": "7.17.1",
-    "framer-motion": "2.1.4",
+    "framer-motion": "2.4.2",
     "fuse.js": "6.4.0",
     "graphql-request": "2.0.0",
     "idb-keyval": "3.2.0",
