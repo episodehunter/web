@@ -7,12 +7,12 @@ import { SpinnerPage } from '../spinner.page'
 export default () => {
   const { data, loading } = useGetUserQuery()
 
-  if (loading || !data) {
+  if (loading) {
     return <SpinnerPage />
   }
 
-  const username = data.me.username
-  const apiKey = data.me.apikey
+  const username = data?.me.username || '<<username>>'
+  const apiKey = data?.me.apikey || '<<apiKey>>'
 
   return (
     <PageWrapper>
