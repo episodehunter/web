@@ -68,7 +68,7 @@
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0",
     "webpack-pwa-manifest": "4.2.0",
-    "worker-loader": "3.0.1"
+    "worker-loader": "3.0.2"
   },
   "dependencies": {
     "@apollo/client": "3.1.3",
