@@ -50,6 +50,9 @@ export function useServiceWorker() {
   }, [])
 
   useEffect(() => {
+    if (config.environment === 'development' || !navigator.serviceWorker) {
+      return
+    }
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       window.location.reload()
     })

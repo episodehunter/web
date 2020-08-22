@@ -9,8 +9,8 @@ export default () => (
     <Body1>
       Episodehunter keeps automatically a record of what you are watching on your media center and
       can there by keep a comprehensive history of all TV shows and movies you have watched and can
-      give you tips on what to see next. Episodehunter currently support XBMC. Other clients may be
-      supported in the future.
+      give you tips on what to see next. Episodehunter currently support Kodi and Plex. Other
+      clients may be supported in the future.
     </Body1>
     <H3>Non-personal identification information</H3>
     <Body1>
@@ -18,14 +18,6 @@ export default () => (
       our Site. Non-personal identification information may include the browser name, the type of
       computer and technical information about Users means of connection to our Site, such as the
       operating system and the Internet service providers utilized and other similar information.
-    </Body1>
-    <H3>Web browser cookies</H3>
-    <Body1>
-      Our Site may use &quot;cookies&quot; to enhance User experience. User&apos;s web browser
-      places cookies on their hard drive for record-keeping purposes and sometimes to track
-      information about them. User may choose to set their web browser to refuse cookies, or to
-      alert you when cookies are being sent. If they do so, note that some parts of the Site may not
-      function properly.
     </Body1>
     <H3>How we use collected information</H3>
     <Body1>
