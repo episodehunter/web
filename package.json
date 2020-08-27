@@ -78,7 +78,7 @@
     "@sentry/browser": "5.22.0",
     "@tjoskar/react-lazyload-img": "1.2.3",
     "comlink": "4.3.0",
-    "date-fns": "2.15.0",
+    "date-fns": "2.16.0",
     "firebase": "7.19.0",
     "framer-motion": "2.6.3",
     "fuse.js": "6.4.1",
