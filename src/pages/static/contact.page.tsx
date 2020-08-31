@@ -20,8 +20,8 @@ export default () => (
       </a>
       <br />
       You can also join{' '}
-      <a href="https://spectrum.chat/episodehunter" target="_blank" rel="noopener noreferrer">
-        Spectrum
+      <a href="https://discord.gg/ESzTFk" target="_blank" rel="noopener noreferrer">
+        Discord
       </a>{' '}
       and start a new conversation. <br />
       Or you can just fill out{' '}
