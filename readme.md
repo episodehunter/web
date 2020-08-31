@@ -4,6 +4,10 @@
 
 This repo contains the web client for [episodehunter.tv](https://episodehunter.tv). The backend and other clients are in the [mono repo](https://github.com/episodehunter/episodehunter).
 
+## Chat with us and the community
+
+Join us on our [Discord server](https://discord.gg/ESzTFk)
+
 ## Developing 🛠
 
 First clone the repo by `git clone https://github.com/episodehunter/web.git`. Run then install all dependencies by running `npm install`, this will automatically create the file `src/dragonstone.tsx` which is generated from the GraphQL documents in `src/data-querys`. You have to manually run `npm run generate` if you make any change in `src/data-querys`.
