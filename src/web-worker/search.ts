@@ -2,6 +2,7 @@ import { Dragonstone } from '@episodehunter/types'
 import { gql } from '@episodehunter/utils'
 import Fuse from 'fuse.js'
 import { request } from 'graphql-request'
+import { get, set } from 'idb-keyval'
 import { config } from '../config'
 import { GetTitlesQuery } from '../dragonstone'
 
@@ -13,7 +14,6 @@ const fuseOptions: Fuse.IFuseOptions<any> = {
   includeScore: true,
 }
 
-type CutomFuseOptions = typeof fuseOptions
 interface ReponseData {
   fetchStatus: 'loaded' | 'loading' | 'error' | 'not loaded'
   result: Dragonstone.Title[]
@@ -34,7 +34,7 @@ const titlesQuery = gql`
   }
 `
 
-let fetchingFuse: Promise<Fuse<Dragonstone.Title, CutomFuseOptions>> | null = null
+let fetchingFuse: Promise<Fuse<Dragonstone.Title>> | null = null
 
 function getFuse() {
   if (fetchingFuse) {
@@ -44,9 +44,27 @@ function getFuse() {
     fetchStatus: 'loading',
     result: [],
   })
-  fetchingFuse = request<GetTitlesQuery>(config.dragonstoneUrl, titlesQuery)
+  const remoteTitles = request<GetTitlesQuery>(config.dragonstoneUrl, titlesQuery)
     .then(result => result.titles)
-    .then(titles => new Fuse<Dragonstone.Title, CutomFuseOptions>(titles as any, fuseOptions))
+    .then(titles => set('titles-v1', titles).then(() => titles))
+
+  const storeTitles = get<Dragonstone.Title[]>('titles-v1')
+    .catch(() => [])
+    .then(result => {
+      if (Array.isArray(result) && result.length > 0) {
+        return result
+      }
+      return remoteTitles
+    })
+
+  fetchingFuse = storeTitles.then(titles => new Fuse<Dragonstone.Title>(titles as any, fuseOptions))
+
+  Promise.all([remoteTitles, storeTitles])
+    .then(([r, s]) => {
+      if (r.length > s.length) {
+        fetchingFuse = Promise.resolve(new Fuse<Dragonstone.Title>(r as any, fuseOptions))
+      }
+    })
     .catch(error => {
       console.error(error)
       returnData({
@@ -54,12 +72,11 @@ function getFuse() {
         error,
         result: [],
       })
-      return new Fuse<Dragonstone.Title, CutomFuseOptions>([], fuseOptions)
     })
   return fetchingFuse
 }
 
-function search(fuse: Fuse<Dragonstone.Title, CutomFuseOptions>, searchWord: string) {
+function search(fuse: Fuse<Dragonstone.Title>, searchWord: string) {
   return fuse
     .search<Dragonstone.Title>(searchWord)
     .map(searchResult => {
