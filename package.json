@@ -79,7 +79,7 @@
     "@tjoskar/react-lazyload-img": "1.2.3",
     "comlink": "4.3.0",
     "date-fns": "2.16.1",
-    "firebase": "7.19.0",
+    "firebase": "7.19.1",
     "framer-motion": "2.6.5",
     "fuse.js": "6.4.1",
     "graphql-request": "3.0.0",
