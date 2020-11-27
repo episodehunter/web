@@ -7,7 +7,7 @@ export default () => (
     <H2>Contact</H2>
     <Body1>
       There are several ways to contact us at Episodehunter. The easiest way is probably to just
-      send an email to infor@episodehunter.tv
+      send an email to info@episodehunter.tv
       <br />
       <br />
       If you are using github; you can create an{' '}
