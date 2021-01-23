@@ -30,35 +30,50 @@ export function LoginPage() {
     setSelectedTab(newTab)
   }
 
+  const onSunsettingClick = () => {
+    navigate(Routes.sunsetting)
+  }
+
   return (
-    <Container style={{ marginBottom: '100px' }} component="main" maxWidth="xs">
-      <motion.div
-        transition={{ duration: 0.5 }}
-        animate={hidePage ? 'hide' : 'show'}
-        variants={animationVariants}
-      >
-        <Logo src={logoPath} />
-        <FormWrapper>
-          <Tabs
-            value={selectedTab}
-            onChange={handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-          >
-            <Tab label="Login" />
-            <Tab label="Register" />
-          </Tabs>
-          {selectedTab === 0 ? (
-            <LoginForm login={auth.login} hideForm={() => setHidePage(true)} />
-          ) : (
-            <RegisterForm register={auth.register} hideForm={() => setHidePage(true)} />
-          )}
-        </FormWrapper>
-      </motion.div>
-    </Container>
+    <>
+      <Sunsetting onClick={onSunsettingClick}>Episodehunter is sunsetting</Sunsetting>
+      <Container style={{ marginBottom: '100px' }} component="main" maxWidth="xs">
+        <motion.div
+          transition={{ duration: 0.5 }}
+          animate={hidePage ? 'hide' : 'show'}
+          variants={animationVariants}
+        >
+          <Logo src={logoPath} />
+          <FormWrapper>
+            <Tabs
+              value={selectedTab}
+              onChange={handleTabChange}
+              indicatorColor="primary"
+              textColor="primary"
+              centered
+            >
+              <Tab label="Login" />
+              <Tab label="Register" />
+            </Tabs>
+            {selectedTab === 0 ? (
+              <LoginForm login={auth.login} hideForm={() => setHidePage(true)} />
+            ) : (
+              <RegisterForm register={auth.register} hideForm={() => setHidePage(true)} />
+            )}
+          </FormWrapper>
+        </motion.div>
+      </Container>
+    </>
   )
 }
+
+const Sunsetting = miStyled('div')({
+  backgroundColor: '#ddd39f',
+  textAlign: 'center',
+  fontSize: '24px',
+  lineHeight: '40px',
+  cursor: 'pointer',
+})
 
 const Logo = miStyled('img')(({ theme }) => ({
   marginTop: theme.spacing(4),

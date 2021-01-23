@@ -95,5 +95,9 @@ export const routes = {
       path: Routes.contact,
       component: lazyloadComponent(lazy(() => import('../pages/static/contact.page'))),
     },
+    {
+      path: Routes.sunsetting,
+      component: lazyloadComponent(lazy(() => import('../pages/static/sunset.page'))),
+    },
   ],
 }

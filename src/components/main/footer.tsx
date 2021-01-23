@@ -10,7 +10,7 @@ export const Footer = () => {
   return (
     <FooterWrapper>
       <FooterItem onClick={() => navigate(Routes.login)}>Login</FooterItem>
-      <FooterItem onClick={() => navigate(Routes.about)}>©EpisodeHunter 2019</FooterItem>
+      <FooterItem onClick={() => navigate(Routes.about)}>©EpisodeHunter 2021</FooterItem>
       <FooterItem onClick={() => navigate(Routes.privacy)}>Privacy Policy</FooterItem>
       <FooterItem onClick={() => navigate(Routes.tos)}>Terms of Service</FooterItem>
       <FooterItem onClick={() => navigate(Routes.kodi)}>Kodi</FooterItem>
