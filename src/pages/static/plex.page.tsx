@@ -10,8 +10,6 @@ import { Footer } from '../../components/main/footer'
 export default () => {
   const { data, loading } = useGetUserQuery()
 
-  console.log({ data, loading })
-
   if (loading) {
     return <SpinnerPage />
   }

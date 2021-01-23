@@ -18,4 +18,5 @@ export const Routes = {
   contact: '/contact',
   landingPage: '/landingpage',
   forgotPassword: '/forgotpassword',
+  sunsetting: '/sunsetting',
 } as const
